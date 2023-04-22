@@ -4,18 +4,23 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import Layout from "../components/Layout";
+import { AppContext } from "../contexts/AppContext";
+import Chip from "@mui/material/Chip";
 
 export default function Menus() {
+  const { fetchData, menus } = React.useContext(AppContext);
+  console.log(menus);
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const menu = {
       name: formData.get("name"),
-      prize: formData.get("prize"),
+      price: formData.get("price"),
     };
 
     await axios
-      .post("/api/menus-post", {
+      .post("/api/menusPost", {
         menu,
       })
       .then((res) => {
@@ -25,6 +30,22 @@ export default function Menus() {
       .catch((err) => {
         return err;
       });
+
+    fetchData();
+  };
+
+  const handleDeleteMenu = async (id: any) => {
+    await axios
+      .delete(`/api/deleteMenu?id=${id}`)
+      .then((res) => {
+        console.log(res);
+        return res;
+      })
+      .catch((err) => {
+        return err;
+      });
+
+    fetchData();
   };
 
   return (
@@ -58,11 +79,24 @@ export default function Menus() {
           sx={{ mb: 2 }}
           color="primary"
           focused
-          name="prize"
+          name="price"
         />
         <Button type="submit" variant="outlined">
           Create Menus
         </Button>
+      </Box>
+      <Box>
+        {menus.map((menu) => {
+          return (
+            // eslint-disable-next-line react/jsx-key
+            <Chip
+              key={menu.id}
+              label={menu.name}
+              sx={{ m: 1 }}
+              onDelete={() => handleDeleteMenu(menu.id)}
+            />
+          );
+        })}
       </Box>
     </Layout>
   );

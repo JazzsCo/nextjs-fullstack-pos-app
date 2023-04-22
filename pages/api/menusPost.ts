@@ -7,9 +7,9 @@ export default async function handler(
 ) {
   try {
     if (req.method === "POST") {
-      const { name, prize } = req.body.menu;
-      const text = `INSERT INTO menus(name, prize) VALUES($1, $2) RETURNING *`;
-      const values = [name, prize];
+      const { name, price } = req.body.menu;
+      const text = `INSERT INTO menus_order(name, price) VALUES($1, $2) RETURNING *`;
+      const values = [name, price];
       const { rows } = await pool.query(text, values);
       res.send(rows);
     }
