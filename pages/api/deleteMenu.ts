@@ -11,7 +11,7 @@ export default async function handler(
       const text = `DELETE FROM menus_order WHERE id = ($1) RETURNING *`;
       const values = [id];
       const { rows } = await pool.query(text, values);
-      res.send(id);
+      res.send(rows);
     }
   } catch (err) {
     console.log("error", err);
