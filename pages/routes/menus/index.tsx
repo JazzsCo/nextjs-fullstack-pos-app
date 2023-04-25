@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import axios from "axios";
-import * as React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
@@ -8,10 +7,11 @@ import Chip from "@mui/material/Chip";
 import { useContext } from "react";
 import { AppContext } from "@/pages/contexts/AppContext";
 import Layout from "@/pages/components/Layout";
+import ButtonSide from "./ButtonSide";
+import Link from "next/link";
 
 export default function Menus() {
   const { fetchData, menus } = useContext(AppContext);
-  console.log(menus);
 
   const handleSubmit = async (e: any) => {
     // e.preventDefault();
@@ -47,9 +47,7 @@ export default function Menus() {
     // fetchData();
   };
 
-  const handleClickMenu = () => {
-    console.log("hello");
-  };
+  const handleClickMenu = () => {};
 
   return (
     <Layout>
@@ -88,16 +86,19 @@ export default function Menus() {
           Create Menus
         </Button>
       </Box>
-      <div className="m-auto max-w-lg space-x-3 space-y-2 ">
+      <div className="m-auto max-w-lg space-x-3">
         {menus.map((menu) => (
-          <Chip
-            key={menu.id}
-            label={menu.name}
-            onDelete={handleDeleteMenu}
-            onClick={handleClickMenu}
-          />
+          <Link href={`/routes/menus/${menu.id}`} key={menu.id}>
+            <Chip
+              label={`${menu.name}`}
+              onDelete={handleDeleteMenu}
+              onClick={handleClickMenu}
+              sx={{ mb: 2 }}
+            />
+          </Link>
         ))}
       </div>
+
       {/* <div className="flex justify-around flex-wrap space-y-5">
         {menus.map((menu) => {
           return (

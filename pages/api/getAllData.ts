@@ -9,7 +9,7 @@ export default async function handler(
   try {
     if (req.method === "GET") {
       const menus = (
-        await pool.query(`SELECT name, price, url FROM menus
+        await pool.query(`SELECT menus.id, name, price, url FROM menus
         INNER JOIN menus_menu_images on menus_menu_images.menu_images_id = menus.id
         INNER JOIN menu_images on menu_images.id = menus_menu_images.menus_id`)
       ).rows;

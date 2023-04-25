@@ -3,7 +3,7 @@ interface CategoryName {
 }
 
 export interface Menus {
-  id?: number;
+  id: number;
   name: string;
   price: number;
   url: string;
