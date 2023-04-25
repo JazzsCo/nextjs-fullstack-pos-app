@@ -8,7 +8,11 @@ export default async function handler(
 ) {
   try {
     if (req.method === "GET") {
-      const menus = (await pool.query("select * from menus_order")).rows;
+      const menus = (
+        await pool.query(`SELECT name, price, url FROM menus
+        INNER JOIN menus_menu_images on menus_menu_images.menu_images_id = menus.id
+        INNER JOIN menu_images on menu_images.id = menus_menu_images.menus_id`)
+      ).rows;
       const menuCategories = (await pool.query("select * from menu_categories"))
         .rows;
       const addons = (await pool.query("select * from addon")).rows;

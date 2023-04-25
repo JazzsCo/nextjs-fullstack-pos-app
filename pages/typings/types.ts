@@ -3,9 +3,10 @@ interface CategoryName {
 }
 
 export interface Menus {
-  id?: string;
+  id?: number;
   name: string;
-  prize: number;
+  price: number;
+  url: string;
 }
 
 export interface MenuCategory extends CategoryName {}

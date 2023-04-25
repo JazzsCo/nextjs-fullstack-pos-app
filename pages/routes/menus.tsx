@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import axios from "axios";
 import * as React from "react";
 import Box from "@mui/material/Box";
@@ -50,7 +51,7 @@ export default function Menus() {
 
   return (
     <Layout>
-      <Box
+      {/* <Box
         component="form"
         sx={{
           maxWidth: "20rem",
@@ -84,20 +85,27 @@ export default function Menus() {
         <Button type="submit" variant="outlined">
           Create Menus
         </Button>
-      </Box>
-      <Box>
+      </Box> */}
+      <div className="flex justify-around flex-wrap space-y-5 bg-cyan-500">
         {menus.map((menu) => {
           return (
-            // eslint-disable-next-line react/jsx-key
-            <Chip
+            <div
               key={menu.id}
-              label={menu.name}
-              sx={{ m: 1 }}
-              onDelete={() => handleDeleteMenu(menu.id)}
-            />
+              className="max-w-sm bg-slate-300 border text-xl text-slate-950 border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+            >
+              <img className="h-auto rounded-lg" src={menu.url} alt="..." />
+              <h1>{menu.name}</h1>
+              <h3>${menu.price}</h3>
+              <button
+                type="button"
+                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+              >
+                Update
+              </button>
+            </div>
           );
         })}
-      </Box>
+      </div>
     </Layout>
   );
 }
