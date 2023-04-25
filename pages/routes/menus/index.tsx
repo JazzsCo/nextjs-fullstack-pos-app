@@ -4,54 +4,56 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
-import Layout from "../components/Layout";
-import { AppContext } from "../contexts/AppContext";
 import Chip from "@mui/material/Chip";
+import { useContext } from "react";
+import { AppContext } from "@/pages/contexts/AppContext";
+import Layout from "@/pages/components/Layout";
 
 export default function Menus() {
-  const { fetchData, menus } = React.useContext(AppContext);
+  const { fetchData, menus } = useContext(AppContext);
   console.log(menus);
 
   const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const menu = {
-      name: formData.get("name"),
-      price: formData.get("price"),
-    };
-
-    await axios
-      .post("/api/menusPost", {
-        menu,
-      })
-      .then((res) => {
-        console.log(res.data);
-        return res;
-      })
-      .catch((err) => {
-        return err;
-      });
-
-    fetchData();
+    // e.preventDefault();
+    // const formData = new FormData(e.currentTarget);
+    // const menu = {
+    //   name: formData.get("name"),
+    //   price: formData.get("price"),
+    // };
+    // await axios
+    //   .post("/api/menusPost", {
+    //     menu,
+    //   })
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     return res;
+    //   })
+    //   .catch((err) => {
+    //     return err;
+    //   });
+    // fetchData();
   };
 
   const handleDeleteMenu = async (id: any) => {
-    await axios
-      .delete(`/api/deleteMenu?id=${id}`)
-      .then((res) => {
-        console.log(res);
-        return res;
-      })
-      .catch((err) => {
-        return err;
-      });
+    // await axios
+    //   .delete(`/api/deleteMenu?id=${id}`)
+    //   .then((res) => {
+    //     console.log(res);
+    //     return res;
+    //   })
+    //   .catch((err) => {
+    //     return err;
+    //   });
+    // fetchData();
+  };
 
-    fetchData();
+  const handleClickMenu = () => {
+    console.log("hello");
   };
 
   return (
     <Layout>
-      {/* <Box
+      <Box
         component="form"
         sx={{
           maxWidth: "20rem",
@@ -85,8 +87,18 @@ export default function Menus() {
         <Button type="submit" variant="outlined">
           Create Menus
         </Button>
-      </Box> */}
-      <div className="flex justify-around flex-wrap space-y-5 bg-cyan-500">
+      </Box>
+      <div className="m-auto max-w-lg space-x-3 space-y-2 ">
+        {menus.map((menu) => (
+          <Chip
+            key={menu.id}
+            label={menu.name}
+            onDelete={handleDeleteMenu}
+            onClick={handleClickMenu}
+          />
+        ))}
+      </div>
+      {/* <div className="flex justify-around flex-wrap space-y-5">
         {menus.map((menu) => {
           return (
             <div
@@ -105,7 +117,7 @@ export default function Menus() {
             </div>
           );
         })}
-      </div>
+      </div> */}
     </Layout>
   );
 }
