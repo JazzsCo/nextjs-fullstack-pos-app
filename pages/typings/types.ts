@@ -7,6 +7,7 @@ export interface Menus {
   name: string;
   price: number;
   url: string;
+  avilable: boolean;
 }
 
 export interface MenuCategory extends CategoryName {}
