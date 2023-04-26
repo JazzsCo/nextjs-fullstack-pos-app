@@ -94,6 +94,7 @@ export default function Menus() {
               onDelete={handleDeleteMenu}
               onClick={handleClickMenu}
               sx={{ mb: 2 }}
+              //   Chip have cusor-pointer auto
             />
           </Link>
         ))}
