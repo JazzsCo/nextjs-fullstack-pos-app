@@ -19,6 +19,7 @@ const Setting = () => {
       });
 
     console.log("Hello ma ma ");
+    console.log("ma ma ko chit tl ");
   };
 
   return (
