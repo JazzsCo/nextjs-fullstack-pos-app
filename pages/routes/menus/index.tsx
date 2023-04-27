@@ -11,7 +11,8 @@ import ButtonSide from "./ButtonSide";
 import Link from "next/link";
 
 export default function Menus() {
-  const { fetchData, menus } = useContext(AppContext);
+  const { fetchData, menus, ...data } = useContext(AppContext);
+  console.log("data");
 
   const handleSubmit = async (e: any) => {
     // e.preventDefault();

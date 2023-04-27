@@ -2,9 +2,12 @@ interface CategoryName {
   categoryName: string;
 }
 
-export interface Menus {
+interface IdAndName {
   id: number;
   name: string;
+}
+
+export interface Menus extends IdAndName {
   price: number;
   url: string;
   avilable: boolean;
@@ -22,3 +25,5 @@ export interface Addon {
 export interface AddonCategory extends CategoryName {
   isRequired: boolean;
 }
+
+export interface Locations extends IdAndName {}

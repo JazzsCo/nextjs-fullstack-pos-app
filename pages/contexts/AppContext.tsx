@@ -1,5 +1,11 @@
 import { createContext, useState, useEffect } from "react";
-import { Addon, AddonCategory, MenuCategory, Menus } from "../typings/types";
+import {
+  Addon,
+  AddonCategory,
+  Locations,
+  MenuCategory,
+  Menus,
+} from "../typings/types";
 import axios from "axios";
 
 interface AppContextType {
@@ -7,6 +13,7 @@ interface AppContextType {
   menuCategories: MenuCategory[];
   addons: Addon[];
   addonCategories: AddonCategory[];
+  location: Locations[];
   updateData: (value: any) => void;
   fetchData: () => void;
 }
@@ -16,6 +23,7 @@ const defaultContext: AppContextType = {
   menuCategories: [],
   addons: [],
   addonCategories: [],
+  location: [],
   updateData: () => {},
   fetchData: () => {},
 };
@@ -35,13 +43,15 @@ const AppProvider = (props: any) => {
     await axios
       .get("/api/getAllData")
       .then((res) => {
-        const { menus, menuCategories, addons, addonCategories } = res.data;
+        const { menus, menuCategories, addons, addonCategories, location } =
+          res.data;
         updateData({
           ...data,
           menus,
           menuCategories,
           addons,
           addonCategories,
+          location,
         });
         return res;
       })

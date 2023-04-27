@@ -8,22 +8,25 @@ export default async function handler(
 ) {
   try {
     if (req.method === "GET") {
-      const menus = (
-        await pool.query(`SELECT menus.id, name, price, url, is_avilable AS avilable FROM menus
-        INNER JOIN menus_menu_images on menus_menu_images.menu_images_id = menus.id
-        INNER JOIN menu_images on menu_images.id = menus_menu_images.menus_id`)
-      ).rows;
+      // const menus = (
+      //   await pool.query(`SELECT menus.id, name, price, url, is_avilable AS avilable FROM menus
+      //   INNER JOIN menus_menu_images on menus_menu_images.menu_images_id = menus.id
+      //   INNER JOIN menu_images on menu_images.id = menus_menu_images.menus_id`)
+      // ).rows;
       const menuCategories = (await pool.query("select * from menu_categories"))
         .rows;
       const addons = (await pool.query("select * from addon")).rows;
       const addonCategories = (
         await pool.query("select * from addon_categories")
       ).rows;
+      const location = (await pool.query("select * from locations")).rows;
+
       res.send({
-        menus,
+        // menus,
         menuCategories,
         addons,
         addonCategories,
+        location,
       });
     }
   } catch (error) {
