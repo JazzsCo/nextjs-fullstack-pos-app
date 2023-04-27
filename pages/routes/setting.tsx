@@ -17,6 +17,8 @@ const Setting = () => {
       .catch((err) => {
         return err;
       });
+
+    console.log("Hello ma ma ");
   };
 
   return (
