@@ -40,3 +40,16 @@ const Setting = () => {
 };
 
 export default Setting;
+
+// -- UPDATE menus_order SET name='ABC', price=200, is_avilable='true'
+// -- WHERE id=10
+
+// -- ALTER TABLE location_menus
+// -- ADD COLUMN "is_available"
+// -- BOOLEAN DEFAULT TRUE
+
+// select menus.name,
+// price, is_available, locations.name from menus
+// inner join location_menus on location_menus.menu_id = menus.id
+// inner join locations on locations.id=location_menus.location_id
+// where locations.id=2
