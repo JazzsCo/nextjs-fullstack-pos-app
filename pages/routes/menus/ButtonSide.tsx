@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { AppContext } from "@/pages/contexts/AppContext";
 import axios from "axios";
-import { Menus } from "@/pages/typings/types";
+import { Menu } from "@/pages/typings/types";
 
 const style = {
   position: "absolute" as "absolute",

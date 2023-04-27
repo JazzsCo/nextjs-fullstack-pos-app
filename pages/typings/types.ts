@@ -7,7 +7,7 @@ interface IdAndName {
   name: string;
 }
 
-export interface Menus extends IdAndName {
+export interface Menu extends IdAndName {
   price: number;
   url: string;
   avilable: boolean;
@@ -26,4 +26,4 @@ export interface AddonCategory extends CategoryName {
   isRequired: boolean;
 }
 
-export interface Locations extends IdAndName {}
+export interface Location extends IdAndName {}

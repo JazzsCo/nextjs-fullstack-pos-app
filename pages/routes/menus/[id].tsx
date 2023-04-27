@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Layout from "@/pages/components/Layout";
 import { AppContext } from "@/pages/contexts/AppContext";
-import { Menus } from "@/pages/typings/types";
+import { Menu } from "@/pages/typings/types";
 import { useRouter } from "next/router";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Button, Box, Modal, Checkbox } from "@mui/material";
@@ -28,10 +28,10 @@ const MenuById = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const [menu, setMenu] = useState<Menus>();
+  const [menu, setMenu] = useState<Menu>();
 
   useEffect(() => {
-    setMenu(menus.find((menu) => menu.id.toString() === id?.toString()));
+    setMenu(menus.find((item) => item.id.toString() === id?.toString()));
   }, [menus, menu]);
 
   const [open, setOpen] = useState(false);

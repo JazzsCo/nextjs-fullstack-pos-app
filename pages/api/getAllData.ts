@@ -19,14 +19,14 @@ export default async function handler(
       const addonCategories = (
         await pool.query("select * from addon_categories")
       ).rows;
-      const location = (await pool.query("select * from locations")).rows;
+      const locations = (await pool.query("select * from locations")).rows;
 
       res.send({
         // menus,
         menuCategories,
         addons,
         addonCategories,
-        location,
+        locations,
       });
     }
   } catch (error) {
