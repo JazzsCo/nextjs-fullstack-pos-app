@@ -19,6 +19,15 @@ export default async function handler(
       const values = [name, price, id];
       const { rows } = await pool.query(text, values);
       res.send(rows);
+    } else if (req.method === "GET") {
+      const id = req.query.id;
+      const text = `SELECT menus.name AS menu_name, price, is_available AS available, locations.name AS location_name FROM menus
+        INNER JOIN location_menus ON location_menus.menu_id = menus.id
+        INNER JOIN locations ON locations.id = location_menus.location_id
+        WHERE locations.id = $1`;
+      const values = [id];
+      const { rows } = await pool.query(text, values);
+      res.send(rows);
     }
   } catch (err) {
     console.log("error", err);
