@@ -1,40 +1,86 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { AppContext } from "../contexts/AppContext";
-import { Box, Button } from "@mui/material";
+import { Location } from "../typings/types";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 import axios from "axios";
 
 const Setting = () => {
   const { locations } = useContext(AppContext);
 
-  const handleClick = async (id: any) => {
-    await axios
-      .get(`/api/menusPost?id=${id}`)
-      .then((res) => {
-        console.log(res.data);
-        return res;
-      })
-      .catch((err) => {
-        return err;
-      });
+  const [selectedLocation, setSelectedLocation] = useState<
+    Location | undefined
+  >();
 
-    console.log("Hello ma ma ");
-    console.log("ma ma ko chit tl ");
+  // Get this data from button elements
+  // const handleClick = async (id: any) => {
+  //   await axios
+  //     .get(`/api/menusPost?id=${id}`)
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       return res;
+  //     })
+  //     .catch((err) => {
+  //       return err;
+  //     });
+
+  //   console.log("Hello ma ma ");
+  //   console.log("ma ma ko chit tl ");
+  // };
+
+  const handleChange = (evt: SelectChangeEvent<number>) => {
+    localStorage.setItem("locationId", String(evt.target.value));
+    const selectedLocation = locations.find(
+      (location) => location.id === evt.target.value
+    );
+    setSelectedLocation(selectedLocation);
   };
+
+  useEffect(() => {
+    if (locations.length) {
+      const locationId = localStorage.getItem("locationId");
+
+      if (!locationId) {
+        localStorage.setItem("locationId", String(locations[0].id));
+        setSelectedLocation(locations[0]);
+      } else {
+        // main point ***
+        const selectedLocation = locations.find(
+          (location) => String(location.id) === locationId
+        );
+        setSelectedLocation(selectedLocation);
+      }
+    }
+  }, [locations]);
 
   return (
     <Layout>
-      <div className="w-full flex flex-col items-center space-y-4 my-52">
-        {locations.map((location) => (
-          <Button
-            key={location.id}
-            variant="outlined"
-            onClick={() => handleClick(location.id)}
+      <Box sx={{ maxWidth: 300, m: "0 auto", mt: 10 }}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Location</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={selectedLocation ? selectedLocation.id : ""} // main point ***
+            label="Locations"
+            onChange={handleChange}
           >
-            {location.name}
-          </Button>
-        ))}
-      </div>
+            {locations.map((location) => (
+              <MenuItem key={location.id} value={location.id}>
+                {location.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
     </Layout>
   );
 };
