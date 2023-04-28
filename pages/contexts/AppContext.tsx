@@ -33,11 +33,7 @@ export const AppContext = createContext<AppContextType>(defaultContext);
 const AppProvider = (props: any) => {
   const [data, updateData] = useState(defaultContext);
 
-  // console.log("data is", data);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  console.log("data is", data);
 
   const fetchData = async () =>
     await axios
@@ -58,6 +54,34 @@ const AppProvider = (props: any) => {
       .catch((err) => {
         return err;
       });
+
+  // const getMenusByLocationId = async (id: string) => {
+  //   await axios
+  //     .get(`/api/menusPost?id=${id}`)
+  //     .then((res) => {
+  //       const { menus } = res.data;
+  //       updateData({ ...data, menus });
+  //       return res;
+  //     })
+  //     .catch((err) => {
+  //       return err;
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   console.log("location id effect");
+  //   const locationId = localStorage.getItem("locationId");
+  //   if (!locationId) {
+  //     localStorage.setItem("locationId", String(1));
+  //     return;
+  //   } else {
+  //     getMenusByLocationId(locationId);
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   //   const fetchData = async () => {
   //     const response = await fetch("/api/getAllData");

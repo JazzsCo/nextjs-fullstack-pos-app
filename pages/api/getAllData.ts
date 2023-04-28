@@ -8,11 +8,11 @@ export default async function handler(
 ) {
   try {
     if (req.method === "GET") {
-      // const menus = (
-      //   await pool.query(`SELECT menus.id, name, price, url FROM menus
-      //   INNER JOIN menus_menu_images on menus_menu_images.menu_images_id = menus.id
-      //   INNER JOIN menu_images on menu_images.id = menus_menu_images.menus_id`)
-      // ).rows;
+      const menus = (
+        await pool.query(`SELECT menus.id, menus.name AS menu_name, price, url FROM menus
+        INNER JOIN menus_menu_images on menus_menu_images.menu_images_id = menus.id
+        INNER JOIN menu_images on menu_images.id = menus_menu_images.menus_id`)
+      ).rows;
       const menuCategories = (await pool.query("select * from menu_categories"))
         .rows;
       const addons = (await pool.query("select * from addon")).rows;
@@ -22,7 +22,7 @@ export default async function handler(
       const locations = (await pool.query("select * from locations")).rows;
 
       res.send({
-        // menus,
+        menus,
         menuCategories,
         addons,
         addonCategories,

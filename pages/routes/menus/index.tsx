@@ -12,9 +12,10 @@ import Link from "next/link";
 import { Menu } from "@/pages/typings/types";
 
 export default function Menus() {
-  const { fetchData, locations, ...data } = useContext(AppContext);
+  const { fetchData, updateData, menus, locations, ...data } =
+    useContext(AppContext);
 
-  const [menus, setMenus] = useState<Menu[] | undefined>();
+  // const [menus, setMenus] = useState<Menu[] | undefined>();
 
   const handleSubmit = async (e: any) => {
     // e.preventDefault();
@@ -56,8 +57,8 @@ export default function Menus() {
     await axios
       .get(`/api/menusPost?id=${id}`)
       .then((res) => {
-        setMenus(res.data);
-        console.log(res.data);
+        const { menus } = res.data;
+        updateData({ ...data, locations, fetchData, updateData, menus });
         return res;
       })
       .catch((err) => {
