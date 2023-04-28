@@ -33,7 +33,7 @@ export const AppContext = createContext<AppContextType>(defaultContext);
 const AppProvider = (props: any) => {
   const [data, updateData] = useState(defaultContext);
 
-  console.log("data is", data);
+  // console.log("data is", data);
 
   useEffect(() => {
     fetchData();

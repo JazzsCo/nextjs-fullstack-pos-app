@@ -4,15 +4,17 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import Chip from "@mui/material/Chip";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "@/pages/contexts/AppContext";
 import Layout from "@/pages/components/Layout";
 import ButtonSide from "./ButtonSide";
 import Link from "next/link";
+import { Menu } from "@/pages/typings/types";
 
 export default function Menus() {
-  const { fetchData, menus, ...data } = useContext(AppContext);
-  console.log("data");
+  const { fetchData, locations, ...data } = useContext(AppContext);
+
+  const [menus, setMenus] = useState<Menu[] | undefined>();
 
   const handleSubmit = async (e: any) => {
     // e.preventDefault();
@@ -49,6 +51,31 @@ export default function Menus() {
   };
 
   const handleClickMenu = () => {};
+
+  const getMenusByLocationId = async (id: string) => {
+    await axios
+      .get(`/api/menusPost?id=${id}`)
+      .then((res) => {
+        setMenus(res.data);
+        console.log(res.data);
+        return res;
+      })
+      .catch((err) => {
+        return err;
+      });
+  };
+
+  useEffect(() => {
+    if (locations.length) {
+      const locationId = localStorage.getItem("locationId");
+      if (!locationId) {
+        localStorage.setItem("locationId", String(locations[0].id));
+        return;
+      } else {
+        getMenusByLocationId(locationId);
+      }
+    }
+  }, []);
 
   return (
     <Layout>
@@ -88,17 +115,21 @@ export default function Menus() {
         </Button>
       </Box>
       <div className="m-auto max-w-lg space-x-3">
-        {menus.map((menu) => (
-          <Link href={`/routes/menus/${menu.id}`} key={menu.id}>
-            <Chip
-              label={`${menu.name}`}
-              onDelete={handleDeleteMenu}
-              onClick={handleClickMenu}
-              sx={{ mb: 2 }}
-              //   Chip have cusor-pointer auto
-            />
-          </Link>
-        ))}
+        {menus ? (
+          menus.map((menu) => (
+            <Link href={`/routes/menus/${menu.id}`} key={menu.id}>
+              <Chip
+                label={`${menu.menu_name}`}
+                onDelete={handleDeleteMenu}
+                onClick={handleClickMenu}
+                sx={{ mb: 2 }}
+                //   Chip have cusor-pointer auto
+              />
+            </Link>
+          ))
+        ) : (
+          <h1>Nothing Baby....</h1>
+        )}
       </div>
 
       {/* <div className="flex justify-around flex-wrap space-y-5">

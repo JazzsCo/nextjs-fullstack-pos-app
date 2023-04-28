@@ -7,10 +7,13 @@ interface IdAndName {
   name: string;
 }
 
-export interface Menu extends IdAndName {
+export interface Menu {
+  id: number;
+  menu_name: string;
+  location_name: string;
+  available: boolean;
   price: number;
   url: string;
-  avilable: boolean;
 }
 
 export interface MenuCategory extends CategoryName {}

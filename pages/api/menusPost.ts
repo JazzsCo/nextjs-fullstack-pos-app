@@ -21,7 +21,7 @@ export default async function handler(
       res.send(rows);
     } else if (req.method === "GET") {
       const id = req.query.id;
-      const text = `SELECT menus.name AS menu_name, price, is_available AS available, locations.name AS location_name FROM menus
+      const text = `SELECT menus.id, menus.name AS menu_name, price, is_available AS available, locations.name AS location_name FROM menus
         INNER JOIN location_menus ON location_menus.menu_id = menus.id
         INNER JOIN locations ON locations.id = location_menus.location_id
         WHERE locations.id = $1`;
