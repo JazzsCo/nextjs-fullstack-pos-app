@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { pool } from "../db/db";
+import bcrypt from "bcrypt";
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,9 +22,11 @@ export default async function handler(
   );
   if (result.rows.length) res.send({ message: "User already exists." });
 
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   const newUser = await pool.query(
     "insert into users (name, email, password) values($1, $2, $3) RETURNING *",
-    [name, email, password]
+    [name, email, hashedPassword]
   );
   //  res.cookie("token", "jKJflkajfladjfklJFADJSFAJSDFADSFdsFAJSDf");
   res.send(newUser);

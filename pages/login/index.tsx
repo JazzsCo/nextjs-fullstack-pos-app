@@ -31,8 +31,15 @@ const Login = () => {
         body: JSON.stringify(user),
       });
 
-      console.log("user success : ", await response.json());
-      <Navigate to={"/routes/menus"} replace={true} />;
+      if (response.ok) {
+        console.log("user success : ", await response.json());
+
+        //  return navigate("/menus?locationId=2");
+      } else {
+        setOpen(true);
+      }
+
+      // <Navigate to={"/routes/menus"} replace={true} />;
       // navigate("/menus?locationId=2");
     } catch (err) {
       console.log("Error here: ", err);
