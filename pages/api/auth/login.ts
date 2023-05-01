@@ -21,6 +21,7 @@ export default async function handler(
   const result = await pool.query("select * from users where email=$1", [
     email,
   ]);
+
   if (!result.rows.length) return res.status(404);
 
   const isValidPassword = await bcrypt.compare(
