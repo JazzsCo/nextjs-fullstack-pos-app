@@ -15,11 +15,13 @@ import { AppContext } from "../contexts/AppContext";
 import { useNavigate, Navigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const Login = () => {
-  // const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState({ email: "", password: "" });
+
+  const router = useRouter();
 
   const SignIn = async () => {
     const isValid = user.email.length > 0 && user.password.length > 0;
@@ -34,13 +36,10 @@ const Login = () => {
       if (response.ok) {
         console.log("user success : ", await response.json());
 
-        //  return navigate("/menus?locationId=2");
+        router.push("/");
       } else {
         setOpen(true);
       }
-
-      // <Navigate to={"/routes/menus"} replace={true} />;
-      // navigate("/menus?locationId=2");
     } catch (err) {
       console.log("Error here: ", err);
     }
