@@ -1,6 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import { pool } from "../db/db";
 import bcrypt from "bcrypt";
 
 export default async function handler(
@@ -18,9 +17,7 @@ export default async function handler(
 
   if (!isValid) return res.status(400);
 
-  const result = await pool.query("select * from users where email=$1", [
-    email,
-  ]);
+  const result = await query("select * from users where email=$1", [email]);
 
   if (!result.rows.length) return res.status(404);
 
