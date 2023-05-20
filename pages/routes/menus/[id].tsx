@@ -1,12 +1,12 @@
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable @next/next/no-img-element */
-import Layout from "@/pages/components/Layout";
-import { AppContext } from "@/pages/contexts/AppContext";
-import { Menu } from "@/pages/typings/types";
 import { useRouter } from "next/router";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Button, Box, Modal, Checkbox } from "@mui/material";
 import axios from "axios";
+import { AppContext } from "@/contexts/AppContext";
+import { Menu } from "@/typings/types";
+import Layout from "@/components/Layout";
 
 const style = {
   position: "absolute" as "absolute",

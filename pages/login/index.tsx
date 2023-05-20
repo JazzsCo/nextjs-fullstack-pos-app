@@ -16,6 +16,7 @@ import { useNavigate, Navigate } from "react-router-dom";
 // import Layout from "../components/Layout";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Layout from "@/components/Layout";
 
 const Login = () => {
   const [open, setOpen] = useState(false);

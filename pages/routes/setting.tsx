@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import Layout from "../components/Layout";
-import { AppContext } from "../contexts/AppContext";
-import { Location } from "../typings/types";
+import { AppContext } from "@/contexts/AppContext";
+import Layout from "@/components/Layout";
 import {
   Box,
   Button,
@@ -12,6 +11,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import axios from "axios";
+import { Location } from "@/typings/types";
 
 const Setting = () => {
   const { locations } = useContext(AppContext);

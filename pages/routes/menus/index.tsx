@@ -5,11 +5,10 @@ import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import { useContext, useEffect, useState } from "react";
-import { AppContext } from "@/pages/contexts/AppContext";
-import Layout from "@/pages/components/Layout";
 import ButtonSide from "./ButtonSide";
 import Link from "next/link";
-import { Menu } from "@/pages/typings/types";
+import { AppContext } from "@/contexts/AppContext";
+import Layout from "@/components/Layout";
 
 export default function Menus() {
   const { fetchData, updateData, menus, locations, ...data } =

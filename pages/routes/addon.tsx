@@ -3,7 +3,7 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
-import Layout from "../components/Layout";
+import Layout from "@/components/Layout";
 
 export default function Addon() {
   const handleSubmit = async (e: any) => {
