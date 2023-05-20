@@ -6,8 +6,6 @@ const endpoint = process.env.SPACE_ENDPOINT || "";
 const accessKey = process.env.SPACE_ACCESS_KEY_ID || "";
 const secretKey = process.env.SPACE_SECRET_ACCESS_KEY || "";
 
-console.log(endpoint, accessKey, secretKey);
-
 // Set S3 endpoint to DigitalOcean Spaces
 const s3Config = new S3Client({
   endpoint: endpoint,

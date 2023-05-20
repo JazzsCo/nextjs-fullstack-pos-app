@@ -7,6 +7,7 @@ import { Request, Response } from "express";
 export const config = {
   api: {
     bodyParser: false,
+    externalResolver: true,
   },
 };
 
