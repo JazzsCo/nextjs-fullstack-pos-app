@@ -29,31 +29,31 @@ const sidebarMenuItems = [
     id: 1,
     label: "Menus",
     icon: <LocalDiningIcon />,
-    route: "/routes/menus",
+    route: "/adman/dashboard/menus",
   },
   {
     id: 2,
     label: "Menu Categories",
     icon: <CategoryIcon />,
-    route: "/routes/menu-categories",
+    route: "/adman/dashboard/menu-categories",
   },
   {
     id: 3,
     label: "Addon",
     icon: <LunchDiningIcon />,
-    route: "/routes/addon",
+    route: "/adman/dashboard/addon",
   },
   {
     id: 4,
     label: "Addon Categories",
     icon: <ClassIcon />,
-    route: "/routes/addon-categories",
+    route: "/adman/dashboard/addon-categories",
   },
   {
     id: 5,
     label: "Settings",
     icon: <SettingsIcon />,
-    route: "/routes/setting",
+    route: "/adman/dashboard/setting",
   },
 ];
 
