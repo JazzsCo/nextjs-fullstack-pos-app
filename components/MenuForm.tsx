@@ -1,12 +1,10 @@
-import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { useContext, useState } from "react";
 import { AppContext } from "../contexts/AppContext";
-import AddonSelect from "./AddonSelect";
 import FileDropZone from "./FileDropZone";
 import LocationsSelect from "./LocationsSelect";
-import MenuCatSelect from "./MenuCatSelect";
-import AddonCatSelect from "./AddonCatSelect";
 import axios from "axios";
+import AddonCatSelect from "./AddonCatSelect";
+import MenuCatSelect from "./MenuCatSelect";
 
 export default function MunuForm() {
   const { menuCategories, addonCategories, addons, fetchData } =

@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import Layout from "@/components/Layout";
+import MenuCatSelect from "@/components/MenuCatSelect";
 
 export default function MenuCategories() {
   const handleSubmit = async (e: any) => {
@@ -63,6 +64,14 @@ export default function MenuCategories() {
         <Button type="submit" variant="outlined">
           Create Menus
         </Button>
+
+        <Box
+          sx={{
+            textAlign: "center",
+          }}
+        >
+          <MenuCatSelect />
+        </Box>
       </Box>
     </Layout>
   );
