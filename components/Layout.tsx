@@ -11,9 +11,6 @@ const Layout = ({ children }: any) => {
   return (
     <div>
       <NavBar />
-      <Button variant="outlined" onClick={() => signOut()}>
-        Sign out
-      </Button>
       {children}
     </div>
   );
