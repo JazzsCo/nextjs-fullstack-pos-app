@@ -14,8 +14,8 @@ export default function Home() {
         marginTop: 50,
       }}
     >
-      <Link href={"/adman"}>
-        <Button variant="outlined">Adman</Button>
+      <Link href={"/admin"}>
+        <Button variant="outlined">Admin</Button>
       </Link>
 
       <Link href={"/user"}>
