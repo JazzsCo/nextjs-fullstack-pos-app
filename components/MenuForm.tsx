@@ -10,10 +10,8 @@ export default function MunuForm() {
   const { menuCategories, addonCategories, addons, fetchData } =
     useContext(AppContext);
 
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_ENDPOINT;
-
-  const imageEndPoint = `${apiBaseUrl}/image`;
-  const createMenuEndPoint = `${apiBaseUrl}/menusPost`;
+  const imageEndPoint = `/api/image`;
+  const createMenuEndPoint = `/api/menusPost`;
 
   const [menuImage, setMenuImage] = useState<File>();
 

@@ -1,12 +1,12 @@
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable @next/next/no-img-element */
+import Layout from "@/components/Layout";
+import { AppContext } from "@/contexts/AppContext";
+import { Menu } from "@/typings/types";
 import { useRouter } from "next/router";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Button, Box, Modal, Checkbox } from "@mui/material";
 import axios from "axios";
-import { AppContext } from "@/contexts/AppContext";
-import { Menu } from "@/typings/types";
-import Layout from "@/components/Layout";
 
 const style = {
   position: "absolute" as "absolute",
@@ -38,6 +38,10 @@ const MenuById = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_ENDPOINT;
+
+  const url = `${apiBaseUrl}/menusPost?id=${id}`;
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -46,7 +50,7 @@ const MenuById = () => {
       price: formData.get("price"),
     };
     await axios
-      .put(`/api/menusPost?id=${id}`, {
+      .put(url, {
         menu,
       })
       .then((res) => {
@@ -67,7 +71,7 @@ const MenuById = () => {
             <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
               <img
                 className="p-8 rounded-[2.5rem]"
-                src={menu?.url}
+                src={menu?.image_url}
                 alt="product image"
               />
 

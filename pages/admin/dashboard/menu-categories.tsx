@@ -1,37 +1,35 @@
 import axios from "axios";
-import * as React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import Layout from "@/components/Layout";
+import { useContext, useState } from "react";
+import { AppContext } from "@/contexts/AppContext";
 import MenuCatSelect from "@/components/MenuCatSelect";
 
 export default function MenuCategories() {
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const menu = {
-      name: formData.get("name"),
-      prize: formData.get("prize"),
-    };
+  const { fetchData, menuCategories } = useContext(AppContext);
 
-    await axios
-      .post("/api/menus-post", {
-        menu,
-      })
-      .then((res) => {
-        console.log(res.data);
-        return res;
-      })
-      .catch((err) => {
-        return err;
-      });
+  const [name, setname] = useState("");
+
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_ENDPOINT;
+
+  const url = `${apiBaseUrl}/menuCategories`;
+
+  const handleSubmit = async () => {
+    if (!name) return console.log("This is empty...");
+
+    const res = await axios.post(url, {
+      name,
+    });
+
+    setname("");
+    fetchData();
   };
 
   return (
     <Layout>
       <Box
-        component="form"
         sx={{
           maxWidth: "20rem",
           display: "flex",
@@ -40,7 +38,6 @@ export default function MenuCategories() {
           margin: "0 auto",
           marginY: 15,
         }}
-        onSubmit={handleSubmit}
       >
         <TextField
           id="standard-basic"
@@ -48,30 +45,21 @@ export default function MenuCategories() {
           variant="standard"
           sx={{ mb: 1 }}
           color="primary"
+          value={name}
           focused
-          name="name"
+          onChange={(e) => setname(e.target.value)}
         />
-        <TextField
-          id="standard-basic"
-          label="Prize"
-          type="number"
-          variant="standard"
-          sx={{ mb: 2 }}
-          color="primary"
-          focused
-          name="prize"
-        />
-        <Button type="submit" variant="outlined">
-          Create Menus
+        <Button onClick={handleSubmit} variant="outlined">
+          Create Menu Category
         </Button>
+      </Box>
 
-        <Box
-          sx={{
-            textAlign: "center",
-          }}
-        >
-          <MenuCatSelect />
-        </Box>
+      <Box
+        sx={{
+          textAlign: "center",
+        }}
+      >
+        <MenuCatSelect />
       </Box>
     </Layout>
   );

@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
-import { AppContext } from "@/contexts/AppContext";
 import Layout from "@/components/Layout";
+import { AppContext } from "@/contexts/AppContext";
+import { Location } from "@/typings/types";
 import {
   Box,
   Button,
@@ -11,7 +12,6 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import axios from "axios";
-import { Location } from "@/typings/types";
 
 const Setting = () => {
   const { locations } = useContext(AppContext);
@@ -19,22 +19,6 @@ const Setting = () => {
   const [selectedLocation, setSelectedLocation] = useState<
     Location | undefined
   >();
-
-  // Get this data from button elements
-  // const handleClick = async (id: any) => {
-  //   await axios
-  //     .get(`/api/menusPost?id=${id}`)
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       return res;
-  //     })
-  //     .catch((err) => {
-  //       return err;
-  //     });
-
-  //   console.log("Hello ma ma ");
-  //   console.log("ma ma ko chit tl ");
-  // };
 
   const handleChange = (evt: SelectChangeEvent<number>) => {
     localStorage.setItem("locationId", String(evt.target.value));
@@ -86,16 +70,3 @@ const Setting = () => {
 };
 
 export default Setting;
-
-// -- UPDATE menus_order SET name='ABC', price=200, is_avilable='true'
-// -- WHERE id=10
-
-// -- ALTER TABLE location_menus
-// -- ADD COLUMN "is_available"
-// -- BOOLEAN DEFAULT TRUE
-
-// select menus.name,
-// price, is_available, locations.name from menus
-// inner join location_menus on location_menus.menu_id = menus.id
-// inner join locations on locations.id=location_menus.location_id
-// where locations.id=2

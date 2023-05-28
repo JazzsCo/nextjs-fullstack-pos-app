@@ -8,9 +8,7 @@ import { AppContext } from "@/contexts/AppContext";
 const CreateAddons = () => {
   const { fetchData } = useContext(AppContext);
 
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_ENDPOINT;
-
-  const url = `${apiBaseUrl}/create-addon`;
+  const url = `/api/createAddon`;
 
   const [count, setCount] = useState(0);
   const [addonCatName, setAddonCatName] = useState("");

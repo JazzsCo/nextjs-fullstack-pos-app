@@ -1,49 +1,65 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useCallback } from "react";
 import {
   Addon,
   AddonCategory,
   Location,
   MenuCategory,
   Menu,
+  AddonAddonCat,
+  MenusAddonCat,
+  MenusMenuCat,
 } from "../typings/types";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 interface AppContextType {
   menus: Menu[];
   menuCategories: MenuCategory[];
   addons: Addon[];
   addonCategories: AddonCategory[];
+  addonAddonCat: AddonAddonCat[];
+  menusMenuCat: MenusMenuCat[];
+  menusAddonCat: MenusAddonCat[];
   locations: Location[];
+  accessToken: string;
   updateData: (value: any) => void;
   fetchData: () => void;
 }
 
-const defaultContext: AppContextType = {
+export const defaultContext: AppContextType = {
   menus: [],
   menuCategories: [],
   addons: [],
   addonCategories: [],
+  menusAddonCat: [],
+  menusMenuCat: [],
+  addonAddonCat: [],
   locations: [],
+  accessToken: "",
   updateData: () => {},
   fetchData: () => {},
 };
 
 export const AppContext = createContext<AppContextType>(defaultContext);
 
-const AppProvider = (props: any) => {
+const AppProvider = ({ children }: any) => {
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_ENDPOINT;
+
+  const url = `${apiBaseUrl}/getAllData`;
+
+  const { data: session } = useSession();
+
   const [data, updateData] = useState(defaultContext);
 
-  console.log("data is", data);
+  // console.log("data is", data);
 
-  const fetchData = async () =>
+  const fetchData = async () => {
     await axios
-      .get("../apiserver/getAllData")
+      .get(url)
       .then((res) => {
-        const { menus, menuCategories, addons, addonCategories, locations } =
-          res.data;
+        const { menuCategories, addons, addonCategories, locations } = res.data;
         updateData({
           ...data,
-          menus,
           menuCategories,
           addons,
           addonCategories,
@@ -54,51 +70,15 @@ const AppProvider = (props: any) => {
       .catch((err) => {
         return err;
       });
-
-  // const getMenusByLocationId = async (id: string) => {
-  //   await axios
-  //     .get(`/api/menusPost?id=${id}`)
-  //     .then((res) => {
-  //       const { menus } = res.data;
-  //       updateData({ ...data, menus });
-  //       return res;
-  //     })
-  //     .catch((err) => {
-  //       return err;
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   console.log("location id effect");
-  //   const locationId = localStorage.getItem("locationId");
-  //   if (!locationId) {
-  //     localStorage.setItem("locationId", String(1));
-  //     return;
-  //   } else {
-  //     getMenusByLocationId(locationId);
-  //   }
-  // }, []);
+  };
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  //   const fetchData = async () => {
-  //     const response = await fetch("/api/getAllData");
-  //     const responseJson = await response.json();
-  //     const { menus, menuCategories, addons, addonCategories } = responseJson;
-  //     updateData({
-  //       ...data,
-  //       menus,
-  //       menuCategories,
-  //       addons,
-  //       addonCategories,
-  //     });
-  //   };
+    if (session) fetchData();
+  }, [session]);
 
   return (
     <AppContext.Provider value={{ ...data, updateData, fetchData }}>
-      {props.children}
+      {children}
     </AppContext.Provider>
   );
 };

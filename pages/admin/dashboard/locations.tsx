@@ -12,9 +12,7 @@ export default function MenuCategories() {
 
   const [name, setname] = useState("");
 
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_ENDPOINT;
-
-  const url = `${apiBaseUrl}/locations`;
+  const url = `/api/locations`;
 
   const handleSubmit = async () => {
     if (!name) return console.log("This is empty...");

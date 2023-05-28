@@ -7,11 +7,33 @@ export default async function handler(
 ) {
   try {
     if (req.method === "POST") {
-      const { name, price } = req.body.menu;
-      const text = `INSERT INTO menus_order(name, price) VALUES($1, $2) RETURNING *`;
-      const values = [name, price];
-      const { rows } = await pool.query(text, values);
-      res.send(rows);
+      const imageUrl = req.body.imageUrl;
+      const { name, price, locationIds, menuCatIds, addonCatIds } =
+        req.body.menu;
+
+      const menuResult = await pool.query(
+        "INSERT INTO menus(name, price, image_url) values($1, $2, $3) RETURNING *",
+        [name, price, imageUrl]
+      );
+
+      const currentMenuId = menuResult.rows[0].id;
+
+      await pool.query(
+        "INSERT INTO location_menus(location_id, menu_id) SELECT * FROM UNNEST ($1::int[], $2::int[]) RETURNING *",
+        [locationIds, Array(locationIds.length).fill(currentMenuId)]
+      );
+
+      await pool.query(
+        "INSERT INTO menus_menu_categories(menus_id, category_id) SELECT * FROM UNNEST ($1::int[], $2::int[]) RETURNING *",
+        [Array(menuCatIds.length).fill(currentMenuId), menuCatIds]
+      );
+
+      await pool.query(
+        "INSERT INTO menus_addon_categories(menus_id, addon_cat_id) SELECT * FROM UNNEST ($1::int[], $2::int[]) RETURNING *",
+        [Array(addonCatIds.length).fill(currentMenuId), addonCatIds]
+      );
+
+      res.send("ok");
     } else if (req.method === "PUT") {
       const { name, price } = req.body.menu;
       const id = req.query.id;
@@ -21,15 +43,68 @@ export default async function handler(
       res.send(rows);
     } else if (req.method === "GET") {
       const id = req.query.id;
-      const text = `SELECT menus.id, menus.name AS menu_name, url, price, is_available AS available, locations.name AS location_name FROM menus
-        INNER JOIN location_menus ON location_menus.menu_id = menus.id
-        INNER JOIN locations ON locations.id = location_menus.location_id
-        INNER JOIN menus_menu_images ON menus_menu_images.menus_id = menus.id
-        INNER JOIN menu_images ON menu_images.id = menus_menu_images.menu_images_id
-        WHERE locations.id = $1`;
-      const values = [id];
-      const menus = (await pool.query(text, values)).rows;
-      res.send({ menus });
+
+      const menus = await pool.query(
+        `SELECT menus.id, menus.name AS menu_name, price, image_url, locations.name AS location_name FROM MENUS
+        INNER JOIN location_menus on location_menus.menu_id = menus.id
+        INNER JOIN locations on locations.id = location_menus.location_id
+        WHERE locations.id = $1`,
+        [id]
+      );
+
+      const menusIds = menus.rows.map((menu) => menu.id) as number[];
+
+      const menusMenuCategoriesResult = await pool.query(
+        "select * from menus_menu_categories where menus_id = ANY($1::int[])",
+        [menusIds]
+      );
+
+      const menuCategoryIds = menusMenuCategoriesResult.rows.map(
+        (row) => row.category_id
+      ) as number[];
+
+      const menuCategoriesResult = await pool.query(
+        "select * from menu_categories where  id = ANY($1::int[])",
+        [menuCategoryIds]
+      );
+
+      const menusAddonCategoriesResult = await pool.query(
+        "select * from menus_addon_categories where menus_id = ANY($1::int[])",
+        [menusIds]
+      );
+
+      const addonCategoryIds = menusAddonCategoriesResult.rows.map(
+        (row) => row.addon_cat_id
+      ) as number[];
+
+      const addonCategoriesResult = await pool.query(
+        "select * from addon_categories where id = ANY($1::int[])",
+        [addonCategoryIds]
+      );
+
+      const addonAddonCategoriesResult = await pool.query(
+        "select * from addon_addon_categories where addon_cat_id = ANY($1::int[])",
+        [addonCategoryIds]
+      );
+
+      const addonIds = addonAddonCategoriesResult.rows.map(
+        (row) => row.addon_id
+      ) as number[];
+
+      const addonsResult = await pool.query(
+        "select * from addon where id = ANY($1::int[])",
+        [addonIds]
+      );
+
+      res.send({
+        menus: menus.rows,
+        menuCategories: menuCategoriesResult.rows,
+        addonCategories: addonCategoriesResult.rows,
+        addons: addonsResult.rows,
+        addonAddonCat: addonAddonCategoriesResult.rows,
+        menusAddonCat: menusAddonCategoriesResult.rows,
+        menusMenuCat: menusMenuCategoriesResult.rows,
+      });
     }
   } catch (err) {
     console.log("error", err);
