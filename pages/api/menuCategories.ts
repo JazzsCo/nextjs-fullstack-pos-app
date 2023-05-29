@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { pool } from "@/libs/db";
+import { pool, prisma } from "@/libs/db";
 
 export default async function handler(
   req: NextApiRequest,

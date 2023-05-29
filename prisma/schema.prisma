@@ -1,34 +1,88 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:thuyein7337@localhost:5437/test_db?schema=sample"
+  url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+model addon {
+  id          Int     @id @default(autoincrement())
+  addon_name  String
+  price       Int
+  is_avilable Boolean @default(true)
 }
 
-model Post {
+model addon_addon_categories {
+  id           Int @id @default(autoincrement())
+  addon_id     Int
+  addon_cat_id Int
+}
+
+model addon_categories {
+  id            Int     @id @default(autoincrement())
+  category_name String
+  is_required   Boolean @default(true)
+}
+
+model location_menus {
+  id           Int      @id @default(autoincrement())
+  location_id  Int
+  menu_id      Int
+  is_available Boolean? @default(true)
+}
+
+model locations {
+  id   Int    @id @default(autoincrement())
+  name String
+}
+
+model menu_categories {
+  id            Int    @id @default(autoincrement())
+  category_name String
+}
+
+model menu_images {
+  id  Int    @id @default(autoincrement())
+  url String
+}
+
+model menus {
   id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+  name      String
+  price     Int
+  image_url String?
 }
 
-model Crud {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
+model menus_addon_categories {
+  id           Int @id @default(autoincrement())
+  menus_id     Int
+  addon_cat_id Int
+}
+
+model menus_menu_categories {
+  id          Int @id @default(autoincrement())
+  menus_id    Int
+  category_id Int
+}
+
+model menus_menu_images {
+  id             Int @id @default(autoincrement())
+  menus_id       Int
+  menu_images_id Int
+}
+
+model menus_order {
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Int
+  is_avilable Boolean? @default(false)
+}
+
+model users {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String
+  password String
 }
