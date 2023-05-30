@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { pool } from "@/libs/db";
+import { pool, prisma } from "@/libs/db";
 
 export default async function handler(
   req: NextApiRequest,
@@ -8,10 +8,14 @@ export default async function handler(
   try {
     if (req.method === "POST") {
       const { name } = req.body;
-      const text = `INSERT INTO locations (name) VALUES($1) RETURNING *`;
-      const values = [name];
-      const { rows } = await pool.query(text, values);
-      res.send(rows);
+
+      const result = await prisma.locations.create({
+        data: {
+          name,
+        },
+      });
+
+      res.send(name);
     }
   } catch (err) {
     console.log("error", err);

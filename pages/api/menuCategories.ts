@@ -7,11 +7,15 @@ export default async function handler(
 ) {
   try {
     if (req.method === "POST") {
-      const { name: category_name } = req.body;
-      const text = `INSERT INTO menu_categories(category_name) VALUES($1) RETURNING *`;
-      const values = [category_name];
-      const { rows } = await pool.query(text, values);
-      res.send(rows);
+      const { name } = req.body;
+
+      const result = await prisma.menu_categories.create({
+        data: {
+          category_name: name,
+        },
+      });
+
+      res.send(result);
     }
   } catch (err) {
     console.log("error", err);
