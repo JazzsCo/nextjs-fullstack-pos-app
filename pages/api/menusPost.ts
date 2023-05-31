@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { pool } from "@/libs/db";
+import { pool, prisma } from "@/libs/db";
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,21 +11,38 @@ export default async function handler(
       const { name, price, locationIds, menuCatIds, addonCatIds } =
         req.body.menu;
 
-      const menuResult = await pool.query(
-        "INSERT INTO menus(name, price, image_url) values($1, $2, $3) RETURNING *",
-        [name, price, imageUrl]
+      const currentMenuId = (
+        await prisma.menus.create({
+          data: {
+            name,
+            price,
+            image_url: imageUrl,
+          },
+        })
+      ).id;
+
+      const menuLocationsIds = locationIds.map((id: number) => {
+        return { location_id: id, menu_id: currentMenuId };
+      });
+
+      await prisma.$transaction(
+        menuLocationsIds.map((id: any) =>
+          prisma.location_menus.create({
+            data: id,
+          })
+        )
       );
 
-      const currentMenuId = menuResult.rows[0].id;
+      const menusMenuCatIds = menuCatIds.map((id: number) => {
+        return { category_id: id, menus_id: currentMenuId };
+      });
 
-      await pool.query(
-        "INSERT INTO location_menus(location_id, menu_id) SELECT * FROM UNNEST ($1::int[], $2::int[]) RETURNING *",
-        [locationIds, Array(locationIds.length).fill(currentMenuId)]
-      );
-
-      await pool.query(
-        "INSERT INTO menus_menu_categories(menus_id, category_id) SELECT * FROM UNNEST ($1::int[], $2::int[]) RETURNING *",
-        [Array(menuCatIds.length).fill(currentMenuId), menuCatIds]
+      await prisma.$transaction(
+        menusMenuCatIds.map((id: any) =>
+          prisma.menus_menu_categories.create({
+            data: id,
+          })
+        )
       );
 
       await pool.query(
@@ -33,7 +50,19 @@ export default async function handler(
         [Array(addonCatIds.length).fill(currentMenuId), addonCatIds]
       );
 
-      res.send("ok");
+      const menuAddonCatIds = addonCatIds.map((id: number) => {
+        return { addon_cat_id: id, menus_id: currentMenuId };
+      });
+
+      await prisma.$transaction(
+        menuAddonCatIds.map((id: any) =>
+          prisma.menus_addon_categories.create({
+            data: id,
+          })
+        )
+      );
+
+      res.status(200).send("It ok");
     } else if (req.method === "PUT") {
       const { name, price } = req.body.menu;
       const id = req.query.id;
