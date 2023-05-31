@@ -15,7 +15,7 @@ export default async function handler(
         },
       });
 
-      res.send(name);
+      res.send("ok");
     }
   } catch (err) {
     console.log("error", err);
