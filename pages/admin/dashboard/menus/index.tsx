@@ -38,24 +38,24 @@ const style = {
 export default function Menus() {
   const {
     locations,
-    menus,
-    menuCategories,
-    addonCategories,
-    addons,
-    menusAddonCat,
-    menusMenuCat,
-    addonAddonCat,
+    // menus,
+    // menuCategories,
+    // addonCategories,
+    // addons,
+    // menusAddonCat,
+    // menusMenuCat,
+    // addonAddonCat,
     updateData,
     ...data
   } = useContext(AppContext);
 
-  // const [menus, setMenus] = useState<Menu[]>([]);
-  // const [menuCategories, setMenuCategories] = useState<MenuCategory[]>([]);
-  // const [addonCategories, setAddonCategories] = useState<AddonCategory[]>([]);
-  // const [addons, setAddons] = useState<Addon[]>([]);
-  // const [addonAddonCat, setAddonAddonCat] = useState<AddonAddonCat[]>([]);
-  // const [menusAddonCat, setMenusAddonCat] = useState<MenusAddonCat[]>([]);
-  // const [menusMenuCat, setMenusMenuCat] = useState<MenusMenuCat[]>([]);
+  const [menus, setMenus] = useState<Menu[]>([]);
+  const [menuCategories, setMenuCategories] = useState<MenuCategory[]>([]);
+  const [addonCategories, setAddonCategories] = useState<AddonCategory[]>([]);
+  const [addons, setAddons] = useState<Addon[]>([]);
+  const [addonAddonCat, setAddonAddonCat] = useState<AddonAddonCat[]>([]);
+  const [menusAddonCat, setMenusAddonCat] = useState<MenusAddonCat[]>([]);
+  const [menusMenuCat, setMenusMenuCat] = useState<MenusMenuCat[]>([]);
 
   console.log("menu", menus);
   console.log("menu cat", menuCategories);
@@ -85,26 +85,27 @@ export default function Menus() {
           menusMenuCat,
         } = res.data;
 
-        updateData({
-          locations,
-          menus,
-          menuCategories,
-          addonCategories,
-          addons,
-          menusAddonCat,
-          menusMenuCat,
-          addonAddonCat,
-          updateData,
-          ...data,
-        });
+        // updateData({
+        //   locations,
+        //   menus,
+        //   menuCategories,
+        //   addonCategories,
+        //   addons,
+        //   menusAddonCat,
+        //   menusMenuCat,
+        //   addonAddonCat,
+        //   updateData,
+        //   ...data,
 
-        // setMenus(menus);
-        // setMenuCategories(menuCategories);
-        // setAddonCategories(addonCategories);
-        // setAddons(addons);
-        // setAddonAddonCat(addonAddonCat);
-        // setMenusAddonCat(menusAddonCat);
-        // setMenusMenuCat(menusMenuCat);
+        // });
+
+        setMenus(menus);
+        setMenuCategories(menuCategories);
+        setAddonCategories(addonCategories);
+        setAddons(addons);
+        setAddonAddonCat(addonAddonCat);
+        setMenusAddonCat(menusAddonCat);
+        setMenusMenuCat(menusMenuCat);
         return res;
       })
       .catch((err) => {

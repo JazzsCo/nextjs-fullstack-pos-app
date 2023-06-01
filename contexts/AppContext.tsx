@@ -43,9 +43,7 @@ export const defaultContext: AppContextType = {
 export const AppContext = createContext<AppContextType>(defaultContext);
 
 const AppProvider = ({ children }: any) => {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_ENDPOINT;
-
-  const url = `${apiBaseUrl}/getAllData`;
+  const url = `/api/getAllData`;
 
   const { data: session } = useSession();
 
