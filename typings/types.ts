@@ -5,7 +5,7 @@ interface IdAndName {
 
 export interface Menu {
   id: number;
-  menu_name: string;
+  name: string;
   location_name: string;
   price: number;
   image_url: string;
