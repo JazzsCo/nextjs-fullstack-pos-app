@@ -77,7 +77,7 @@ const MenuById = () => {
 
               <div className="px-5 pb-5">
                 <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                  {menu?.menu_name}
+                  {menu?.name}
                 </h5>
 
                 <div className="flex items-center mt-2.5 mb-5">
@@ -160,7 +160,7 @@ const MenuById = () => {
                             <input
                               type="text"
                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                              defaultValue={menu?.menu_name}
+                              defaultValue={menu?.name}
                               name="name"
                               required
                             />

@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import axios from "axios";
+import { Menu } from "@/typings/types";
 
 const style = {
   position: "absolute" as "absolute",
@@ -19,33 +20,40 @@ const style = {
   p: 4,
 };
 
-export default function BasicModal({ menu, fetchData }: any) {
+interface Props {
+  menu: Menu;
+  fetchData?: () => void;
+  menusCat: (id: number) => JSX.Element;
+  addonsCat: (id: number) => JSX.Element;
+}
+
+export default function BasicModal({ menu, menusCat, addonsCat }: Props) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const id = menu?.id;
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const menu = {
-      name: formData.get("name"),
-      price: formData.get("price"),
-    };
-    await axios
-      .put(`/api/menusPost?id=${id}`, {
-        menu,
-      })
-      .then((res) => {
-        console.log(res.data);
-        return res;
-      })
-      .catch((err) => {
-        return err;
-      });
-    fetchData();
-  };
+  // const handleSubmit = async (e: any) => {
+  //   e.preventDefault();
+  //   const formData = new FormData(e.currentTarget);
+  //   const menu = {
+  //     name: formData.get("name"),
+  //     price: formData.get("price"),
+  //   };
+  //   await axios
+  //     .put(`/api/menusPost?id=${id}`, {
+  //       menu,
+  //     })
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       return res;
+  //     })
+  //     .catch((err) => {
+  //       return err;
+  //     });
+  //   fetchData();
+  // };
 
   return (
     <div>
@@ -61,40 +69,16 @@ export default function BasicModal({ menu, fetchData }: any) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-6">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Name
-              </label>
-              <input
-                type="text"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                defaultValue={menu?.name}
-                name="name"
-                required
-              />
-            </div>
-            <div className="mb-6">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Price
-              </label>
-              <input
-                type="number"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                defaultValue={menu?.price}
-                name="price"
-                required
-              />
-            </div>
-            <div className="flex justify-end">
-              <button
-                type="submit"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >
-                Update
-              </button>
-            </div>
-          </form>
+          <img
+            className="p-8 rounded-[2.5rem]"
+            src={menu.image_url}
+            alt="product image"
+          />
+
+          <h1>{menu.name}</h1>
+          <h1>{menu.price}</h1>
+          {menusCat(menu.id)}
+          {addonsCat(menu.id)}
         </Box>
       </Modal>
     </div>
