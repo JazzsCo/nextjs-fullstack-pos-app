@@ -46,7 +46,7 @@ export default function LocationsSelect({ onStateChange }: any) {
 
     const selectedIds = locations
       .filter((location) => {
-        return selectedNames.includes(location.name);
+        return selectedNames.includes(location.location_name);
       })
       .map((location) => {
         return location.id;

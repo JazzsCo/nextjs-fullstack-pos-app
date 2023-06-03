@@ -46,7 +46,7 @@ export default function AddonCatSelect({ onStateChange }: any) {
 
     const selectedIds = addonCategories
       .filter((addonCat) => {
-        return selectedNames.includes(addonCat.category_name);
+        return selectedNames.includes(addonCat.addon_cat_name);
       })
       .map((addonCat) => {
         return addonCat.id;

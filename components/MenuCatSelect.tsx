@@ -48,7 +48,7 @@ export default function MenuCatSelect({ onStateChange }: any) {
 
     const selectedIds = menuCategories
       .filter((menuCat) => {
-        return selectedNames.includes(menuCat.category_name);
+        return selectedNames.includes(menuCat.menu_cat_name);
       })
       .map((menuCat) => {
         return menuCat.id;

@@ -2,7 +2,15 @@
 /* eslint-disable @next/next/no-img-element */
 import Layout from "@/components/Layout";
 import { AppContext } from "@/contexts/AppContext";
-import { Menu } from "@/typings/types";
+import type {
+  menus as Menu,
+  menu_cats as MenuCategory,
+  addon_cats as AddonCategory,
+  addons as Addon,
+  addons_addon_cats as AddonAddonCat,
+  menus_addon_cats as MenusAddonCat,
+  menus_menu_cats as MenusMenuCat,
+} from "@prisma/client";
 import { useRouter } from "next/router";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Button, Box, Modal, Checkbox } from "@mui/material";

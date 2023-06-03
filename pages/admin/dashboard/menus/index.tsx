@@ -5,15 +5,15 @@ import { AppContext } from "@/contexts/AppContext";
 import Layout from "@/components/Layout";
 import ButtonSide from "./ButtonSide";
 import Link from "next/link";
-import {
-  Addon,
-  AddonAddonCat,
-  AddonCategory,
-  Menu,
-  MenuCategory,
-  MenusAddonCat,
-  MenusMenuCat,
-} from "@/typings/types";
+import type {
+  menus as Menu,
+  menu_cats as MenuCategory,
+  addon_cats as AddonCategory,
+  addons as Addon,
+  addons_addon_cats as AddonAddonCat,
+  menus_addon_cats as MenusAddonCat,
+  menus_menu_cats as MenusMenuCat,
+} from "@prisma/client";
 import { useRouter } from "next/router";
 
 export default function Menus() {
@@ -104,12 +104,12 @@ export default function Menus() {
 
   const menusCat = (id: number) => {
     const menuMenuCatIds = menusMenuCat
-      .filter((menuCat) => menuCat.menus_id === id)
-      .map((menuCat) => menuCat.category_id);
+      .filter((menuCat) => menuCat.menu_id === id)
+      .map((menuCat) => menuCat.menu_cat_id);
 
     const menuCatNames = menuCategories
       .filter((menuCat) => menuMenuCatIds.includes(menuCat.id))
-      .map((menuCat) => menuCat.category_name);
+      .map((menuCat) => menuCat.menu_cat_name);
 
     return (
       <div>
@@ -122,12 +122,12 @@ export default function Menus() {
 
   const addonsCat = (id: number) => {
     const menuAddonCatIds = menusAddonCat
-      .filter((addonCat) => addonCat.menus_id === id)
+      .filter((addonCat) => addonCat.menu_id === id)
       .map((addonCat) => addonCat.addon_cat_id);
 
     const addonCatNames = addonCategories
       .filter((addonCat) => menuAddonCatIds.includes(addonCat.id))
-      .map((addonCat) => addonCat.category_name);
+      .map((addonCat) => addonCat.addon_cat_name);
 
     return (
       <div>
