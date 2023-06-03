@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import { pool, prisma } from "@/libs/db";
+import { prisma } from "@/libs/db";
 
 export default async function handler(
   req: NextApiRequest,
@@ -8,11 +8,11 @@ export default async function handler(
 ) {
   try {
     if (req.method === "GET") {
-      const menuCategories = await prisma.menu_categories.findMany();
+      const menuCategories = await prisma.menu_cats.findMany();
 
-      const addons = await prisma.addon.findMany();
+      const addons = await prisma.addons.findMany();
 
-      const addonCategories = await prisma.addon_categories.findMany();
+      const addonCategories = await prisma.addon_cats.findMany();
 
       const locations = await prisma.locations.findMany();
 

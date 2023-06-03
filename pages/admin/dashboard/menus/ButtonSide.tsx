@@ -1,24 +1,12 @@
-import React, { useContext, useState } from "react";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import axios from "axios";
+import { Fragment, useState } from "react";
+import {
+  Button,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+} from "@material-tailwind/react";
 import { Menu } from "@/typings/types";
-
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  borderRadius: 2,
-  borderColor: "white",
-  p: 4,
-};
 
 interface Props {
   menu: Menu;
@@ -29,8 +17,8 @@ interface Props {
 
 export default function BasicModal({ menu, menusCat, addonsCat }: Props) {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+
+  const handleOpen = () => setOpen(!open);
 
   const id = menu?.id;
 
@@ -56,19 +44,13 @@ export default function BasicModal({ menu, menusCat, addonsCat }: Props) {
   // };
 
   return (
-    <div>
-      <Button variant="outlined" onClick={handleOpen}>
-        Update Menu
+    <Fragment>
+      <Button onClick={handleOpen} variant="gradient">
+        Menu Info
       </Button>
-
-      <Modal
-        sx={{}}
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
+      <Dialog open={open} handler={handleOpen}>
+        <DialogHeader>Its a simple dialog.</DialogHeader>
+        <DialogBody divider>
           <img
             className="p-8 rounded-[2.5rem]"
             src={menu.image_url}
@@ -79,8 +61,21 @@ export default function BasicModal({ menu, menusCat, addonsCat }: Props) {
           <h1>{menu.price}</h1>
           {menusCat(menu.id)}
           {addonsCat(menu.id)}
-        </Box>
-      </Modal>
-    </div>
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            variant="text"
+            color="red"
+            onClick={handleOpen}
+            className="mr-1"
+          >
+            <span>Cancel</span>
+          </Button>
+          <Button variant="gradient" color="green" onClick={handleOpen}>
+            <span>Confirm</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
+    </Fragment>
   );
 }

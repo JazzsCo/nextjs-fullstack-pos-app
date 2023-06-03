@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { pool, prisma } from "@/libs/db";
+import { prisma } from "@/libs/db";
 
 export default async function handler(
   req: NextApiRequest,
@@ -27,7 +27,7 @@ export default async function handler(
 
       await prisma.$transaction(
         menuLocationsIds.map((id: any) =>
-          prisma.location_menus.create({
+          prisma.menus_locations.create({
             data: id,
           })
         )
@@ -39,7 +39,7 @@ export default async function handler(
 
       await prisma.$transaction(
         menusMenuCatIds.map((id: any) =>
-          prisma.menus_menu_categories.create({
+          prisma.menus_menu_cats.create({
             data: id,
           })
         )
@@ -51,7 +51,7 @@ export default async function handler(
 
       await prisma.$transaction(
         menuAddonCatIds.map((id: any) =>
-          prisma.menus_addon_categories.create({
+          prisma.menus_addon_cats.create({
             data: id,
           })
         )
@@ -59,17 +59,17 @@ export default async function handler(
 
       res.status(200).send("It ok");
     } else if (req.method === "PUT") {
-      const { name, price } = req.body.menu;
-      const id = req.query.id;
-      const text = `UPDATE menus SET name = $1, price = $2 WHERE id = $3 RETURNING *`;
-      const values = [name, price, id];
-      const { rows } = await pool.query(text, values);
-      res.send(rows);
+      // const { name, price } = req.body.menu;
+      // const id = req.query.id;
+      // const text = `UPDATE menus SET name = $1, price = $2 WHERE id = $3 RETURNING *`;
+      // const values = [name, price, id];
+      // const { rows } = await pool.query(text, values);
+      // res.send(rows);
     } else if (req.method === "GET") {
       const id = req.query.id;
 
       const menusIds = (
-        await prisma.location_menus.findMany({
+        await prisma.menus_locations.findMany({
           where: {
             location_id: Number(id),
           },
@@ -84,17 +84,17 @@ export default async function handler(
         },
       });
 
-      const menusMenuCat = await prisma.menus_menu_categories.findMany({
+      const menusMenuCat = await prisma.menus_menu_cats.findMany({
         where: {
-          menus_id: {
+          menu_id: {
             in: menusIds,
           },
         },
       });
 
-      const menuCategoriesIds = menusMenuCat.map((item) => item.category_id);
+      const menuCategoriesIds = menusMenuCat.map((item) => item.menu_cat_id);
 
-      const menuCategories = await prisma.menu_categories.findMany({
+      const menuCategories = await prisma.menu_cats.findMany({
         where: {
           id: {
             in: menuCategoriesIds,
@@ -102,9 +102,9 @@ export default async function handler(
         },
       });
 
-      const menusAddonCat = await prisma.menus_addon_categories.findMany({
+      const menusAddonCat = await prisma.menus_addon_cats.findMany({
         where: {
-          menus_id: {
+          menu_id: {
             in: menusIds,
           },
         },
@@ -112,7 +112,7 @@ export default async function handler(
 
       const addonCategoriesIds = menusAddonCat.map((item) => item.addon_cat_id);
 
-      const addonCategories = await prisma.addon_categories.findMany({
+      const addonCategories = await prisma.addon_cats.findMany({
         where: {
           id: {
             in: addonCategoriesIds,
@@ -120,7 +120,7 @@ export default async function handler(
         },
       });
 
-      const addonAddonCat = await prisma.addon_addon_categories.findMany({
+      const addonAddonCat = await prisma.addons_addon_cats.findMany({
         where: {
           addon_cat_id: {
             in: addonCategoriesIds,
@@ -130,7 +130,7 @@ export default async function handler(
 
       const addonIds = addonAddonCat.map((item) => item.addon_id);
 
-      const addons = await prisma.addon.findMany({
+      const addons = await prisma.addons.findMany({
         where: {
           id: {
             in: addonIds,

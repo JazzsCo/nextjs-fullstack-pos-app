@@ -1,4 +1,3 @@
-import { Box } from "@mui/material";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 
@@ -16,13 +15,13 @@ const FileDropZone = ({ onFileSelected }: Props) => {
   });
 
   return (
-    <Box
+    <div
       {...getRootProps()}
-      sx={{
+      style={{
         borderRadius: 4,
         border: "3px dotted lightgray",
         textAlign: "center",
-        p: 1,
+        padding: 1,
         cursor: "pointer",
       }}
     >
@@ -32,7 +31,7 @@ const FileDropZone = ({ onFileSelected }: Props) => {
       ) : (
         <p>Drag n drop some files here, or click to select files</p>
       )}
-    </Box>
+    </div>
   );
 };
 

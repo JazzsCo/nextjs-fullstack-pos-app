@@ -1,5 +1,5 @@
 import Layout from "@/components/Layout";
-import Button from "@mui/material/Button";
+import { Button } from "@material-tailwind/react";
 import Link from "next/link";
 
 export default function Home() {

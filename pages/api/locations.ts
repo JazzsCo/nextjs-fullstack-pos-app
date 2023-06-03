@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { pool, prisma } from "@/libs/db";
+import { prisma } from "@/libs/db";
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,7 +11,7 @@ export default async function handler(
 
       const result = await prisma.locations.create({
         data: {
-          name,
+          location_name: name,
         },
       });
 

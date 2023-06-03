@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useCallback } from "react";
-import {
+import type {
   Addon,
   AddonCategory,
   Location,
@@ -11,6 +11,15 @@ import {
 } from "../typings/types";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+// import type {
+//   menus as Menu,
+//   menu_categories as MenuCategory,
+//   addon_categories as AddonCategory,
+//   addon as Addon,
+//   addon_addon_categories as AddonAddonCat,
+//   menus_addon_categories as MenusAddonCat,
+//   menus_menu_categories as MenusMenuCat,
+// } from "@prisma/client";
 
 interface AppContextType {
   menus: Menu[];

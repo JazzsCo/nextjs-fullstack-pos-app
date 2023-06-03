@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { pool, prisma } from "@/libs/db";
+import { prisma } from "@/libs/db";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,9 +9,9 @@ export default async function handler(
     if (req.method === "POST") {
       const { name } = req.body;
 
-      const result = await prisma.menu_categories.create({
+      const result = await prisma.menu_cats.create({
         data: {
-          category_name: name,
+          menu_cat_name: name,
         },
       });
 

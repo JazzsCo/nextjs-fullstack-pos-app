@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import { pool, prisma } from "@/libs/db";
+import { prisma } from "@/libs/db";
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,9 +15,9 @@ export default async function handler(
       console.log(addonPrice);
 
       const addonCatResultId = (
-        await prisma.addon_categories.create({
+        await prisma.addon_cats.create({
           data: {
-            category_name: addonCatName,
+            cat_name: addonCatName,
           },
         })
       ).id;
@@ -30,7 +30,7 @@ export default async function handler(
       const addonsResultIds = (
         await prisma.$transaction(
           addonsResult.map((addon: any) =>
-            prisma.addon.create({
+            prisma.addons.create({
               data: addon,
             })
           )
@@ -43,7 +43,7 @@ export default async function handler(
 
       await prisma.$transaction(
         resultIds.map((id: any) =>
-          prisma.addon_addon_categories.create({
+          prisma.addons_addon_cats.create({
             data: id,
           })
         )

@@ -7,82 +7,87 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model addon {
-  id          Int     @id @default(autoincrement())
-  addon_name  String
-  price       Int
-  is_avilable Boolean @default(true)
+model addon_cats {
+  id                             Int                              @id @default(autoincrement())
+  addon_cat_name                 String
+  is_required                    Boolean                          @default(true)
+  addons_addon_cats              addons_addon_cats[]
+  menu_cats_addon_cats_locations menu_cats_addon_cats_locations[]
+  menus_addon_cats               menus_addon_cats[]
 }
 
-model addon_addon_categories {
-  id           Int @id @default(autoincrement())
+model addons {
+  id                Int                 @id @default(autoincrement())
+  addon_name        String
+  price             Int
+  is_available      Boolean             @default(true)
+  addons_addon_cats addons_addon_cats[]
+}
+
+model addons_addon_cats {
+  id           Int        @id @default(autoincrement())
   addon_id     Int
   addon_cat_id Int
-}
-
-model addon_categories {
-  id            Int     @id @default(autoincrement())
-  category_name String
-  is_required   Boolean @default(true)
-}
-
-model location_menus {
-  id           Int      @id @default(autoincrement())
-  location_id  Int
-  menu_id      Int
-  is_available Boolean? @default(true)
+  addon_cats   addon_cats @relation(fields: [addon_cat_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  addons       addons     @relation(fields: [addon_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model locations {
-  id   Int    @id @default(autoincrement())
-  name String
+  id                             Int                              @id @default(autoincrement())
+  location_name                  String
+  address                        String?
+  menu_cats_addon_cats_locations menu_cats_addon_cats_locations[]
+  menus_locations                menus_locations[]
 }
 
-model menu_categories {
-  id            Int    @id @default(autoincrement())
-  category_name String
+model menu_cats {
+  id                             Int                              @id @default(autoincrement())
+  menu_cat_name                  String
+  menu_cats_addon_cats_locations menu_cats_addon_cats_locations[]
+  menus_menu_cats                menus_menu_cats[]
 }
 
-model menu_images {
-  id  Int    @id @default(autoincrement())
-  url String
+model menu_cats_addon_cats_locations {
+  id           Int         @id @default(autoincrement())
+  menu_cat_id  Int?
+  addon_cat_id Int?
+  location_id  Int
+  addon_cats   addon_cats? @relation(fields: [addon_cat_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  locations    locations   @relation(fields: [location_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  menu_cats    menu_cats?  @relation(fields: [menu_cat_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model menus {
-  id        Int     @id @default(autoincrement())
-  name      String
-  price     Int
-  image_url String?
+  id               Int                @id @default(autoincrement())
+  name             String
+  price            Int
+  image_url        String
+  menus_addon_cats menus_addon_cats[]
+  menus_locations  menus_locations[]
+  menus_menu_cats  menus_menu_cats[]
 }
 
-model menus_addon_categories {
-  id           Int @id @default(autoincrement())
-  menus_id     Int
+model menus_addon_cats {
+  id           Int        @id @default(autoincrement())
+  menu_id      Int
   addon_cat_id Int
+  addon_cats   addon_cats @relation(fields: [addon_cat_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  menus        menus      @relation(fields: [menu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model menus_menu_categories {
-  id          Int @id @default(autoincrement())
-  menus_id    Int
-  category_id Int
+model menus_locations {
+  id           Int       @id @default(autoincrement())
+  location_id  Int
+  menu_id      Int
+  is_available Boolean   @default(true)
+  locations    locations @relation(fields: [location_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  menus        menus     @relation(fields: [menu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model menus_menu_images {
-  id             Int @id @default(autoincrement())
-  menus_id       Int
-  menu_images_id Int
-}
-
-model menus_order {
-  id          Int      @id @default(autoincrement())
-  name        String
-  price       Int
-  is_avilable Boolean? @default(false)
-}
-
-model users {
-  id       Int    @id @default(autoincrement())
-  name     String
-  email    String
-  password String
+model menus_menu_cats {
+  id          Int       @id @default(autoincrement())
+  menu_id     Int
+  menu_cat_id Int
+  menu_cats   menu_cats @relation(fields: [menu_cat_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  menus       menus     @relation(fields: [menu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

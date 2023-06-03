@@ -1,10 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import axios from "axios";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import InfoIcon from "@mui/icons-material/Info";
-import { Button, Modal } from "@mui/material";
-import Chip from "@mui/material/Chip";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { AppContext } from "@/contexts/AppContext";
 import Layout from "@/components/Layout";

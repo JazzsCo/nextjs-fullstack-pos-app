@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { pool } from "@/libs/db";
 
 export default async function handler(
   req: NextApiRequest,
@@ -7,11 +6,11 @@ export default async function handler(
 ) {
   try {
     if (req.method === "DELETE") {
-      const id = req.query.id;
-      const text = `DELETE FROM menus_order WHERE id = ($1) RETURNING *`;
-      const values = [id];
-      const { rows } = await pool.query(text, values);
-      res.send(rows);
+      // const id = req.query.id;
+      // const text = `DELETE FROM menus_order WHERE id = ($1) RETURNING *`;
+      // const values = [id];
+      // const { rows } = await pool.query(text, values);
+      // res.send(rows);
     }
   } catch (err) {
     console.log("error", err);
