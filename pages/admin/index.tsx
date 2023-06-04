@@ -1,7 +1,33 @@
 import Layout from "@/components/Layout";
-import React, { useEffect } from "react";
+import { AppContext } from "@/contexts/AppContext";
+import axios from "axios";
+import React, { useContext, useEffect } from "react";
 
 const AdminHome = () => {
+  const { locations } = useContext(AppContext);
+
+  const getDataByLocationId = async (id: number) => {
+    const url = `/api/getAllData?id=${id}`;
+
+    const res = await axios.get(url);
+    console.log(res.data);
+  };
+
+  useEffect(() => {
+    if (locations.length) {
+      const locationId = localStorage.getItem("locationId");
+
+      if (!locationId) {
+        const currentLocationId = locations[0].id;
+        localStorage.setItem("locationId", String(currentLocationId));
+        getDataByLocationId(currentLocationId);
+      } else {
+        // main point ***
+        getDataByLocationId(Number(locationId));
+      }
+    }
+  }, [locations]);
+
   return <Layout />;
 };
 

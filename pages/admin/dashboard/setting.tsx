@@ -1,16 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import { AppContext } from "@/contexts/AppContext";
-import type {
-  menus as Menu,
-  menu_cats as MenuCategory,
-  addon_cats as AddonCategory,
-  addons as Addon,
-  addons_addon_cats as AddonAddonCat,
-  menus_addon_cats as MenusAddonCat,
-  menus_menu_cats as MenusMenuCat,
-  locations as Location,
-} from "@prisma/client";
+import type { locations as Location } from "@prisma/client";
 import {
   Box,
   Button,

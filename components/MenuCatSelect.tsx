@@ -8,6 +8,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useContext } from "react";
 import { title } from "process";
 import { AppContext } from "../contexts/AppContext";
+import { menu_cats } from "@prisma/client";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -71,13 +72,13 @@ export default function MenuCatSelect({ onStateChange }: any) {
           MenuProps={MenuProps}
         >
           {menuCategories &&
-            menuCategories.map((menuCat: any) => (
+            menuCategories.map((menuCat: menu_cats) => (
               <MenuItem
                 key={menuCat.id}
-                value={menuCat.category_name}
-                style={getStyles(menuCat.category_name, personName, theme)}
+                value={menuCat.menu_cat_name}
+                style={getStyles(menuCat.menu_cat_name, personName, theme)}
               >
-                {menuCat.category_name}
+                {menuCat.menu_cat_name}
               </MenuItem>
             ))}
         </Select>

@@ -16,6 +16,21 @@ export default async function handler(
       });
 
       res.send("ok");
+    } else if (req.method === "GET") {
+      // const menuCategories = await prisma.menu_cats.findMany();
+
+      // const addons = await prisma.addons.findMany();
+
+      // const addonCategories = await prisma.addon_cats.findMany();
+
+      const locations = await prisma.locations.findMany();
+
+      res.send({
+        // menuCategories,
+        // addons,
+        // addonCategories,
+        locations,
+      });
     }
   } catch (err) {
     console.log("error", err);

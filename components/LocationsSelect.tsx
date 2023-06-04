@@ -72,10 +72,10 @@ export default function LocationsSelect({ onStateChange }: any) {
             locations.map((location: any) => (
               <MenuItem
                 key={location.id}
-                value={location.name}
-                style={getStyles(location.name, personName, theme)}
+                value={location.location_name}
+                style={getStyles(location.location_name, personName, theme)}
               >
-                {location.name}
+                {location.location_name}
               </MenuItem>
             ))}
         </Select>

@@ -6,22 +6,31 @@ import Layout from "@/components/Layout";
 import { useContext, useState } from "react";
 import { AppContext } from "@/contexts/AppContext";
 import MenuCatSelect from "@/components/MenuCatSelect";
+import LocationsSelect from "@/components/LocationsSelect";
 
 export default function MenuCategories() {
   const { fetchData, menuCategories } = useContext(AppContext);
 
-  const [name, setname] = useState("");
+  const [menuCat, setMenuCat] = useState({
+    name: "",
+    locationIds: [],
+  });
+
+  const locationStateChange = (childStateSelectedLocationIds: any) => {
+    setMenuCat({ ...menuCat, locationIds: childStateSelectedLocationIds });
+  };
 
   const url = `/api/menuCategories`;
 
   const handleSubmit = async () => {
-    if (!name) return console.log("This is empty...");
-
     const res = await axios.post(url, {
-      name,
+      menuCat,
     });
 
-    setname("");
+    setMenuCat({
+      name: "",
+      locationIds: [],
+    });
     fetchData();
   };
 
@@ -45,8 +54,9 @@ export default function MenuCategories() {
           color="primary"
           value={name}
           focused
-          onChange={(e) => setname(e.target.value)}
+          onChange={(e) => setMenuCat({ ...menuCat, name: e.target.value })}
         />
+        <LocationsSelect onStateChange={locationStateChange} />
         <Button onClick={handleSubmit} variant="outlined">
           Create Menu Category
         </Button>

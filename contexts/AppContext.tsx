@@ -1,14 +1,4 @@
 import { createContext, useState, useEffect, useCallback } from "react";
-// import type {
-//   Addon,
-//   AddonCategory,
-//   Location,
-//   MenuCategory,
-//   Menu,
-//   AddonAddonCat,
-//   MenusAddonCat,
-//   MenusMenuCat,
-// } from "../typings/types";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import type {
@@ -53,7 +43,7 @@ export const defaultContext: AppContextType = {
 export const AppContext = createContext<AppContextType>(defaultContext);
 
 const AppProvider = ({ children }: any) => {
-  const url = `/api/getAllData`;
+  const url = `/api/locations`;
 
   const { data: session } = useSession();
 
@@ -68,9 +58,6 @@ const AppProvider = ({ children }: any) => {
         const { menuCategories, addons, addonCategories, locations } = res.data;
         updateData({
           ...data,
-          menuCategories,
-          addons,
-          addonCategories,
           locations,
         });
         return res;
