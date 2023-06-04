@@ -10,21 +10,21 @@ export default async function handler(
     if (req.method === "GET") {
       const id = req.query.id;
 
-      const menusIds = (
-        await prisma.menus_locations.findMany({
-          where: {
-            location_id: Number(id),
-          },
-        })
-      ).map((item) => item.menu_id);
+      // const menusIds = (
+      //   await prisma.menus_locations.findMany({
+      //     where: {
+      //       location_id: Number(id),
+      //     },
+      //   })
+      // ).map((item) => item.menu_id);
 
-      const menus = await prisma.menus.findMany({
-        where: {
-          id: {
-            in: menusIds,
-          },
-        },
-      });
+      // const menus = await prisma.menus.findMany({
+      //   where: {
+      //     id: {
+      //       in: menusIds,
+      //     },
+      //   },
+      // });
 
       const menuCatAddonCatLocation =
         await prisma.menu_cats_addon_cats_locations.findMany({
@@ -33,17 +33,29 @@ export default async function handler(
           },
         });
 
-      const menuCatIds = menuCatAddonCatLocation.map(
-        (item) => item.menu_cat_id
-      ) as Number[];
+      const menuCatIds = menuCatAddonCatLocation
+        .map((item) => item.menu_cat_id)
+        .filter((item) => typeof item === "number") as number[];
 
-      console.log("menuCatIds", menuCatIds);
+      const addonCatIds = menuCatAddonCatLocation
+        .map((item) => item.addon_cat_id)
+        .filter((item) => typeof item === "number") as number[];
 
-      const addonCatIds = menuCatAddonCatLocation.map(
-        (item) => item.addon_cat_id
-      ) as Number[];
+      const menuCategories = await prisma.menu_cats.findMany({
+        where: {
+          id: {
+            in: menuCatIds,
+          },
+        },
+      });
 
-      console.log("addonCatIds", addonCatIds);
+      const addonCategories = await prisma.addon_cats.findMany({
+        where: {
+          id: {
+            in: addonCatIds,
+          },
+        },
+      });
 
       //  const menusMenuCat = await prisma.menus_menu_cats.findMany({
       //    where: {
@@ -101,7 +113,7 @@ export default async function handler(
       //    },
       //  });
 
-      res.send("ok");
+      res.status(200).send({ menuCategories, addonCategories });
     }
   } catch (error) {
     console.log("error", error);

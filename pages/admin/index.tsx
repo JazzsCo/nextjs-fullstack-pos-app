@@ -4,13 +4,16 @@ import axios from "axios";
 import React, { useContext, useEffect } from "react";
 
 const AdminHome = () => {
-  const { locations } = useContext(AppContext);
+  const { locations, updateData, ...data } = useContext(AppContext);
 
   const getDataByLocationId = async (id: number) => {
     const url = `/api/getAllData?id=${id}`;
 
     const res = await axios.get(url);
-    console.log(res.data);
+    console.log("get data by location id : ", res);
+    const { menuCategories, addonCategories } = res.data;
+
+    updateData({ ...data, menuCategories, addonCategories });
   };
 
   useEffect(() => {
