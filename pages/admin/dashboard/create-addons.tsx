@@ -4,6 +4,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import React, { useContext, useState } from "react";
 import axios from "axios";
 import { AppContext } from "@/contexts/AppContext";
+import LocationsSelect from "@/components/LocationsSelect";
 
 const CreateAddons = () => {
   const { fetchData } = useContext(AppContext);
@@ -11,7 +12,10 @@ const CreateAddons = () => {
   const url = `/api/createAddon`;
 
   const [count, setCount] = useState(0);
-  const [addonCatName, setAddonCatName] = useState("");
+  const [addonCatName, setAddonCatName] = useState({
+    name: "",
+    locationIds: [],
+  });
   const [addonName, setAddonName] = useState<String[]>([]);
   const [addonPrice, setAddonPrice] = useState<Number[]>([]);
 
@@ -35,6 +39,13 @@ const CreateAddons = () => {
     setAddonPrice(updatedValues);
   };
 
+  const locationStateChange = (childStateSelectedLocationIds: any) => {
+    setAddonCatName({
+      ...addonCatName,
+      locationIds: childStateSelectedLocationIds,
+    });
+  };
+
   const createAddon = async () => {
     const res = await axios.post(url, {
       addonCatName,
@@ -44,7 +55,10 @@ const CreateAddons = () => {
 
     console.log(res);
 
-    setAddonCatName("");
+    setAddonCatName({
+      name: "",
+      locationIds: [],
+    });
     setAddonName([]);
     setAddonPrice([]);
     setCount(0);
@@ -73,8 +87,12 @@ const CreateAddons = () => {
             color="primary"
             focused
             value={addonCatName}
-            onChange={(e) => setAddonCatName(e.target.value)}
+            onChange={(e) =>
+              setAddonCatName({ ...addonCatName, name: e.target.value })
+            }
           />
+
+          <LocationsSelect onStateChange={locationStateChange} />
 
           {addonIds &&
             addonIds.map((e, index) => (

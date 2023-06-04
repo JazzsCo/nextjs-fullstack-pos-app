@@ -8,19 +8,31 @@ export default async function handler(
 ) {
   try {
     if (req.method === "POST") {
-      const { addonCatName, addonName, addonPrice } = req.body;
+      const { addonName, addonPrice } = req.body;
+      const { name, locationIds } = req.body.addonCatName;
 
-      console.log(addonCatName);
       console.log(addonName);
       console.log(addonPrice);
 
       const addonCatResultId = (
         await prisma.addon_cats.create({
           data: {
-            cat_name: addonCatName,
+            addon_cat_name: name,
           },
         })
       ).id;
+
+      const addonCatLocationsIds = locationIds.map((id: number) => {
+        return { location_id: id, addon_cat_id: addonCatResultId };
+      });
+
+      await prisma.$transaction(
+        addonCatLocationsIds.map((id: any) =>
+          prisma.menu_cats_addon_cats_locations.create({
+            data: id,
+          })
+        )
+      );
 
       // output addonsResult ==> [{addon_name: more rice, price: 333}] just like this
       const addonsResult = addonName.map((name: string, index: number) => {

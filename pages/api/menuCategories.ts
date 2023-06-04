@@ -7,15 +7,29 @@ export default async function handler(
 ) {
   try {
     if (req.method === "POST") {
-      const { name } = req.body;
+      const { name, locationIds } = req.body.menuCat;
 
-      const result = await prisma.menu_cats.create({
-        data: {
-          menu_cat_name: name,
-        },
+      const menuCatId = (
+        await prisma.menu_cats.create({
+          data: {
+            menu_cat_name: name,
+          },
+        })
+      ).id;
+
+      const menuCatLocationsIds = locationIds.map((id: number) => {
+        return { location_id: id, menu_cat_id: menuCatId };
       });
 
-      res.send(result);
+      await prisma.$transaction(
+        menuCatLocationsIds.map((id: any) =>
+          prisma.menu_cats_addon_cats_locations.create({
+            data: id,
+          })
+        )
+      );
+
+      res.status(200).send("Its ok");
     }
   } catch (err) {
     console.log("error", err);
