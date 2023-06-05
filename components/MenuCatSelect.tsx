@@ -8,7 +8,12 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useContext } from "react";
 import { title } from "process";
 import { AppContext } from "../contexts/AppContext";
-import { menu_cats } from "@prisma/client";
+import { menu_cats as MenuCategories } from "@prisma/client";
+
+interface Props {
+  onStateChange?: (childStateSelectedMenuCatIds: any) => void;
+  menuCategories?: MenuCategories[];
+}
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -30,8 +35,11 @@ function getStyles(name: string, personName: string[], theme: Theme) {
   };
 }
 
-export default function MenuCatSelect({ onStateChange }: any) {
-  const { menuCategories } = useContext(AppContext);
+export default function MenuCatSelect({
+  onStateChange,
+  menuCategories,
+}: Props) {
+  // const { menuCategories } = useContext(AppContext);
 
   const theme = useTheme();
   const [personName, setPersonName] = React.useState<string[]>([]);
@@ -47,15 +55,17 @@ export default function MenuCatSelect({ onStateChange }: any) {
 
     const selectedNames = event.target.value as string[];
 
-    const selectedIds = menuCategories
-      .filter((menuCat) => {
-        return selectedNames.includes(menuCat.menu_cat_name);
-      })
-      .map((menuCat) => {
-        return menuCat.id;
-      });
+    const selectedIds =
+      menuCategories &&
+      menuCategories
+        .filter((menuCat) => {
+          return selectedNames.includes(menuCat.menu_cat_name);
+        })
+        .map((menuCat) => {
+          return menuCat.id;
+        });
 
-    onStateChange(selectedIds);
+    onStateChange && onStateChange(selectedIds);
   };
 
   return (
@@ -72,7 +82,7 @@ export default function MenuCatSelect({ onStateChange }: any) {
           MenuProps={MenuProps}
         >
           {menuCategories &&
-            menuCategories.map((menuCat: menu_cats) => (
+            menuCategories.map((menuCat: MenuCategories) => (
               <MenuItem
                 key={menuCat.id}
                 value={menuCat.menu_cat_name}
