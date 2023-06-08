@@ -39,8 +39,6 @@ export default function MenuCatSelect({
   onStateChange,
   menuCategories,
 }: Props) {
-  // const { menuCategories } = useContext(AppContext);
-
   const theme = useTheme();
   const [personName, setPersonName] = React.useState<string[]>([]);
 

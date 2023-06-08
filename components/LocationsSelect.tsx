@@ -8,6 +8,11 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { AppContext } from "../contexts/AppContext";
 import { useContext, useState } from "react";
 
+interface Props {
+  onStateChange?: (childStateSelectedMenuCatIds: any) => void;
+  // menuCategories?: MenuCategories[];
+}
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -28,7 +33,7 @@ function getStyles(name: string, personName: string[], theme: Theme) {
   };
 }
 
-export default function LocationsSelect({ onStateChange }: any) {
+export default function LocationsSelect({ onStateChange }: Props) {
   const { locations } = useContext(AppContext);
   const theme = useTheme();
   const [personName, setPersonName] = React.useState<string[]>([]);
@@ -52,7 +57,7 @@ export default function LocationsSelect({ onStateChange }: any) {
         return location.id;
       });
 
-    onStateChange(selectedIds);
+    onStateChange && onStateChange(selectedIds);
   };
 
   return (

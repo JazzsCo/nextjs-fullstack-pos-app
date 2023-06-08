@@ -5,10 +5,33 @@ import LocationsSelect from "./LocationsSelect";
 import axios from "axios";
 import AddonCatSelect from "./AddonCatSelect";
 import MenuCatSelect from "./MenuCatSelect";
+import {
+  menu_cats,
+  menus_menu_cats_addon_cats_locations,
+} from "@prisma/client";
 
 export default function MunuForm() {
-  const { menuCategories, addonCategories, addons, fetchData } =
-    useContext(AppContext);
+  const locationId = Number(localStorage.getItem("locationId"));
+
+  const {
+    menuCategories,
+    addonCategories,
+    addons,
+    menusMenuCatAddonCatLocation,
+    fetchData,
+  } = useContext(AppContext);
+
+  const menuCatId = menusMenuCatAddonCatLocation
+    .filter(
+      (item: menus_menu_cats_addon_cats_locations) =>
+        item.location_id === locationId
+    )
+    .map((item: menus_menu_cats_addon_cats_locations) => item.menu_cat_id)
+    .filter((item: any) => typeof item === "number") as number[];
+
+  const menuCatByLocId = menuCategories.filter((item: menu_cats) =>
+    menuCatId.includes(item.id)
+  );
 
   const imageEndPoint = `/api/image`;
   const createMenuEndPoint = `/api/menusPost`;
@@ -160,7 +183,10 @@ export default function MunuForm() {
             <div className="space-y-3">
               <LocationsSelect onStateChange={locationStateChange} />
 
-              <MenuCatSelect onStateChange={menuCatStateChange} />
+              <MenuCatSelect
+                menuCategories={menuCatByLocId}
+                onStateChange={menuCatStateChange}
+              />
 
               <AddonCatSelect onStateChange={addonCatStateChange} />
 

@@ -7,8 +7,8 @@ import type {
   addon_cats as AddonCategory,
   addons as Addon,
   addons_addon_cats as AddonAddonCat,
-  menus_addon_cats as MenusAddonCat,
-  menus_menu_cats as MenusMenuCat,
+  menus_menu_cats_addon_cats_locations as MenusMenuCatAddonCatLocation,
+  // menus_menu_cats as MenusMenuCat,
   locations as Location,
 } from "@prisma/client";
 
@@ -18,9 +18,8 @@ interface AppContextType {
   addons: Addon[];
   addonCategories: AddonCategory[];
   addonAddonCat: AddonAddonCat[];
-  menusMenuCat: MenusMenuCat[];
-  menusAddonCat: MenusAddonCat[];
   locations: Location[];
+  menusMenuCatAddonCatLocation: MenusMenuCatAddonCatLocation[];
   accessToken: string;
   updateData: (value: any) => void;
   fetchData: () => void;
@@ -31,10 +30,9 @@ export const defaultContext: AppContextType = {
   menuCategories: [],
   addons: [],
   addonCategories: [],
-  menusAddonCat: [],
-  menusMenuCat: [],
   addonAddonCat: [],
   locations: [],
+  menusMenuCatAddonCatLocation: [],
   accessToken: "",
   updateData: () => {},
   fetchData: () => {},
@@ -43,28 +41,33 @@ export const defaultContext: AppContextType = {
 export const AppContext = createContext<AppContextType>(defaultContext);
 
 const AppProvider = ({ children }: any) => {
-  const url = `/api/locations`;
-
   const { data: session } = useSession();
 
   const [data, updateData] = useState(defaultContext);
 
-  // console.log("data is", data);
+  console.log("data is", data);
 
   const fetchData = async () => {
-    await axios
-      .get(url)
-      .then((res) => {
-        const { locations } = res.data;
-        updateData({
-          ...data,
-          locations,
-        });
-        return res;
-      })
-      .catch((err) => {
-        return err;
-      });
+    const res = await axios.get(`/api/getAllData`);
+
+    const {
+      menus,
+      menuCategories,
+      addonCategories,
+      addons,
+      menusMenuCatAddonCatLocation,
+      locations,
+    } = res.data;
+
+    updateData({
+      ...data,
+      menus,
+      menuCategories,
+      addonCategories,
+      addons,
+      menusMenuCatAddonCatLocation,
+      locations,
+    });
   };
 
   useEffect(() => {

@@ -1,185 +1,84 @@
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import { useState } from "react";
-import LunchDiningIcon from "@mui/icons-material/LunchDining";
-import LocalDiningIcon from "@mui/icons-material/LocalDining";
-import LocalMallIcon from "@mui/icons-material/LocalMall";
-import FastfoodIcon from "@mui/icons-material/Fastfood";
-import AddLocationIcon from "@mui/icons-material/AddLocation";
-import SettingsIcon from "@mui/icons-material/Settings";
-import ClassIcon from "@mui/icons-material/Class";
-import CategoryIcon from "@mui/icons-material/Category";
-import MailIcon from "@mui/icons-material/Mail";
 import {
-  Divider,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useSession, signIn, signOut } from "next-auth/react";
+  Navbar,
+  Typography,
+  Button,
+  Avatar,
+  MenuHandler,
+  MenuList,
+  MenuItem,
+} from "@material-tailwind/react";
 
-const sidebarMenuItems = [
-  {
-    id: 1,
-    label: "Orders",
-    icon: <LocalMallIcon />,
-    route: "/admin/dashboard/orders",
-  },
-  {
-    id: 2,
-    label: "Menus",
-    icon: <LocalDiningIcon />,
-    route: "/admin/dashboard/menus",
-  },
-  {
-    id: 3,
-    label: "Create A New Menu",
-    icon: <FastfoodIcon />,
-    route: "/admin/dashboard/create-menus",
-  },
-  {
-    id: 4,
-    label: "Menu Categories",
-    icon: <CategoryIcon />,
-    route: "/admin/dashboard/menu-categories",
-  },
-  // {
-  //   id: 5,
-  //   label: "Addons",
-  //   icon: <LunchDiningIcon />,
-  //   route: "/routes/addon",
-  // },
-  // {
-  //   id: 6,
-  //   label: "Addon Categories",
-  //   icon: <ClassIcon />,
-  //   route: "/routes/addon-categories",
-  // },
-  {
-    id: 5,
-    label: "Create Addons",
-    icon: <LunchDiningIcon />,
-    route: "/admin/dashboard/create-addons",
-  },
-  {
-    id: 6,
-    label: "Locations",
-    icon: <AddLocationIcon />,
-    route: "/admin/dashboard/locations",
-  },
-  {
-    id: 7,
-    label: "Settings",
-    icon: <SettingsIcon />,
-    route: "/admin/dashboard/setting",
-  },
-];
-
-const NavBar = () => {
-  const [open, setOpen] = useState<boolean>(false);
-
-  const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === "keydown" &&
-        ((event as React.KeyboardEvent).key === "Tab" ||
-          (event as React.KeyboardEvent).key === "Shift")
-      ) {
-        return;
-      }
-      setOpen(open);
-    };
-
-  const drawerContent = () => {
-    return (
-      <Box
-        sx={{ width: 250 }}
-        role="presentation"
-        onClick={toggleDrawer(false)}
-        onKeyDown={toggleDrawer(false)}
+export default function Example() {
+  const navList = (
+    <ul className="mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
+      <Typography
+        as="li"
+        variant="small"
+        color="blue-gray"
+        className="p-1 font-normal"
       >
-        <List>
-          {sidebarMenuItems.slice(0, 6).map((item) => (
-            <Link
-              key={item.id}
-              href={item.route}
-              style={{ textDecoration: "none", color: "#313131" }}
-            >
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.label} />
-                </ListItemButton>
-              </ListItem>
-            </Link>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {sidebarMenuItems.slice(-1).map((item) => (
-            <Link
-              key={item.id}
-              href={item.route}
-              style={{ textDecoration: "none", color: "#313131" }}
-            >
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.label} />
-                </ListItemButton>
-              </ListItem>
-            </Link>
-          ))}
-        </List>
-      </Box>
-    );
-  };
-
-  const router = useRouter();
-
-  const pageTitle = sidebarMenuItems.find(
-    (item) => item.route === router.pathname
-  )?.label;
+        <a href="#" className="flex items-center">
+          Pages
+        </a>
+      </Typography>
+      <Typography
+        as="li"
+        variant="small"
+        color="blue-gray"
+        className="p-1 font-normal"
+      >
+        <a href="#" className="flex items-center">
+          Account
+        </a>
+      </Typography>
+      <Typography
+        as="li"
+        variant="small"
+        color="blue-gray"
+        className="p-1 font-normal"
+      >
+        <a href="#" className="flex items-center">
+          Blocks
+        </a>
+      </Typography>
+      <Typography
+        as="li"
+        variant="small"
+        color="blue-gray"
+        className="p-1 font-normal"
+      >
+        <a href="#" className="flex items-center">
+          Docs
+        </a>
+      </Typography>
+    </ul>
+  );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            onClick={() => setOpen(true)}
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {pageTitle ? pageTitle : "Home"}
+    <>
+      <Navbar className="sticky inset-0 z-10 h-max max-w-full py-2 px-4 lg:px-8 lg:py-4 rounded-md">
+        <div className="flex items-center justify-between text-blue-gray-900">
+          <Typography className="mr-4 cursor-pointer py-1.5 font-medium">
+            Material Tailwind
           </Typography>
-          {/* <Link href={"/admin/auth/login"}> */}
-          <Button onClick={() => signOut()} color="inherit">
-            Logout
-          </Button>
-          {/* </Link> */}
-        </Toolbar>
-      </AppBar>
-      <Drawer anchor="left" open={open} onClose={toggleDrawer(false)}>
-        {drawerContent()}
-      </Drawer>
-    </Box>
+          <div className="flex items-center gap-4">
+            <div className="mr-4 hidden lg:block">{navList}</div>
+            <Button
+              variant="text"
+              color="blue-gray"
+              className="flex items-center gap-1 rounded-full py-0.5 px-0.5 lg:ml-auto"
+            >
+              <Avatar
+                variant="circular"
+                size="sm"
+                alt="candice wu"
+                className="border border-blue-500 p-0.5"
+                src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+              />
+            </Button>
+          </div>
+        </div>
+      </Navbar>
+    </>
   );
-};
-
-export default NavBar;
+}

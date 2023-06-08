@@ -4,7 +4,7 @@ import axios from "axios";
 import React, { useContext, useEffect } from "react";
 
 const AdminHome = () => {
-  const { locations, updateData, ...data } = useContext(AppContext);
+  const { locations } = useContext(AppContext);
 
   useEffect(() => {
     if (locations.length) {
