@@ -23,7 +23,7 @@ export default async function handler(
 
       await prisma.$transaction(
         menuCatLocationsIds.map((id: any) =>
-          prisma.menus_menu_cats_addon_cats_locations.create({
+          prisma.menus_menu_cats_locations.create({
             data: id,
           })
         )

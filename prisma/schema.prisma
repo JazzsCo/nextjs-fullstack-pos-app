@@ -35,16 +35,16 @@ model locations {
   id                                   Int                                    @id @default(autoincrement())
   location_name                        String
   address                              String?
-  menus_menu_cats_addon_cats_locations menus_menu_cats_addon_cats_locations[]
+  menus_menu_cats_addon_cats_locations menus_menu_cats_locations[]
 }
 
 model menu_cats {
   id                                   Int                                    @id @default(autoincrement())
   menu_cat_name                        String
-  menus_menu_cats_addon_cats_locations menus_menu_cats_addon_cats_locations[]
+  menus_menu_cats_addon_cats_locations menus_menu_cats_locations[]
 }
 
-model menus_menu_cats_addon_cats_locations {
+model menus_menu_cats_locations {
   id           Int        @id @default(autoincrement())
   menu_id      Int?
   location_id  Int?
@@ -60,7 +60,7 @@ model menus {
   name                                 String
   price                                Int
   image_url                            String
-  menus_menu_cats_addon_cats_locations menus_menu_cats_addon_cats_locations[]
+  menus_menu_cats_addon_cats_locations menus_menu_cats_locations[]
   menus_addon_cats                     menus_addon_cats[]
 }
 

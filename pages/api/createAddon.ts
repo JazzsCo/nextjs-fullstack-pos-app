@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/libs/db";
+import { menus_addon_cats, menus_menu_cats_locations } from "@prisma/client";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,7 +10,7 @@ export default async function handler(
   try {
     if (req.method === "POST") {
       const { addonName, addonPrice } = req.body;
-      const { name, locationIds } = req.body.addonCatName;
+      const { name, menuIds } = req.body.addonCatName;
 
       console.log(addonName);
       console.log(addonPrice);
@@ -22,13 +23,13 @@ export default async function handler(
         })
       ).id;
 
-      const addonCatLocationsIds = locationIds.map((id: number) => {
-        return { location_id: id, addon_cat_id: addonCatResultId };
+      const addonCatMenuIds = menuIds.map((id: number) => {
+        return { menu_id: id, addon_cat_id: addonCatResultId };
       });
 
       await prisma.$transaction(
-        addonCatLocationsIds.map((id: any) =>
-          prisma.menus_menu_cats_addon_cats_locations.create({
+        addonCatMenuIds.map((id: any) =>
+          prisma.menus_addon_cats.create({
             data: id,
           })
         )
@@ -62,6 +63,46 @@ export default async function handler(
       );
 
       res.status(200).send("ok");
+    } else if (req.method === "GET") {
+      const { id } = req.query;
+
+      console.log("id : ", id);
+
+      const menuIds = (
+        await prisma.menus_menu_cats_locations.findMany({
+          where: {
+            location_id: Number(id),
+          },
+        })
+      )
+        .map((item: menus_menu_cats_locations) => item.menu_id)
+        .filter((item: any) => typeof item === "number") as number[];
+
+      console.log("menids : ", menuIds);
+
+      const addonCatIds = (
+        await prisma.menus_addon_cats.findMany({
+          where: {
+            menu_id: {
+              in: menuIds,
+            },
+          },
+        })
+      ).map((item: menus_addon_cats) => item.addon_cat_id);
+
+      console.log("addonCatIds : ", addonCatIds);
+
+      const addonCategories = await prisma.addon_cats.findMany({
+        where: {
+          id: {
+            in: addonCatIds,
+          },
+        },
+      });
+
+      console.log("addonCategories : ", addonCategories);
+
+      res.status(200).send({ addonCategories });
     }
   } catch (error) {
     console.log("error", error);

@@ -10,7 +10,7 @@ import LocationsSelect from "@/components/LocationsSelect";
 import {
   menu_cats as MenuCategory,
   menu_cats,
-  menus_menu_cats_addon_cats_locations,
+  menus_menu_cats_locations,
 } from "@prisma/client";
 import { LocationId } from "@/libs/locationId";
 
@@ -22,10 +22,9 @@ export default function MenuCategories() {
 
   const menuCatId = menusMenuCatAddonCatLocation
     .filter(
-      (item: menus_menu_cats_addon_cats_locations) =>
-        item.location_id === locationId
+      (item: menus_menu_cats_locations) => item.location_id === locationId
     )
-    .map((item: menus_menu_cats_addon_cats_locations) => item.menu_cat_id)
+    .map((item: menus_menu_cats_locations) => item.menu_cat_id)
     .filter((item: any) => typeof item === "number") as number[];
 
   const menuCatByLocId = menuCategories.filter((item: menu_cats) =>

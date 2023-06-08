@@ -7,8 +7,8 @@ import type {
   addon_cats as AddonCategory,
   addons as Addon,
   addons_addon_cats as AddonAddonCat,
-  menus_menu_cats_addon_cats_locations as MenusMenuCatAddonCatLocation,
-  // menus_menu_cats as MenusMenuCat,
+  menus_menu_cats_locations as MenusMenuCatAddonCatLocation,
+  menus_addon_cats as MenuAddonCat,
   locations as Location,
 } from "@prisma/client";
 
@@ -18,6 +18,7 @@ interface AppContextType {
   addons: Addon[];
   addonCategories: AddonCategory[];
   addonAddonCat: AddonAddonCat[];
+  menusAddonCat: MenuAddonCat[];
   locations: Location[];
   menusMenuCatAddonCatLocation: MenusMenuCatAddonCatLocation[];
   accessToken: string;
@@ -31,6 +32,7 @@ export const defaultContext: AppContextType = {
   addons: [],
   addonCategories: [],
   addonAddonCat: [],
+  menusAddonCat: [],
   locations: [],
   menusMenuCatAddonCatLocation: [],
   accessToken: "",
@@ -57,6 +59,8 @@ const AppProvider = ({ children }: any) => {
       addons,
       menusMenuCatAddonCatLocation,
       locations,
+      menusAddonCat,
+      addonAddonCat,
     } = res.data;
 
     updateData({
@@ -67,6 +71,8 @@ const AppProvider = ({ children }: any) => {
       addons,
       menusMenuCatAddonCatLocation,
       locations,
+      menusAddonCat,
+      addonAddonCat,
     });
   };
 

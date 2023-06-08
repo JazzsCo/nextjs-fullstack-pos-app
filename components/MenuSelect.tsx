@@ -5,13 +5,11 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { useContext } from "react";
 import { AppContext } from "../contexts/AppContext";
-import { addon_cats } from "@prisma/client";
+import { useContext, useState } from "react";
 
 interface Props {
-  onStateChange?: (childStateSelectedAddonCatIds: any) => void;
-  addonCategories?: addon_cats[];
+  onStateChange?: (childStateSelectedMenuId: any) => void;
 }
 
 const ITEM_HEIGHT = 48;
@@ -34,11 +32,8 @@ function getStyles(name: string, personName: string[], theme: Theme) {
   };
 }
 
-export default function AddonCatSelect({
-  addonCategories,
-  onStateChange,
-}: Props) {
-  // const { addonCategories } = useContext(AppContext);
+export default function MenuCatSelect({ onStateChange }: Props) {
+  const { menus } = useContext(AppContext);
   const theme = useTheme();
   const [personName, setPersonName] = React.useState<string[]>([]);
 
@@ -53,15 +48,13 @@ export default function AddonCatSelect({
 
     const selectedNames = event.target.value as string[];
 
-    const selectedIds =
-      addonCategories &&
-      addonCategories
-        .filter((addonCat) => {
-          return selectedNames.includes(addonCat.addon_cat_name);
-        })
-        .map((addonCat) => {
-          return addonCat.id;
-        });
+    const selectedIds = menus
+      .filter((menu) => {
+        return selectedNames.includes(menu.name);
+      })
+      .map((menu) => {
+        return menu.id;
+      });
 
     onStateChange && onStateChange(selectedIds);
   };
@@ -69,24 +62,24 @@ export default function AddonCatSelect({
   return (
     <div>
       <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-name-label">Addon Categories</InputLabel>
+        <InputLabel id="demo-multiple-name-label">Menus</InputLabel>
         <Select
           labelId="demo-multiple-name-label"
           id="demo-multiple-name"
           multiple
           value={personName}
           onChange={handleChange}
-          input={<OutlinedInput label="Addon Categories" />}
+          input={<OutlinedInput label="Menus" />}
           MenuProps={MenuProps}
         >
-          {addonCategories &&
-            addonCategories.map((addonCat: addon_cats) => (
+          {menus &&
+            menus.map((menu: any) => (
               <MenuItem
-                key={addonCat.id}
-                value={addonCat.addon_cat_name}
-                style={getStyles(addonCat.addon_cat_name, personName, theme)}
+                key={menu.id}
+                value={menu.name}
+                style={getStyles(menu.name, personName, theme)}
               >
-                {addonCat.addon_cat_name}
+                {menu.name}
               </MenuItem>
             ))}
         </Select>

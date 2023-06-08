@@ -11,7 +11,7 @@ import type {
   addon_cats as AddonCategory,
   addons as Addon,
   addons_addon_cats as AddonAddonCat,
-  menus_menu_cats_addon_cats_locations,
+  menus_menu_cats_locations,
 } from "@prisma/client";
 import { useRouter } from "next/router";
 import { LocationId } from "@/libs/locationId";
@@ -26,7 +26,7 @@ export default function Menus() {
   const [addonCategories, setAddonCategories] = useState<AddonCategory[]>([]);
   const [addons, setAddons] = useState<Addon[]>([]);
   const [menusMenuCatAddonCatLocation, setMenusMenuCatAddonCatLocation] =
-    useState<menus_menu_cats_addon_cats_locations[]>([]);
+    useState<menus_menu_cats_locations[]>([]);
 
   console.log("menu", menus);
   console.log("menu cat", menuCategories);

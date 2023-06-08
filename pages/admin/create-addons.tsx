@@ -1,20 +1,34 @@
 import Layout from "@/components/Layout";
 import { Box, TextField, Button } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AppContext } from "@/contexts/AppContext";
 import LocationsSelect from "@/components/LocationsSelect";
+import { LocationId } from "@/libs/locationId";
+import MenuCatSelect from "@/components/MenuCatSelect";
+import MenuSelect from "@/components/MenuSelect";
+import { addon_cats } from "@prisma/client";
+import AddonCatSelect from "@/components/AddonCatSelect";
 
 const CreateAddons = () => {
-  const { fetchData } = useContext(AppContext);
+  const locationId = Number(LocationId());
 
-  const url = `/api/createAddon`;
+  const {
+    // addonCategories,
+    // addons,
+    // menusAddonCat,
+    // addonAddonCat,
+    // menusMenuCatAddonCatLocation,
+    fetchData,
+  } = useContext(AppContext);
+
+  const [addonCategories, setAddonCategories] = useState<addon_cats[]>();
 
   const [count, setCount] = useState(0);
   const [addonCatName, setAddonCatName] = useState({
     name: "",
-    locationIds: [],
+    menuIds: [],
   });
   const [addonName, setAddonName] = useState<String[]>([]);
   const [addonPrice, setAddonPrice] = useState<Number[]>([]);
@@ -39,17 +53,15 @@ const CreateAddons = () => {
     setAddonPrice(updatedValues);
   };
 
-  const locationStateChange = (childStateSelectedLocationIds: any) => {
+  const menuStateChange = (childStateSelectedMenuIds: any) => {
     setAddonCatName({
       ...addonCatName,
-      locationIds: childStateSelectedLocationIds,
+      menuIds: childStateSelectedMenuIds,
     });
   };
 
-  const locationId = Number(localStorage.getItem("locationId"));
-
   const createAddon = async () => {
-    const res = await axios.post(url, {
+    const res = await axios.post(`/api/createAddon`, {
       addonCatName,
       addonName,
       addonPrice,
@@ -59,7 +71,7 @@ const CreateAddons = () => {
 
     setAddonCatName({
       name: "",
-      locationIds: [],
+      menuIds: [],
     });
     setAddonName([]);
     setAddonPrice([]);
@@ -67,6 +79,19 @@ const CreateAddons = () => {
 
     fetchData();
   };
+
+  const getAddon = async (id: number) => {
+    const res = await axios.get(`/api/createAddon?id=${id}`);
+    const { addonCategories } = res.data;
+
+    setAddonCategories(addonCategories);
+
+    console.log("sldsdsldsd", addonCategories, id);
+  };
+
+  useEffect(() => {
+    getAddon(locationId);
+  }, [locationId]);
 
   return (
     <Layout>
@@ -88,13 +113,13 @@ const CreateAddons = () => {
             sx={{ mb: 1 }}
             color="primary"
             focused
-            value={addonCatName}
+            value={addonCatName.name}
             onChange={(e) =>
               setAddonCatName({ ...addonCatName, name: e.target.value })
             }
           />
 
-          <LocationsSelect onStateChange={locationStateChange} />
+          <MenuSelect onStateChange={menuStateChange} />
 
           {addonIds &&
             addonIds.map((e, index) => (
@@ -142,6 +167,14 @@ const CreateAddons = () => {
           <Button onClick={createAddon} variant="outlined">
             Create Addons
           </Button>
+        </Box>
+
+        <Box
+          sx={{
+            textAlign: "center",
+          }}
+        >
+          <AddonCatSelect addonCategories={addonCategories} />
         </Box>
       </Box>
     </Layout>

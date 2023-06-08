@@ -119,9 +119,11 @@ export default async function handler(
       const addonCategories = await prisma.addon_cats.findMany();
       const addons = await prisma.addons.findMany();
       const menusMenuCatAddonCatLocation =
-        await prisma.menus_menu_cats_addon_cats_locations.findMany();
+        await prisma.menus_menu_cats_locations.findMany();
 
       const locations = await prisma.locations.findMany();
+      const menusAddonCat = await prisma.menus_addon_cats.findMany();
+      const addonAddonCat = await prisma.addons_addon_cats.findMany();
 
       res.status(200).send({
         menus,
@@ -130,6 +132,8 @@ export default async function handler(
         addons,
         menusMenuCatAddonCatLocation,
         locations,
+        menusAddonCat,
+        addonAddonCat,
       });
     }
   } catch (error) {

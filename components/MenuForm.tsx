@@ -5,13 +5,11 @@ import LocationsSelect from "./LocationsSelect";
 import axios from "axios";
 import AddonCatSelect from "./AddonCatSelect";
 import MenuCatSelect from "./MenuCatSelect";
-import {
-  menu_cats,
-  menus_menu_cats_addon_cats_locations,
-} from "@prisma/client";
+import { menu_cats, menus_menu_cats_locations } from "@prisma/client";
+import { LocationId } from "@/libs/locationId";
 
 export default function MunuForm() {
-  const locationId = Number(localStorage.getItem("locationId"));
+  const locationId = Number(LocationId());
 
   const {
     menuCategories,
@@ -23,10 +21,9 @@ export default function MunuForm() {
 
   const menuCatId = menusMenuCatAddonCatLocation
     .filter(
-      (item: menus_menu_cats_addon_cats_locations) =>
-        item.location_id === locationId
+      (item: menus_menu_cats_locations) => item.location_id === locationId
     )
-    .map((item: menus_menu_cats_addon_cats_locations) => item.menu_cat_id)
+    .map((item: menus_menu_cats_locations) => item.menu_cat_id)
     .filter((item: any) => typeof item === "number") as number[];
 
   const menuCatByLocId = menuCategories.filter((item: menu_cats) =>
@@ -44,7 +41,7 @@ export default function MunuForm() {
     // imageUrl: "",
     locationIds: [],
     menuCatIds: [],
-    addonCatIds: [],
+    // addonCatIds: [],
     // addonIds: [],
   });
 
@@ -60,9 +57,9 @@ export default function MunuForm() {
     setMenu({ ...menu, menuCatIds: childStateSelectedMenuCatIds });
   };
 
-  const addonCatStateChange = (childStateSelectedAddonCatIds: any) => {
-    setMenu({ ...menu, addonCatIds: childStateSelectedAddonCatIds });
-  };
+  // const addonCatStateChange = (childStateSelectedAddonCatIds: any) => {
+  //   setMenu({ ...menu, addonCatIds: childStateSelectedAddonCatIds });
+  // };
 
   // const addonStateChange = (childStateSelectedAddonIds: any) => {
   //   setMenu({ ...menu, addonIds: childStateSelectedAddonIds });
@@ -188,7 +185,7 @@ export default function MunuForm() {
                 onStateChange={menuCatStateChange}
               />
 
-              <AddonCatSelect onStateChange={addonCatStateChange} />
+              {/* <AddonCatSelect onStateChange={addonCatStateChange} /> */}
 
               {/* <AddonCatSelect onStateChange={addonCatStateChange} />
 
