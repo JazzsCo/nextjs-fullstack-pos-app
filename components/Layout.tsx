@@ -11,7 +11,6 @@ const Layout = ({ children }: Props) => {
   return (
     <div>
       <NavBar />
-      <SideBar />
       {children}
     </div>
   );

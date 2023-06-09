@@ -15,6 +15,8 @@ import type {
 } from "@prisma/client";
 import { useRouter } from "next/router";
 import { LocationId } from "@/libs/locationId";
+import { Button } from "@material-tailwind/react";
+import MenuForm from "@/components/MenuForm";
 
 export default function Menus() {
   const locationId = LocationId() || "";
@@ -97,33 +99,37 @@ export default function Menus() {
 
   return (
     <Layout>
-      <div>
+      <div className="absolute top-[5.5rem] right-10">
+        <MenuForm />
+      </div>
+      <div className="flex my-16 gap-3 ml-[18rem] flex-wrap">
         {menus &&
           menus.map((menu, index) => (
-            <div key={index} className="flex flex-col items-center my-28">
-              <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <img
-                  className="p-8 rounded-[2.5rem]"
-                  src={menu.image_url}
-                  alt="product image"
-                />
+            <div
+              key={index}
+              className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+            >
+              <img
+                className="p-8 rounded-[2.5rem]"
+                src={menu.image_url}
+                alt="product image"
+              />
 
-                <div className="px-5 pb-5">
-                  <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                    {menu.name}
-                  </h5>
+              <div className="px-5 pb-5">
+                <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                  {menu.name}
+                </h5>
 
-                  <div className="flex items-center justify-between">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">
-                      ${menu.price}
-                    </span>
-                    <div>
-                      <ButtonSide
-                        menu={menu}
-                        menusCat={menusCat}
-                        // addonsCat={addonsCat}
-                      />
-                    </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-3xl font-bold text-gray-900 dark:text-white">
+                    ${menu.price}
+                  </span>
+                  <div>
+                    <ButtonSide
+                      menu={menu}
+                      menusCat={menusCat}
+                      // addonsCat={addonsCat}
+                    />
                   </div>
                 </div>
               </div>

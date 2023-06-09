@@ -7,6 +7,8 @@ import AddonCatSelect from "./AddonCatSelect";
 import MenuCatSelect from "./MenuCatSelect";
 import { menu_cats, menus_menu_cats_locations } from "@prisma/client";
 import { LocationId } from "@/libs/locationId";
+import { Button, Input, Typography } from "@material-tailwind/react";
+import Dialog from "@mui/material/Dialog";
 
 export default function MunuForm() {
   const locationId = Number(LocationId());
@@ -92,134 +94,80 @@ export default function MunuForm() {
 
   console.log(menu);
 
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(!open);
+
   return (
-    <div className="w-full max-w-3xl px-28 py-7 m-auto mt-12  bg-slate-100 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-      <div>
-        <p className="font-semibold text-xl">Create A New Menu</p>
-        <div className="mt-10 space-y-4">
-          {/* <div className="max-w-md sm:col-span-4">
-            <label
-              htmlFor="location"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Location Name
-            </label>
-            <div className="mt-2">
-              <input
-                id="location"
-                name="location"
-                type="text"
-                placeholder="Ma Ma"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div> */}
+    <div>
+      <Button onClick={handleOpen} variant="gradient">
+        Create Menu
+      </Button>
+      <Dialog open={open} onClose={handleOpen}>
+        <div className="px-[2rem] py-[3rem]">
+          <div>
+            <Typography variant="h5" color="blue-gray">
+              Create A New Menu
+            </Typography>
 
-          <div className="flex justify-normal">
-            <div className="max-w-sm space-y-5 mr-14">
-              <div className="sm:col-span-3">
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Menu Name
-                </label>
-                <div className="mt-2">
-                  <input
+            <div className="mt-10 space-y-4">
+              <div className="flex justify-normal">
+                <div className="max-w-md space-y-5 mr-10">
+                  <Input
                     type="text"
-                    name="name"
-                    id="name"
-                    placeholder="Ah Toke"
+                    label="Menu Name"
                     onChange={(e) => setMenu({ ...menu, name: e.target.value })}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
-                </div>
-              </div>
 
-              <div className="sm:col-span-3">
-                <label
-                  htmlFor="price"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Price
-                </label>
-                <div className="mt-2">
-                  <input
+                  <Input
                     type="number"
-                    name="price"
-                    id="price"
-                    placeholder="0000"
+                    label="Price"
                     onChange={(e) =>
                       setMenu({ ...menu, price: Number(e.target.value) })
                     }
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  />
+
+                  <FileDropZone onFileSelected={onFileSelected} />
+                </div>
+                <div className="space-y-3">
+                  <LocationsSelect onStateChange={locationStateChange} />
+
+                  <MenuCatSelect
+                    menuCategories={menuCatByLocId}
+                    onStateChange={menuCatStateChange}
                   />
                 </div>
-                <a href=""></a>
               </div>
 
-              <FileDropZone onFileSelected={onFileSelected} />
-
-              <div className="flex items-center">
-                <input
-                  disabled
-                  checked
-                  id="disabled-checked-checkbox"
-                  type="checkbox"
-                  value=""
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
+              <div className="col-span-full">
                 <label
-                  htmlFor="disabled-checked-checkbox"
-                  className="ml-2 text-sm font-medium text-gray-400 dark:text-gray-500"
+                  htmlFor="about"
+                  className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Available
+                  Description
                 </label>
+                <div className="mt-2">
+                  <textarea
+                    id="about"
+                    name="about"
+                    rows={3}
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    defaultValue={""}
+                  />
+                </div>
+              </div>
+              <div className="text-right">
+                <button
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                  onClick={createMenu}
+                >
+                  Default
+                </button>
               </div>
             </div>
-            <div className="space-y-3">
-              <LocationsSelect onStateChange={locationStateChange} />
-
-              <MenuCatSelect
-                menuCategories={menuCatByLocId}
-                onStateChange={menuCatStateChange}
-              />
-
-              {/* <AddonCatSelect onStateChange={addonCatStateChange} /> */}
-
-              {/* <AddonCatSelect onStateChange={addonCatStateChange} />
-
-              <AddonSelect onStateChange={addonStateChange} /> */}
-            </div>
-          </div>
-
-          <div className="col-span-full">
-            <label
-              htmlFor="about"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Description
-            </label>
-            <div className="mt-2">
-              <textarea
-                id="about"
-                name="about"
-                rows={3}
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                defaultValue={""}
-              />
-            </div>
-          </div>
-          <div className="text-right">
-            <button
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-              onClick={createMenu}
-            >
-              Default
-            </button>
           </div>
         </div>
-      </div>
+      </Dialog>
     </div>
   );
 }

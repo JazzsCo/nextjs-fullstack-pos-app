@@ -95,87 +95,85 @@ const CreateAddons = () => {
 
   return (
     <Layout>
-      <Box>
-        <Box
+      <Box
+        sx={{
+          maxWidth: "20rem",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          margin: "0 auto",
+          marginY: 15,
+        }}
+      >
+        <TextField
+          id="standard-basic"
+          label="Addon Category Name"
+          variant="standard"
+          sx={{ mb: 1 }}
+          color="primary"
+          focused
+          value={addonCatName.name}
+          onChange={(e) =>
+            setAddonCatName({ ...addonCatName, name: e.target.value })
+          }
+        />
+
+        <MenuSelect onStateChange={menuStateChange} />
+
+        {addonIds &&
+          addonIds.map((e, index) => (
+            <Box
+              key={index}
+              sx={{ display: "flex", justifyContent: "space-around" }}
+            >
+              <TextField
+                id="standard-basic"
+                label="Addon Name"
+                variant="standard"
+                sx={{ mb: 1, mr: 3 }}
+                color="primary"
+                focused
+                onChange={(e) => addonNames(e, index)}
+              />
+
+              <TextField
+                id="standard-basic"
+                label="Price"
+                variant="standard"
+                type="number"
+                sx={{ mb: 1 }}
+                color="primary"
+                focused
+                onChange={(e) => addonPrices(e, index)}
+              />
+            </Box>
+          ))}
+
+        <Button
           sx={{
-            maxWidth: "20rem",
             display: "flex",
-            flexDirection: "column",
             justifyContent: "center",
-            margin: "0 auto",
-            marginY: 15,
+            m: 2,
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            setCount(count + 1);
           }}
         >
-          <TextField
-            id="standard-basic"
-            label="Addon Category Name"
-            variant="standard"
-            sx={{ mb: 1 }}
-            color="primary"
-            focused
-            value={addonCatName.name}
-            onChange={(e) =>
-              setAddonCatName({ ...addonCatName, name: e.target.value })
-            }
-          />
+          <AddCircleIcon color="primary" />
+        </Button>
 
-          <MenuSelect onStateChange={menuStateChange} />
+        <Button onClick={createAddon} variant="outlined">
+          Create Addons
+        </Button>
+      </Box>
 
-          {addonIds &&
-            addonIds.map((e, index) => (
-              <Box
-                key={index}
-                sx={{ display: "flex", justifyContent: "space-around" }}
-              >
-                <TextField
-                  id="standard-basic"
-                  label="Addon Name"
-                  variant="standard"
-                  sx={{ mb: 1, mr: 3 }}
-                  color="primary"
-                  focused
-                  onChange={(e) => addonNames(e, index)}
-                />
-
-                <TextField
-                  id="standard-basic"
-                  label="Price"
-                  variant="standard"
-                  type="number"
-                  sx={{ mb: 1 }}
-                  color="primary"
-                  focused
-                  onChange={(e) => addonPrices(e, index)}
-                />
-              </Box>
-            ))}
-
-          <Button
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              m: 2,
-              cursor: "pointer",
-            }}
-            onClick={() => {
-              setCount(count + 1);
-            }}
-          >
-            <AddCircleIcon color="primary" />
-          </Button>
-
-          <Button onClick={createAddon} variant="outlined">
-            Create Addons
-          </Button>
-        </Box>
-
-        <Box
-          sx={{
-            textAlign: "center",
-          }}
-        >
-          <AddonCatSelect addonCategories={addonCategories} />
-        </Box>
+      <Box
+        sx={{
+          textAlign: "center",
+        }}
+      >
+        <AddonCatSelect addonCategories={addonCategories} />
       </Box>
     </Layout>
   );

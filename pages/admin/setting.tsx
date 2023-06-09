@@ -42,24 +42,26 @@ const Setting = () => {
 
   return (
     <Layout>
-      <Box sx={{ maxWidth: 300, m: "0 auto", mt: 10 }}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Location</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={selectedLocation ? selectedLocation.id : ""} // main point ***
-            label="Locations"
-            onChange={handleChange}
-          >
-            {locations.map((location) => (
-              <MenuItem key={location.id} value={location.id}>
-                {location.location_name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
+      <div className="-mr-[210px]">
+        <Box sx={{ maxWidth: 300, m: "0 auto", mt: 10 }}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Location</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={selectedLocation ? selectedLocation.id : ""} // main point ***
+              label="Locations"
+              onChange={handleChange}
+            >
+              {locations.map((location) => (
+                <MenuItem key={location.id} value={location.id}>
+                  {location.location_name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      </div>
     </Layout>
   );
 };

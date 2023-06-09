@@ -7,6 +7,7 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { AppContext } from "../contexts/AppContext";
 import { useContext, useState } from "react";
+import { locations } from "@prisma/client";
 
 interface Props {
   onStateChange?: (childStateSelectedMenuCatIds: any) => void;
@@ -62,7 +63,7 @@ export default function LocationsSelect({ onStateChange }: Props) {
 
   return (
     <div>
-      <FormControl sx={{ m: 1, width: 300 }}>
+      <FormControl sx={{ m: 1, width: 250 }}>
         <InputLabel id="demo-multiple-name-label">Locations</InputLabel>
         <Select
           labelId="demo-multiple-name-label"
