@@ -57,7 +57,7 @@ export default function Example() {
 
   return (
     <>
-      <Navbar className="sticky inset-0 z-10 h-max max-w-full py-2 px-4 lg:px-8 lg:py-4">
+      <Navbar className="sticky bg-blue-500 inset-0 z-10 h-max max-w-full py-2 px-4 lg:px-8 lg:py-4 rounded-t-none rounded-bl-none m-0">
         <div className="flex items-center justify-between text-blue-gray-900">
           <Typography className="mr-4 cursor-pointer py-1.5 font-medium">
             Material Tailwind

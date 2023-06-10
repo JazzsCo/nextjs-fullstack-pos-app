@@ -104,68 +104,33 @@ export default function MunuForm() {
         Create Menu
       </Button>
       <Dialog open={open} onClose={handleOpen}>
-        <div className="px-[2rem] py-[3rem]">
-          <div>
-            <Typography variant="h5" color="blue-gray">
-              Create A New Menu
-            </Typography>
+        <div className="flex flex-col justify-center px-20 py-14 space-y-4 ml-9">
+          <Typography variant="h3" color="blue-gray">
+            Create A New Menu
+          </Typography>
 
-            <div className="mt-10 space-y-4">
-              <div className="flex justify-normal">
-                <div className="max-w-md space-y-5 mr-10">
-                  <Input
-                    type="text"
-                    label="Menu Name"
-                    onChange={(e) => setMenu({ ...menu, name: e.target.value })}
-                  />
+          <div className=" space-y-5 mr-10 max-w-[280px]">
+            <Input
+              type="text"
+              label="Menu Name"
+              onChange={(e) => setMenu({ ...menu, name: e.target.value })}
+            />
 
-                  <Input
-                    type="number"
-                    label="Price"
-                    onChange={(e) =>
-                      setMenu({ ...menu, price: Number(e.target.value) })
-                    }
-                  />
+            <Input
+              type="number"
+              label="Price"
+              onChange={(e) =>
+                setMenu({ ...menu, price: Number(e.target.value) })
+              }
+            />
 
-                  <FileDropZone onFileSelected={onFileSelected} />
-                </div>
-                <div className="space-y-3">
-                  <LocationsSelect onStateChange={locationStateChange} />
-
-                  <MenuCatSelect
-                    menuCategories={menuCatByLocId}
-                    onStateChange={menuCatStateChange}
-                  />
-                </div>
-              </div>
-
-              <div className="col-span-full">
-                <label
-                  htmlFor="about"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Description
-                </label>
-                <div className="mt-2">
-                  <textarea
-                    id="about"
-                    name="about"
-                    rows={3}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    defaultValue={""}
-                  />
-                </div>
-              </div>
-              <div className="text-right">
-                <button
-                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                  onClick={createMenu}
-                >
-                  Default
-                </button>
-              </div>
-            </div>
+            <FileDropZone onFileSelected={onFileSelected} />
           </div>
+          <LocationsSelect onStateChange={locationStateChange} />
+
+          <Button onClick={createMenu} className="max-w-[280px]">
+            Create
+          </Button>
         </div>
       </Dialog>
     </div>

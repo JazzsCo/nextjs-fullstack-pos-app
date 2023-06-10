@@ -1,7 +1,6 @@
 import axios from "axios";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import { Button } from "@mui/material";
 import Layout from "@/components/Layout";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "@/contexts/AppContext";
@@ -13,6 +12,9 @@ import {
   menus_menu_cats_locations,
 } from "@prisma/client";
 import { LocationId } from "@/libs/locationId";
+import { Button, Input } from "@material-tailwind/react";
+import Dialog from "@mui/material/Dialog";
+import MenuSelect from "@/components/MenuSelect";
 
 export default function MenuCategories() {
   const locationId = Number(LocationId());
@@ -33,12 +35,8 @@ export default function MenuCategories() {
 
   const [menuCat, setMenuCat] = useState({
     name: "",
-    locationIds: [],
+    menusIds: [],
   });
-
-  const locationStateChange = (childStateSelectedLocationIds: any) => {
-    setMenuCat({ ...menuCat, locationIds: childStateSelectedLocationIds });
-  };
 
   const handleSubmit = async () => {
     const url = `/api/menuCategories`;
@@ -49,39 +47,47 @@ export default function MenuCategories() {
 
     setMenuCat({
       name: "",
-      locationIds: [],
+      menusIds: [],
     });
 
     fetchData();
   };
 
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(!open);
+
+  const menuStateChange = (childStateSelectedMenuIds: any) => {
+    setMenuCat({
+      ...menuCat,
+      menusIds: childStateSelectedMenuIds,
+    });
+  };
+
   return (
     <Layout>
-      <Box
-        sx={{
-          maxWidth: "20rem",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          margin: "0 auto",
-          marginY: 15,
-        }}
-      >
-        <TextField
-          id="standard-basic"
-          label="Menu Category Name"
-          variant="standard"
-          sx={{ mb: 1 }}
-          color="primary"
-          value={menuCat.name}
-          focused
-          onChange={(e) => setMenuCat({ ...menuCat, name: e.target.value })}
-        />
-        <LocationsSelect onStateChange={locationStateChange} />
-        <Button onClick={handleSubmit} variant="outlined">
+      <div className="absolute top-[5.5rem] right-10">
+        <Button onClick={handleOpen} variant="gradient">
           Create Menu Category
         </Button>
-      </Box>
+      </div>
+
+      <Dialog open={open} onClose={handleOpen}>
+        <div className="flex flex-col items-center px-20 py-28 space-y-2">
+          <div className="w-[280px]">
+            <Input
+              type="text"
+              label="Menu Category Name"
+              onChange={(e) => setMenuCat({ ...menuCat, name: e.target.value })}
+            />
+          </div>
+          <MenuSelect onStateChange={menuStateChange} />
+
+          <Button onClick={handleSubmit} variant="gradient">
+            Create Menu Category
+          </Button>
+        </div>
+      </Dialog>
 
       <Box
         sx={{

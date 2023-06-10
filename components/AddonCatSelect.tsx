@@ -35,10 +35,10 @@ function getStyles(name: string, personName: string[], theme: Theme) {
 }
 
 export default function AddonCatSelect({
-  addonCategories,
+  // addonCategories,
   onStateChange,
 }: Props) {
-  // const { addonCategories } = useContext(AppContext);
+  const { addonCategories } = useContext(AppContext);
   const theme = useTheme();
   const [personName, setPersonName] = React.useState<string[]>([]);
 
@@ -68,7 +68,7 @@ export default function AddonCatSelect({
 
   return (
     <div>
-      <FormControl sx={{ m: 1, width: 250 }}>
+      <FormControl sx={{ m: 1, width: 280 }}>
         <InputLabel id="demo-multiple-name-label">Addon Categories</InputLabel>
         <Select
           labelId="demo-multiple-name-label"

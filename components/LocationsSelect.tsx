@@ -63,7 +63,7 @@ export default function LocationsSelect({ onStateChange }: Props) {
 
   return (
     <div>
-      <FormControl sx={{ m: 1, width: 250 }}>
+      <FormControl sx={{ width: 280 }}>
         <InputLabel id="demo-multiple-name-label">Locations</InputLabel>
         <Select
           labelId="demo-multiple-name-label"

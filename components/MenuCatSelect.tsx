@@ -68,7 +68,7 @@ export default function MenuCatSelect({
 
   return (
     <div>
-      <FormControl sx={{ m: 1, width: 250 }}>
+      <FormControl sx={{ m: 1, width: 280 }}>
         <InputLabel id="demo-multiple-name-label">Menu Categories</InputLabel>
         <Select
           labelId="demo-multiple-name-label"

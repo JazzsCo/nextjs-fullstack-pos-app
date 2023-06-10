@@ -46,24 +46,25 @@ const sidebarMenuItems = [
     icon: <CategoryIcon />,
     route: "/admin/menu-categories",
   },
-  // {
-  //   id: 5,
-  //   label: "Addons",
-  //   icon: <LunchDiningIcon />,
-  //   route: "/routes/addon",
-  // },
-  // {
-  //   id: 6,
-  //   label: "Addon Categories",
-  //   icon: <ClassIcon />,
-  //   route: "/routes/addon-categories",
-  // },
+  {
+    id: 6,
+    label: "Addon Categories",
+    icon: <ClassIcon />,
+    route: "/admin/addon-categories",
+  },
   {
     id: 5,
-    label: "Addon Categories",
+    label: "Addons",
     icon: <LunchDiningIcon />,
-    route: "/admin/create-addons",
+    route: "/admin/addons",
   },
+
+  // {
+  //   id: 5,
+  //   label: "Addon Categories",
+  //   icon: <LunchDiningIcon />,
+  //   route: "/admin/create-addons",
+  // },
   {
     id: 6,
     label: "Locations",
@@ -80,7 +81,7 @@ const sidebarMenuItems = [
 
 export default function SideBar() {
   return (
-    <Card className="fixed bg-green-200 h-full w-full max-w-[15rem] rounded-tl-none rounded-bl-none">
+    <Card className="fixed bg-blue-300 h-full w-full max-w-[15rem] rounded-tl-none rounded-bl-none">
       <List className="mt-14">
         {sidebarMenuItems.map((item) => (
           <Link href={item.route} key={item.id}>

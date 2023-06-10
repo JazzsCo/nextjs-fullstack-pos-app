@@ -1,5 +1,5 @@
 import Layout from "@/components/Layout";
-import { Box, TextField, Button } from "@mui/material";
+import { Box, TextField, Dialog } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
@@ -10,8 +10,9 @@ import MenuCatSelect from "@/components/MenuCatSelect";
 import MenuSelect from "@/components/MenuSelect";
 import { addon_cats } from "@prisma/client";
 import AddonCatSelect from "@/components/AddonCatSelect";
+import { Button, Input } from "@material-tailwind/react";
 
-const CreateAddons = () => {
+const AddonCategory = () => {
   const locationId = Number(LocationId());
 
   const {
@@ -93,80 +94,73 @@ const CreateAddons = () => {
     getAddon(locationId);
   }, [locationId]);
 
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(!open);
+    setAddonCatName({
+      name: "",
+      menuIds: [],
+    });
+    setAddonName([]);
+    setAddonPrice([]);
+    setCount(0);
+  };
+
   return (
     <Layout>
-      <Box
-        sx={{
-          maxWidth: "20rem",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          margin: "0 auto",
-          marginY: 15,
-        }}
-      >
-        <TextField
-          id="standard-basic"
-          label="Addon Category Name"
-          variant="standard"
-          sx={{ mb: 1 }}
-          color="primary"
-          focused
-          value={addonCatName.name}
-          onChange={(e) =>
-            setAddonCatName({ ...addonCatName, name: e.target.value })
-          }
-        />
+      <div className="absolute top-[5.5rem] right-10">
+        <Button onClick={handleOpen} variant="gradient">
+          Create Addon Category
+        </Button>
+      </div>
 
-        <MenuSelect onStateChange={menuStateChange} />
+      <Dialog open={open} onClose={handleOpen}>
+        <div className="w-full flex flex-col items-center px-20 py-24 space-y-3">
+          <div className="w-[280px]">
+            <Input
+              type="text"
+              label="Addon Category Name"
+              onChange={(e) =>
+                setAddonCatName({ ...addonCatName, name: e.target.value })
+              }
+            />
+          </div>
+          <MenuSelect onStateChange={menuStateChange} />
 
-        {addonIds &&
-          addonIds.map((e, index) => (
-            <Box
-              key={index}
-              sx={{ display: "flex", justifyContent: "space-around" }}
+          {/* <div className="space-y-3">
+            {addonIds &&
+              addonIds.map((e, index) => (
+                <div key={index} className="flex justify-around space-x-3">
+                  <Input
+                    type="text"
+                    label="Addon Name"
+                    onChange={(e) => addonNames(e, index)}
+                  />
+
+                  <Input
+                    type="number"
+                    label="Price"
+                    onChange={(e) => addonPrices(e, index)}
+                  />
+                </div>
+              ))}
+          </div>
+          <div className="flex flex-col items-center space-y-2">
+            <Button
+              onClick={() => {
+                setCount(count + 1);
+              }}
+              className="text-base rounded-full"
             >
-              <TextField
-                id="standard-basic"
-                label="Addon Name"
-                variant="standard"
-                sx={{ mb: 1, mr: 3 }}
-                color="primary"
-                focused
-                onChange={(e) => addonNames(e, index)}
-              />
-
-              <TextField
-                id="standard-basic"
-                label="Price"
-                variant="standard"
-                type="number"
-                sx={{ mb: 1 }}
-                color="primary"
-                focused
-                onChange={(e) => addonPrices(e, index)}
-              />
-            </Box>
-          ))}
-
-        <Button
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            m: 2,
-            cursor: "pointer",
-          }}
-          onClick={() => {
-            setCount(count + 1);
-          }}
-        >
-          <AddCircleIcon color="primary" />
-        </Button>
-
-        <Button onClick={createAddon} variant="outlined">
-          Create Addons
-        </Button>
-      </Box>
+              +
+            </Button>
+          </div> */}
+          <Button onClick={createAddon} variant="gradient">
+            Create Addon Category
+          </Button>
+        </div>
+      </Dialog>
 
       <Box
         sx={{
@@ -179,4 +173,4 @@ const CreateAddons = () => {
   );
 };
 
-export default CreateAddons;
+export default AddonCategory;

@@ -61,7 +61,7 @@ export default function MenuCatSelect({ onStateChange }: Props) {
 
   return (
     <div>
-      <FormControl sx={{ m: 1, width: 250 }}>
+      <FormControl sx={{ m: 1, width: 280 }}>
         <InputLabel id="demo-multiple-name-label">Menus</InputLabel>
         <Select
           labelId="demo-multiple-name-label"
