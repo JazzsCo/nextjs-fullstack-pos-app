@@ -7,7 +7,7 @@ import type {
   addon_cats as AddonCategory,
   addons as Addon,
   addons_addon_cats as AddonAddonCat,
-  menus_menu_cats_locations as MenusMenuCatAddonCatLocation,
+  menus_locations as MenusLocation,
   menus_addon_cats as MenuAddonCat,
   locations as Location,
 } from "@prisma/client";
@@ -20,7 +20,7 @@ interface AppContextType {
   addonAddonCat: AddonAddonCat[];
   menusAddonCat: MenuAddonCat[];
   locations: Location[];
-  menusMenuCatAddonCatLocation: MenusMenuCatAddonCatLocation[];
+  menusMenuCatAddonCatLocation: MenusLocation[];
   accessToken: string;
   updateData: (value: any) => void;
   fetchData: () => void;

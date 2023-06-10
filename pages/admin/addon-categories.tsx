@@ -26,33 +26,35 @@ const AddonCategory = () => {
 
   const [addonCategories, setAddonCategories] = useState<addon_cats[]>();
 
-  const [count, setCount] = useState(0);
   const [addonCatName, setAddonCatName] = useState({
     name: "",
     menuIds: [],
   });
-  const [addonName, setAddonName] = useState<String[]>([]);
-  const [addonPrice, setAddonPrice] = useState<Number[]>([]);
 
-  const addonIds = Array.from({ length: count }, (_, index) => index + 1);
+  // const [count, setCount] = useState(0);
 
-  const addonNames = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    index: number
-  ) => {
-    const updatedValues = [...addonName];
-    updatedValues[index] = e.target.value;
-    setAddonName(updatedValues);
-  };
+  // const [addonName, setAddonName] = useState<String[]>([]);
+  // const [addonPrice, setAddonPrice] = useState<Number[]>([]);
 
-  const addonPrices = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    index: number
-  ) => {
-    const updatedValues = [...addonPrice];
-    updatedValues[index] = Number(e.target.value);
-    setAddonPrice(updatedValues);
-  };
+  // const addonIds = Array.from({ length: count }, (_, index) => index + 1);
+
+  // const addonNames = (
+  //   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  //   index: number
+  // ) => {
+  //   const updatedValues = [...addonName];
+  //   updatedValues[index] = e.target.value;
+  //   setAddonName(updatedValues);
+  // };
+
+  // const addonPrices = (
+  //   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  //   index: number
+  // ) => {
+  //   const updatedValues = [...addonPrice];
+  //   updatedValues[index] = Number(e.target.value);
+  //   setAddonPrice(updatedValues);
+  // };
 
   const menuStateChange = (childStateSelectedMenuIds: any) => {
     setAddonCatName({
@@ -64,8 +66,6 @@ const AddonCategory = () => {
   const createAddon = async () => {
     const res = await axios.post(`/api/createAddon`, {
       addonCatName,
-      addonName,
-      addonPrice,
     });
 
     console.log(res);
@@ -74,9 +74,6 @@ const AddonCategory = () => {
       name: "",
       menuIds: [],
     });
-    setAddonName([]);
-    setAddonPrice([]);
-    setCount(0);
 
     fetchData();
   };
@@ -102,9 +99,6 @@ const AddonCategory = () => {
       name: "",
       menuIds: [],
     });
-    setAddonName([]);
-    setAddonPrice([]);
-    setCount(0);
   };
 
   return (
@@ -128,34 +122,6 @@ const AddonCategory = () => {
           </div>
           <MenuSelect onStateChange={menuStateChange} />
 
-          {/* <div className="space-y-3">
-            {addonIds &&
-              addonIds.map((e, index) => (
-                <div key={index} className="flex justify-around space-x-3">
-                  <Input
-                    type="text"
-                    label="Addon Name"
-                    onChange={(e) => addonNames(e, index)}
-                  />
-
-                  <Input
-                    type="number"
-                    label="Price"
-                    onChange={(e) => addonPrices(e, index)}
-                  />
-                </div>
-              ))}
-          </div>
-          <div className="flex flex-col items-center space-y-2">
-            <Button
-              onClick={() => {
-                setCount(count + 1);
-              }}
-              className="text-base rounded-full"
-            >
-              +
-            </Button>
-          </div> */}
           <Button onClick={createAddon} variant="gradient">
             Create Addon Category
           </Button>

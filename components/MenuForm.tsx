@@ -5,32 +5,13 @@ import LocationsSelect from "./LocationsSelect";
 import axios from "axios";
 import AddonCatSelect from "./AddonCatSelect";
 import MenuCatSelect from "./MenuCatSelect";
-import { menu_cats, menus_menu_cats_locations } from "@prisma/client";
+import { menu_cats, menus_locations } from "@prisma/client";
 import { LocationId } from "@/libs/locationId";
 import { Button, Input, Typography } from "@material-tailwind/react";
 import Dialog from "@mui/material/Dialog";
 
 export default function MunuForm() {
-  const locationId = Number(LocationId());
-
-  const {
-    menuCategories,
-    addonCategories,
-    addons,
-    menusMenuCatAddonCatLocation,
-    fetchData,
-  } = useContext(AppContext);
-
-  const menuCatId = menusMenuCatAddonCatLocation
-    .filter(
-      (item: menus_menu_cats_locations) => item.location_id === locationId
-    )
-    .map((item: menus_menu_cats_locations) => item.menu_cat_id)
-    .filter((item: any) => typeof item === "number") as number[];
-
-  const menuCatByLocId = menuCategories.filter((item: menu_cats) =>
-    menuCatId.includes(item.id)
-  );
+  const { fetchData } = useContext(AppContext);
 
   const imageEndPoint = `/api/image`;
   const createMenuEndPoint = `/api/menusPost`;
@@ -42,9 +23,6 @@ export default function MunuForm() {
     price: 0,
     // imageUrl: "",
     locationIds: [],
-    menuCatIds: [],
-    // addonCatIds: [],
-    // addonIds: [],
   });
 
   const onFileSelected = (files: File[]) => {
@@ -54,18 +32,6 @@ export default function MunuForm() {
   const locationStateChange = (childStateSelectedLocationIds: any) => {
     setMenu({ ...menu, locationIds: childStateSelectedLocationIds });
   };
-
-  const menuCatStateChange = (childStateSelectedMenuCatIds: any) => {
-    setMenu({ ...menu, menuCatIds: childStateSelectedMenuCatIds });
-  };
-
-  // const addonCatStateChange = (childStateSelectedAddonCatIds: any) => {
-  //   setMenu({ ...menu, addonCatIds: childStateSelectedAddonCatIds });
-  // };
-
-  // const addonStateChange = (childStateSelectedAddonIds: any) => {
-  //   setMenu({ ...menu, addonIds: childStateSelectedAddonIds });
-  // };
 
   const createMenu = async () => {
     try {

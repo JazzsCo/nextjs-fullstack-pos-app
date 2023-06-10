@@ -7,7 +7,7 @@ export default async function handler(
 ) {
   try {
     if (req.method === "POST") {
-      const { name, locationIds } = req.body.menuCat;
+      const { name, menusIds } = req.body.menuCat;
 
       const menuCatId = (
         await prisma.menu_cats.create({
@@ -17,17 +17,13 @@ export default async function handler(
         })
       ).id;
 
-      const menuCatLocationsIds = locationIds.map((id: number) => {
-        return { location_id: id, menu_cat_id: menuCatId };
+      const menusMenuCats = menusIds.map((id: number) => {
+        return { menu_id: id, menu_cat_id: menuCatId };
       });
 
-      await prisma.$transaction(
-        menuCatLocationsIds.map((id: any) =>
-          prisma.menus_menu_cats_locations.create({
-            data: id,
-          })
-        )
-      );
+      await prisma.menus_menu_cats.createMany({
+        data: menusMenuCats,
+      });
 
       res.status(200).send("Its ok");
     }
