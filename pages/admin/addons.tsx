@@ -11,6 +11,7 @@ import MenuSelect from "@/components/MenuSelect";
 import { addon_cats } from "@prisma/client";
 import AddonCatSelect from "@/components/AddonCatSelect";
 import { Button, Input } from "@material-tailwind/react";
+import { now } from "next-auth/client/_utils";
 
 const CreateAddons = () => {
   const locationId = Number(LocationId());
@@ -28,8 +29,7 @@ const CreateAddons = () => {
 
   const [count, setCount] = useState(0);
   const [addonCatName, setAddonCatName] = useState({
-    name: "",
-    menuIds: [],
+    addonIds: [],
   });
   const [addonName, setAddonName] = useState<String[]>([]);
   const [addonPrice, setAddonPrice] = useState<Number[]>([]);
@@ -54,10 +54,10 @@ const CreateAddons = () => {
     setAddonPrice(updatedValues);
   };
 
-  const menuStateChange = (childStateSelectedMenuIds: any) => {
+  const addonStateChange = (childStateSelectedAddonCatIds: any) => {
     setAddonCatName({
       ...addonCatName,
-      menuIds: childStateSelectedMenuIds,
+      addonIds: childStateSelectedAddonCatIds,
     });
   };
 
@@ -68,39 +68,39 @@ const CreateAddons = () => {
       addonPrice,
     });
 
-    console.log(res);
+    console.log("sdlskdld", addonName);
+    console.log("sdlskdld", addonPrice);
 
-    setAddonCatName({
-      name: "",
-      menuIds: [],
-    });
-    setAddonName([]);
-    setAddonPrice([]);
-    setCount(0);
+    // setAddonCatName({
+    //   name: "",
+    //   menuIds: [],
+    // });
+    // setAddonName([]);
+    // setAddonPrice([]);
+    // setCount(0);
 
-    fetchData();
+    // fetchData();
   };
 
-  const getAddon = async (id: number) => {
-    const res = await axios.get(`/api/createAddon?id=${id}`);
-    const { addonCategories } = res.data;
+  // const getAddon = async (id: number) => {
+  //   const res = await axios.get(`/api/createAddon?id=${id}`);
+  //   const { addonCategories } = res.data;
 
-    setAddonCategories(addonCategories);
+  //   setAddonCategories(addonCategories);
 
-    console.log("sldsdsldsd", addonCategories, id);
-  };
+  //   console.log("sldsdsldsd", addonCategories, id);
+  // };
 
-  useEffect(() => {
-    getAddon(locationId);
-  }, [locationId]);
+  // useEffect(() => {
+  //   getAddon(locationId);
+  // }, [locationId]);
 
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
     setOpen(!open);
     setAddonCatName({
-      name: "",
-      menuIds: [],
+      addonIds: [],
     });
     setAddonName([]);
     setAddonPrice([]);
@@ -117,25 +117,7 @@ const CreateAddons = () => {
 
       <Dialog open={open} onClose={handleOpen}>
         <div className="w-full flex flex-col items-center px-20 py-24 space-y-1">
-          <div className="w-[280px] space-y-3">
-            <Input
-              type="text"
-              label="Addon Name"
-              onChange={(e) =>
-                setAddonCatName({ ...addonCatName, name: e.target.value })
-              }
-            />
-
-            <Input
-              type="number"
-              label="Price"
-              onChange={(e) =>
-                setAddonCatName({ ...addonCatName, name: e.target.value })
-              }
-            />
-          </div>
-          <AddonCatSelect />
-          {/* <div className="space-y-3">
+          <div className="flex flex-col justify-center space-y-3">
             {addonIds &&
               addonIds.map((e, index) => (
                 <div key={index} className="flex justify-around space-x-3">
@@ -152,30 +134,38 @@ const CreateAddons = () => {
                   />
                 </div>
               ))}
+
+            <div className="flex flex-row justify-center">
+              <button
+                onClick={() => {
+                  setCount(count + 1);
+                }}
+                className="text-white w-[30px] h-[30px] bg-blue-500 rounded-full"
+              >
+                <AddCircleIcon />
+              </button>
+            </div>
           </div>
-          <div className="flex flex-col items-center space-y-2">
-            <Button
-              onClick={() => {
-                setCount(count + 1);
-              }}
-              className="text-base rounded-full"
-            >
-              +
-            </Button>
-          </div> */}
+          <AddonCatSelect
+            onStateChange={addonStateChange}
+            addonCategories={addonCategories}
+          />
           <Button onClick={createAddon} variant="gradient">
             Create Addon
           </Button>
         </div>
       </Dialog>
 
-      <Box
+      {/* <Box
         sx={{
           textAlign: "center",
         }}
       >
-        <AddonCatSelect addonCategories={addonCategories} />
-      </Box>
+        <AddonCatSelect
+          onStateChange={addonStateChange}
+          addonCategories={addonCategories}
+        />
+      </Box> */}
     </Layout>
   );
 };

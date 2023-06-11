@@ -15,14 +15,7 @@ import { Button, Input } from "@material-tailwind/react";
 const AddonCategory = () => {
   const locationId = Number(LocationId());
 
-  const {
-    // addonCategories,
-    // addons,
-    // menusAddonCat,
-    // addonAddonCat,
-    // menusMenuCatAddonCatLocation,
-    fetchData,
-  } = useContext(AppContext);
+  const { fetchData } = useContext(AppContext);
 
   const [addonCategories, setAddonCategories] = useState<addon_cats[]>();
 
@@ -30,31 +23,6 @@ const AddonCategory = () => {
     name: "",
     menuIds: [],
   });
-
-  // const [count, setCount] = useState(0);
-
-  // const [addonName, setAddonName] = useState<String[]>([]);
-  // const [addonPrice, setAddonPrice] = useState<Number[]>([]);
-
-  // const addonIds = Array.from({ length: count }, (_, index) => index + 1);
-
-  // const addonNames = (
-  //   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  //   index: number
-  // ) => {
-  //   const updatedValues = [...addonName];
-  //   updatedValues[index] = e.target.value;
-  //   setAddonName(updatedValues);
-  // };
-
-  // const addonPrices = (
-  //   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  //   index: number
-  // ) => {
-  //   const updatedValues = [...addonPrice];
-  //   updatedValues[index] = Number(e.target.value);
-  //   setAddonPrice(updatedValues);
-  // };
 
   const menuStateChange = (childStateSelectedMenuIds: any) => {
     setAddonCatName({
@@ -64,7 +32,7 @@ const AddonCategory = () => {
   };
 
   const createAddon = async () => {
-    const res = await axios.post(`/api/createAddon`, {
+    const res = await axios.post(`/api/addonCategory`, {
       addonCatName,
     });
 

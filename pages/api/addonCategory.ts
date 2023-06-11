@@ -9,35 +9,23 @@ export default async function handler(
 ) {
   try {
     if (req.method === "POST") {
-      const { addonName, addonPrice } = req.body;
-      const { addonIds } = req.body.addonCatName;
+      const { name, menuIds } = req.body.addonCatName;
 
-      // output addonsResult ==> [{addon_name: more rice, price: 333}] just like this
-      const addonsResult = addonName.map((name: string, index: number) => {
-        return { addon_name: name, price: addonPrice[index] };
+      const addonCatResultId = (
+        await prisma.addon_cats.create({
+          data: {
+            addon_cat_name: name,
+          },
+        })
+      ).id;
+
+      const menuAddonCat = menuIds.map((id: number) => {
+        return { menu_id: id, addon_cat_id: addonCatResultId };
       });
 
-      const addonsResultIds = (
-        await prisma.$transaction(
-          addonsResult.map((addon: any) =>
-            prisma.addons.create({
-              data: addon,
-            })
-          )
-        )
-      ).map((addon) => addon.id);
-
-      const resultIds = addonsResultIds.map((id: number) => {
-        return { addon_id: id, addon_cat_id: addonIds[0] };
+      await prisma.menus_addon_cats.createMany({
+        data: menuAddonCat,
       });
-
-      await prisma.$transaction(
-        resultIds.map((id: any) =>
-          prisma.addons_addon_cats.create({
-            data: id,
-          })
-        )
-      );
 
       res.status(200).send("ok");
     } else if (req.method === "GET") {

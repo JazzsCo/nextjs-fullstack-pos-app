@@ -47,13 +47,13 @@ const sidebarMenuItems = [
     route: "/admin/menu-categories",
   },
   {
-    id: 6,
+    id: 5,
     label: "Addon Categories",
     icon: <ClassIcon />,
     route: "/admin/addon-categories",
   },
   {
-    id: 5,
+    id: 6,
     label: "Addons",
     icon: <LunchDiningIcon />,
     route: "/admin/addons",
@@ -66,13 +66,13 @@ const sidebarMenuItems = [
   //   route: "/admin/create-addons",
   // },
   {
-    id: 6,
+    id: 7,
     label: "Locations",
     icon: <AddLocationIcon />,
     route: "/admin/locations",
   },
   {
-    id: 7,
+    id: 8,
     label: "Settings",
     icon: <SettingsIcon />,
     route: "/admin/setting",
