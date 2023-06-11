@@ -10,8 +10,8 @@ import { AppContext } from "../contexts/AppContext";
 import { addon_cats } from "@prisma/client";
 
 interface Props {
-  onStateChange?: (childStateSelectedAddonCatIds: any) => void;
-  addonCategories?: addon_cats[];
+  onStateChange: (childStateSelectedAddonCatIds: any) => void;
+  addonCategories: addon_cats[];
 }
 
 const ITEM_HEIGHT = 48;
@@ -35,10 +35,9 @@ function getStyles(name: string, personName: string[], theme: Theme) {
 }
 
 export default function AddonCatSelect({
-  // addonCategories,
+  addonCategories,
   onStateChange,
 }: Props) {
-  const { addonCategories } = useContext(AppContext);
   const theme = useTheme();
   const [personName, setPersonName] = React.useState<string[]>([]);
 
@@ -53,17 +52,15 @@ export default function AddonCatSelect({
 
     const selectedNames = event.target.value as string[];
 
-    const selectedIds =
-      addonCategories &&
-      addonCategories
-        .filter((addonCat) => {
-          return selectedNames.includes(addonCat.addon_cat_name);
-        })
-        .map((addonCat) => {
-          return addonCat.id;
-        });
+    const selectedIds = addonCategories
+      .filter((addonCat) => {
+        return selectedNames.includes(addonCat.addon_cat_name);
+      })
+      .map((addonCat) => {
+        return addonCat.id;
+      });
 
-    onStateChange && onStateChange(selectedIds);
+    onStateChange(selectedIds);
   };
 
   return (

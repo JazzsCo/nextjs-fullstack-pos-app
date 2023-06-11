@@ -15,28 +15,52 @@ import { LocationId } from "@/libs/locationId";
 import { Button, Input } from "@material-tailwind/react";
 import Dialog from "@mui/material/Dialog";
 import MenuSelect from "@/components/MenuSelect";
+import {
+  menu_cats,
+  menus,
+  menus_locations,
+  menus_menu_cats,
+} from "@prisma/client";
 
 export default function MenuCategories() {
   const locationId = Number(LocationId());
 
-  const { fetchData, menuCategories, menusMenuCatAddonCatLocation, ...data } =
-    useContext(AppContext);
-
-  // const menuCatId = menusMenuCatAddonCatLocation
-  //   .filter(
-  //     (item: menus_menu_cats_locations) => item.location_id === locationId
-  //   )
-  //   .map((item: menus_menu_cats_locations) => item.menu_cat_id)
-  //   .filter((item: any) => typeof item === "number") as number[];
-
-  // const menuCatByLocId = menuCategories.filter((item: menu_cats) =>
-  //   menuCatId.includes(item.id)
-  // );
+  const [open, setOpen] = useState(false);
 
   const [menuCat, setMenuCat] = useState({
     name: "",
     menusIds: [],
   });
+
+  const { menus, menuCategories, menusMenuCat, menusLocation, fetchData } =
+    useContext(AppContext);
+
+  const menuIds = menusLocation
+    .filter((item: menus_locations) => item.location_id === locationId)
+    .map((item: menus_locations) => item.menu_id);
+
+  const getMenusByLocationIds = menus.filter((item: menus) =>
+    menuIds.includes(item.id)
+  );
+
+  const menuCatIds = menusMenuCat
+    .filter((item: menus_menu_cats) => menuIds.includes(item.menu_id))
+    .map((item: menus_menu_cats) => item.menu_cat_id);
+
+  const menuCatByMenu = menuCategories.filter((item: menu_cats) =>
+    menuCatIds.includes(item.id)
+  );
+
+  console.log("sdsdsds", menuCatByMenu);
+
+  const handleOpen = () => setOpen(!open);
+
+  const menuStateChange = (childStateSelectedMenuIds: any) => {
+    setMenuCat({
+      ...menuCat,
+      menusIds: childStateSelectedMenuIds,
+    });
+  };
 
   const handleSubmit = async () => {
     const url = `/api/menuCategories`;
@@ -51,17 +75,6 @@ export default function MenuCategories() {
     });
 
     fetchData();
-  };
-
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = () => setOpen(!open);
-
-  const menuStateChange = (childStateSelectedMenuIds: any) => {
-    setMenuCat({
-      ...menuCat,
-      menusIds: childStateSelectedMenuIds,
-    });
   };
 
   return (
@@ -81,7 +94,10 @@ export default function MenuCategories() {
               onChange={(e) => setMenuCat({ ...menuCat, name: e.target.value })}
             />
           </div>
-          <MenuSelect onStateChange={menuStateChange} />
+          <MenuSelect
+            menus={getMenusByLocationIds}
+            onStateChange={menuStateChange}
+          />
 
           <Button onClick={handleSubmit} variant="gradient">
             Create Menu Category
@@ -89,13 +105,16 @@ export default function MenuCategories() {
         </div>
       </Dialog>
 
-      {/* <Box
-        sx={{
-          textAlign: "center",
-        }}
-      >
-        <MenuCatSelect menuCategories={menuCatByLocId} />
-      </Box> */}
+      <div className="ml-[17rem] mt-16 flex justify-start space-x-3">
+        {menuCatByMenu.map((item: menu_cats) => (
+          <div
+            key={item.id}
+            className="w-[10rem] h-[7rem] flex flex-col items-center justify-center bg-blue-gray-200 rounded-md"
+          >
+            <h1>{item.menu_cat_name}</h1>
+          </div>
+        ))}
+      </div>
     </Layout>
   );
 }

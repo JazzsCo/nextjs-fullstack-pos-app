@@ -1,30 +1,12 @@
-import {
-  Card,
-  Typography,
-  List,
-  ListItem,
-  ListItemPrefix,
-  ListItemSuffix,
-  Chip,
-} from "@material-tailwind/react";
-import {
-  PresentationChartBarIcon,
-  ShoppingBagIcon,
-  UserCircleIcon,
-  Cog6ToothIcon,
-  InboxIcon,
-  PowerIcon,
-} from "@heroicons/react/24/solid";
+import { Card, List, ListItem, ListItemPrefix } from "@material-tailwind/react";
 
 import LunchDiningIcon from "@mui/icons-material/LunchDining";
 import LocalDiningIcon from "@mui/icons-material/LocalDining";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
-import FastfoodIcon from "@mui/icons-material/Fastfood";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ClassIcon from "@mui/icons-material/Class";
 import CategoryIcon from "@mui/icons-material/Category";
-import MailIcon from "@mui/icons-material/Mail";
 import Link from "next/link";
 
 const sidebarMenuItems = [

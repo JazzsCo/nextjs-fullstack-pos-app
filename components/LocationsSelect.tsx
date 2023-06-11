@@ -7,11 +7,9 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { AppContext } from "../contexts/AppContext";
 import { useContext, useState } from "react";
-import { locations } from "@prisma/client";
 
 interface Props {
-  onStateChange?: (childStateSelectedMenuCatIds: any) => void;
-  // menuCategories?: MenuCategories[];
+  onStateChange: (childStateSelectedLocationIds: any) => void;
 }
 
 const ITEM_HEIGHT = 48;
@@ -58,7 +56,7 @@ export default function LocationsSelect({ onStateChange }: Props) {
         return location.id;
       });
 
-    onStateChange && onStateChange(selectedIds);
+    onStateChange(selectedIds);
   };
 
   return (

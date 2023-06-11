@@ -1,38 +1,74 @@
 import Layout from "@/components/Layout";
-import { Box, TextField, Dialog } from "@mui/material";
+import { Dialog } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { AppContext } from "@/contexts/AppContext";
-import LocationsSelect from "@/components/LocationsSelect";
 import { LocationId } from "@/libs/locationId";
-import MenuCatSelect from "@/components/MenuCatSelect";
-import MenuSelect from "@/components/MenuSelect";
-import { addon_cats } from "@prisma/client";
+import {
+  addon_cats,
+  addons,
+  addons_addon_cats,
+  menus,
+  menus_addon_cats,
+  menus_locations,
+} from "@prisma/client";
 import AddonCatSelect from "@/components/AddonCatSelect";
 import { Button, Input } from "@material-tailwind/react";
-import { now } from "next-auth/client/_utils";
 
 const CreateAddons = () => {
   const locationId = Number(LocationId());
 
-  const {
-    // addonCategories,
-    // addons,
-    // menusAddonCat,
-    // addonAddonCat,
-    // menusMenuCatAddonCatLocation,
-    fetchData,
-  } = useContext(AppContext);
-
-  const [addonCategories, setAddonCategories] = useState<addon_cats[]>();
+  const [open, setOpen] = useState(false);
 
   const [count, setCount] = useState(0);
+
   const [addonCatName, setAddonCatName] = useState({
     addonIds: [],
   });
   const [addonName, setAddonName] = useState<String[]>([]);
   const [addonPrice, setAddonPrice] = useState<Number[]>([]);
+
+  const {
+    addonCategories,
+    addons,
+    menusAddonCat,
+    addonAddonCat,
+    menusLocation,
+    fetchData,
+  } = useContext(AppContext);
+
+  const menuIds = menusLocation
+    .filter((item: menus_locations) => item.location_id === locationId)
+    .map((item: menus_locations) => item.menu_id);
+
+  const addonCatIds = menusAddonCat
+    .filter((item: menus_addon_cats) => menuIds.includes(item.menu_id))
+    .map((item: menus_addon_cats) => item.addon_cat_id);
+
+  const addonCatByMenu = addonCategories.filter((item: addon_cats) =>
+    addonCatIds.includes(item.id)
+  );
+
+  const addonIdss = addonAddonCat
+    .filter((item: addons_addon_cats) =>
+      addonCatIds.includes(item.addon_cat_id)
+    )
+    .map((item: addons_addon_cats) => item.addon_id);
+
+  const addonByAddonCat = addons.filter((item: addons) =>
+    addonIdss.includes(item.id)
+  );
+
+  const handleOpen = () => {
+    setOpen(!open);
+    setAddonCatName({
+      addonIds: [],
+    });
+    setAddonName([]);
+    setAddonPrice([]);
+    setCount(0);
+  };
 
   const addonIds = Array.from({ length: count }, (_, index) => index + 1);
 
@@ -68,43 +104,7 @@ const CreateAddons = () => {
       addonPrice,
     });
 
-    console.log("sdlskdld", addonName);
-    console.log("sdlskdld", addonPrice);
-
-    // setAddonCatName({
-    //   name: "",
-    //   menuIds: [],
-    // });
-    // setAddonName([]);
-    // setAddonPrice([]);
-    // setCount(0);
-
-    // fetchData();
-  };
-
-  // const getAddon = async (id: number) => {
-  //   const res = await axios.get(`/api/createAddon?id=${id}`);
-  //   const { addonCategories } = res.data;
-
-  //   setAddonCategories(addonCategories);
-
-  //   console.log("sldsdsldsd", addonCategories, id);
-  // };
-
-  // useEffect(() => {
-  //   getAddon(locationId);
-  // }, [locationId]);
-
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = () => {
-    setOpen(!open);
-    setAddonCatName({
-      addonIds: [],
-    });
-    setAddonName([]);
-    setAddonPrice([]);
-    setCount(0);
+    fetchData();
   };
 
   return (
@@ -148,7 +148,7 @@ const CreateAddons = () => {
           </div>
           <AddonCatSelect
             onStateChange={addonStateChange}
-            addonCategories={addonCategories}
+            addonCategories={addonCatByMenu}
           />
           <Button onClick={createAddon} variant="gradient">
             Create Addon
@@ -156,16 +156,16 @@ const CreateAddons = () => {
         </div>
       </Dialog>
 
-      {/* <Box
-        sx={{
-          textAlign: "center",
-        }}
-      >
-        <AddonCatSelect
-          onStateChange={addonStateChange}
-          addonCategories={addonCategories}
-        />
-      </Box> */}
+      <div className="ml-[17rem] mt-16 flex justify-start space-x-3">
+        {addonByAddonCat.map((item: addons) => (
+          <div
+            key={item.id}
+            className="w-[10rem] h-[7rem] flex flex-col items-center justify-center bg-blue-gray-200 rounded-md"
+          >
+            <h1>{item.addon_name}</h1>
+          </div>
+        ))}
+      </div>
     </Layout>
   );
 };

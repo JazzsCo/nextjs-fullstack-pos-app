@@ -1,83 +1,41 @@
 /* eslint-disable @next/next/no-img-element */
-import axios from "axios";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { AppContext } from "@/contexts/AppContext";
 import Layout from "@/components/Layout";
-import ButtonSide from "./ButtonSide";
-import Link from "next/link";
-import type {
-  menus as Menu,
-  menu_cats as MenuCategory,
-  addon_cats as AddonCategory,
-  addons as Addon,
-  addons_addon_cats as AddonAddonCat,
-  menus_menu_cats_locations,
-} from "@prisma/client";
-import { useRouter } from "next/router";
+import type { menus, menus_locations } from "@prisma/client";
 import { LocationId } from "@/libs/locationId";
-import { Button } from "@material-tailwind/react";
 import MenuForm from "@/components/MenuForm";
 
 export default function Menus() {
-  const locationId = LocationId() || "";
+  const locationId = Number(LocationId());
 
-  const { locations } = useContext(AppContext);
+  const { menus, menusLocation } = useContext(AppContext);
 
-  const [menus, setMenus] = useState<Menu[]>([]);
-  const [menuCategories, setMenuCategories] = useState<MenuCategory[]>([]);
-  const [addonCategories, setAddonCategories] = useState<AddonCategory[]>([]);
-  const [addons, setAddons] = useState<Addon[]>([]);
-  const [menusMenuCatAddonCatLocation, setMenusMenuCatAddonCatLocation] =
-    useState<menus_menu_cats_locations[]>([]);
+  const menuIds = menusLocation
+    .filter((item: menus_locations) => item.location_id === locationId)
+    .map((item: menus_locations) => item.menu_id);
 
-  console.log("menu", menus);
-  console.log("menu cat", menuCategories);
-  console.log("addon cat", addonCategories);
-  console.log("addons", addons);
-  console.log("menusMenuCatAddonCatLocation", menusMenuCatAddonCatLocation);
+  const getMenusByLocationIds = menus.filter((item: menus) =>
+    menuIds.includes(item.id)
+  );
 
-  const getMenusByLocationId = async (id: string) => {
-    const url = `/api/menusPost?id=${id}`;
+  // const menusCat = (id: number) => {
+  //   const menuMenuCatIds = menusMenuCatAddonCatLocation
+  //     .filter((menuCat) => menuCat.menu_id === id)
+  //     .map((menuCat) => menuCat.menu_cat_id);
 
-    await axios
-      .get(url)
-      .then((res) => {
-        const { menus, menuCategories, menusMenuCat, addonCategories, addons } =
-          res.data;
+  //   const menuCatNames = menuCategories
+  //     .filter((menuCat) => menuMenuCatIds.includes(menuCat.id))
+  //     .map((menuCat) => menuCat.menu_cat_name);
 
-        setMenus(menus);
-        setMenuCategories(menuCategories);
-        setMenusMenuCatAddonCatLocation(menusMenuCat);
-        return res;
-      })
-      .catch((err) => {
-        return err;
-      });
-  };
-
-  useEffect(() => {
-    if (locations.length) {
-      getMenusByLocationId(locationId);
-    }
-  }, [locations, locationId]);
-
-  const menusCat = (id: number) => {
-    const menuMenuCatIds = menusMenuCatAddonCatLocation
-      .filter((menuCat) => menuCat.menu_id === id)
-      .map((menuCat) => menuCat.menu_cat_id);
-
-    const menuCatNames = menuCategories
-      .filter((menuCat) => menuMenuCatIds.includes(menuCat.id))
-      .map((menuCat) => menuCat.menu_cat_name);
-
-    return (
-      <div>
-        {menuCatNames.map((menuCat, index) => (
-          <div key={index}>{menuCat}</div>
-        ))}
-      </div>
-    );
-  };
+  //   return (
+  //     <div>
+  //       {menuCatNames.map((menuCat, index) => (
+  //         <div key={index}>{menuCat}</div>
+  //       ))}
+  //     </div>
+  //   );
+  // };
 
   // const addonsCat = (id: number) => {
   //   const menuAddonCatIds = menusAddonCat
@@ -103,10 +61,10 @@ export default function Menus() {
         <MenuForm />
       </div>
       <div className="flex my-16 gap-3 ml-[18rem] flex-wrap">
-        {menus &&
-          menus.map((menu, index) => (
+        {getMenusByLocationIds &&
+          getMenusByLocationIds.map((menu: menus) => (
             <div
-              key={index}
+              key={menu.id}
               className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
             >
               <img
@@ -125,11 +83,11 @@ export default function Menus() {
                     ${menu.price}
                   </span>
                   <div>
-                    <ButtonSide
+                    {/* <ButtonSide
                       menu={menu}
                       menusCat={menusCat}
                       // addonsCat={addonsCat}
-                    />
+                    /> */}
                   </div>
                 </div>
               </div>

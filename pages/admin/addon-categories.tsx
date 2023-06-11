@@ -1,28 +1,54 @@
 import Layout from "@/components/Layout";
-import { Box, TextField, Dialog } from "@mui/material";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { Dialog } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AppContext } from "@/contexts/AppContext";
-import LocationsSelect from "@/components/LocationsSelect";
 import { LocationId } from "@/libs/locationId";
-import MenuCatSelect from "@/components/MenuCatSelect";
 import MenuSelect from "@/components/MenuSelect";
-import { addon_cats } from "@prisma/client";
-import AddonCatSelect from "@/components/AddonCatSelect";
+import {
+  addon_cats,
+  menus,
+  menus_addon_cats,
+  menus_locations,
+} from "@prisma/client";
 import { Button, Input } from "@material-tailwind/react";
 
 const AddonCategory = () => {
   const locationId = Number(LocationId());
 
-  const { fetchData } = useContext(AppContext);
-
-  const [addonCategories, setAddonCategories] = useState<addon_cats[]>();
+  const [open, setOpen] = useState(false);
 
   const [addonCatName, setAddonCatName] = useState({
     name: "",
     menuIds: [],
   });
+
+  const { menus, addonCategories, menusAddonCat, menusLocation, fetchData } =
+    useContext(AppContext);
+
+  const menuIds = menusLocation
+    .filter((item: menus_locations) => item.location_id === locationId)
+    .map((item: menus_locations) => item.menu_id);
+
+  const getMenusByLocationIds = menus.filter((item: menus) =>
+    menuIds.includes(item.id)
+  );
+
+  const addonCatIds = menusAddonCat
+    .filter((item: menus_addon_cats) => menuIds.includes(item.menu_id))
+    .map((item: menus_addon_cats) => item.addon_cat_id);
+
+  const addonCatByMenu = addonCategories.filter((item: addon_cats) =>
+    addonCatIds.includes(item.id)
+  );
+
+  const handleOpen = () => {
+    setOpen(!open);
+    setAddonCatName({
+      name: "",
+      menuIds: [],
+    });
+  };
 
   const menuStateChange = (childStateSelectedMenuIds: any) => {
     setAddonCatName({
@@ -36,37 +62,12 @@ const AddonCategory = () => {
       addonCatName,
     });
 
-    console.log(res);
-
     setAddonCatName({
       name: "",
       menuIds: [],
     });
 
     fetchData();
-  };
-
-  const getAddon = async (id: number) => {
-    const res = await axios.get(`/api/createAddon?id=${id}`);
-    const { addonCategories } = res.data;
-
-    setAddonCategories(addonCategories);
-
-    console.log("sldsdsldsd", addonCategories, id);
-  };
-
-  useEffect(() => {
-    getAddon(locationId);
-  }, [locationId]);
-
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = () => {
-    setOpen(!open);
-    setAddonCatName({
-      name: "",
-      menuIds: [],
-    });
   };
 
   return (
@@ -88,7 +89,10 @@ const AddonCategory = () => {
               }
             />
           </div>
-          <MenuSelect onStateChange={menuStateChange} />
+          <MenuSelect
+            menus={getMenusByLocationIds}
+            onStateChange={menuStateChange}
+          />
 
           <Button onClick={createAddon} variant="gradient">
             Create Addon Category
@@ -96,13 +100,16 @@ const AddonCategory = () => {
         </div>
       </Dialog>
 
-      <Box
-        sx={{
-          textAlign: "center",
-        }}
-      >
-        <AddonCatSelect addonCategories={addonCategories} />
-      </Box>
+      <div className="ml-[17rem] mt-16 flex justify-start space-x-3">
+        {addonCatByMenu.map((item: addon_cats) => (
+          <div
+            key={item.id}
+            className="w-[10rem] h-[7rem] flex flex-col items-center justify-center bg-blue-gray-200 rounded-md"
+          >
+            <h1>{item.addon_cat_name}</h1>
+          </div>
+        ))}
+      </div>
     </Layout>
   );
 };

@@ -5,11 +5,11 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { AppContext } from "../contexts/AppContext";
-import { useContext, useState } from "react";
+import { menus } from "@prisma/client";
 
 interface Props {
-  onStateChange?: (childStateSelectedMenuId: any) => void;
+  onStateChange: (childStateSelectedMenuId: any) => void;
+  menus: menus[];
 }
 
 const ITEM_HEIGHT = 48;
@@ -32,8 +32,7 @@ function getStyles(name: string, personName: string[], theme: Theme) {
   };
 }
 
-export default function MenuCatSelect({ onStateChange }: Props) {
-  const { menus } = useContext(AppContext);
+export default function MenuCatSelect({ onStateChange, menus }: Props) {
   const theme = useTheme();
   const [personName, setPersonName] = React.useState<string[]>([]);
 
@@ -49,14 +48,14 @@ export default function MenuCatSelect({ onStateChange }: Props) {
     const selectedNames = event.target.value as string[];
 
     const selectedIds = menus
-      .filter((menu) => {
+      .filter((menu: menus) => {
         return selectedNames.includes(menu.name);
       })
-      .map((menu) => {
+      .map((menu: menus) => {
         return menu.id;
       });
 
-    onStateChange && onStateChange(selectedIds);
+    onStateChange(selectedIds);
   };
 
   return (
