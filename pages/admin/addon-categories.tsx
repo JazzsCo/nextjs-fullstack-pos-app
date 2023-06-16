@@ -1,6 +1,6 @@
 import Layout from "@/components/Layout";
 import { Dialog } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { AppContext } from "@/contexts/AppContext";
 import { LocationId } from "@/libs/locationId";
@@ -57,7 +57,7 @@ const AddonCategory = () => {
     });
   };
 
-  const createAddon = async () => {
+  const createAddonCategory = async () => {
     const res = await axios.post(`/api/addonCategory`, {
       addonCatName,
     });
@@ -94,7 +94,7 @@ const AddonCategory = () => {
             onStateChange={menuStateChange}
           />
 
-          <Button onClick={createAddon} variant="gradient">
+          <Button onClick={createAddonCategory} variant="gradient">
             Create Addon Category
           </Button>
         </div>

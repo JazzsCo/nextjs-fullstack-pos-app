@@ -9,13 +9,11 @@ import {
   addon_cats,
   addons,
   addons_addon_cats,
-  menus,
   menus_addon_cats,
   menus_locations,
 } from "@prisma/client";
 import AddonCatSelect from "@/components/AddonCatSelect";
 import { Button, Input } from "@material-tailwind/react";
-
 const CreateAddons = () => {
   const locationId = Number(LocationId());
 

@@ -8,16 +8,14 @@ import { AppContext } from "@/contexts/AppContext";
 import LocationsSelect from "@/components/LocationsSelect";
 
 export default function MenuCategories() {
-  const { fetchData, locations } = useContext(AppContext);
+  const { fetchData } = useContext(AppContext);
 
   const [name, setname] = useState("");
 
-  const url = `/api/locations`;
-
-  const handleSubmit = async () => {
+  const createLocation = async () => {
     if (!name) return console.log("This is empty...");
 
-    const res = await axios.post(url, {
+    const res = await axios.post(`/api/locations`, {
       name,
     });
 
@@ -47,17 +45,9 @@ export default function MenuCategories() {
           focused
           onChange={(e) => setname(e.target.value)}
         />
-        <Button onClick={handleSubmit} variant="outlined">
+        <Button onClick={createLocation} variant="outlined">
           Create Location
         </Button>
-      </Box>
-
-      <Box
-        sx={{
-          textAlign: "center",
-        }}
-      >
-        <LocationsSelect />
       </Box>
     </Layout>
   );

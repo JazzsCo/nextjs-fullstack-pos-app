@@ -7,9 +7,11 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { AppContext } from "../contexts/AppContext";
 import { useContext, useState } from "react";
+import { locations } from "@prisma/client";
 
 interface Props {
-  onStateChange: (childStateSelectedLocationIds: any) => void;
+  onStateChange?: (childStateSelectedLocationIds: any) => void;
+  locations?: locations[];
 }
 
 const ITEM_HEIGHT = 48;
@@ -32,8 +34,8 @@ function getStyles(name: string, personName: string[], theme: Theme) {
   };
 }
 
-export default function LocationsSelect({ onStateChange }: Props) {
-  const { locations } = useContext(AppContext);
+export default function LocationsSelect({ onStateChange, locations }: Props) {
+  // const { locations } = useContext(AppContext);
   const theme = useTheme();
   const [personName, setPersonName] = React.useState<string[]>([]);
 
@@ -48,15 +50,17 @@ export default function LocationsSelect({ onStateChange }: Props) {
 
     const selectedNames = event.target.value as string[];
 
-    const selectedIds = locations
-      .filter((location) => {
-        return selectedNames.includes(location.location_name);
-      })
-      .map((location) => {
-        return location.id;
-      });
+    const selectedIds =
+      locations &&
+      locations
+        .filter((location) => {
+          return selectedNames.includes(location.location_name);
+        })
+        .map((location) => {
+          return location.id;
+        });
 
-    onStateChange(selectedIds);
+    onStateChange && onStateChange(selectedIds);
   };
 
   return (

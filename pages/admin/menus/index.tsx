@@ -1,10 +1,10 @@
-/* eslint-disable @next/next/no-img-element */
 import { useContext } from "react";
 import { AppContext } from "@/contexts/AppContext";
 import Layout from "@/components/Layout";
 import type { menus, menus_locations } from "@prisma/client";
 import { LocationId } from "@/libs/locationId";
 import MenuForm from "@/components/MenuForm";
+import Link from "next/link";
 
 export default function Menus() {
   const locationId = Number(LocationId());
@@ -63,9 +63,10 @@ export default function Menus() {
       <div className="flex my-16 gap-3 ml-[18rem] flex-wrap">
         {getMenusByLocationIds &&
           getMenusByLocationIds.map((menu: menus) => (
-            <div
+            <Link
+              className="w-full max-w-sm bg-white hover:bg-gray-100 border border-gray-200 cursor-pointer rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
               key={menu.id}
-              className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+              href={`/admin/menus/${menu.id}`}
             >
               <img
                 className="p-8 rounded-[2.5rem]"
@@ -82,16 +83,10 @@ export default function Menus() {
                   <span className="text-3xl font-bold text-gray-900 dark:text-white">
                     ${menu.price}
                   </span>
-                  <div>
-                    {/* <ButtonSide
-                      menu={menu}
-                      menusCat={menusCat}
-                      // addonsCat={addonsCat}
-                    /> */}
-                  </div>
+                  <div></div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
       </div>
     </Layout>

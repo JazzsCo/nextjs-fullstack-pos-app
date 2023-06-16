@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/libs/db";
+import { menus_locations } from "@prisma/client";
 
 export default async function handler(
   req: NextApiRequest,
@@ -33,12 +34,40 @@ export default async function handler(
 
       res.status(200).send("It ok");
     } else if (req.method === "PUT") {
-      // const { name, price } = req.body.menu;
-      // const id = req.query.id;
-      // const text = `UPDATE menus SET name = $1, price = $2 WHERE id = $3 RETURNING *`;
-      // const values = [name, price, id];
-      // const { rows } = await pool.query(text, values);
-      // res.send(rows);
+      const { id } = req.query;
+      const { locationId } = req.body;
+
+      const validLocationId = (
+        await prisma.menus_locations.findMany({
+          where: { menu_id: Number(id) },
+        })
+      )
+        .map((item: menus_locations) => item.location_id)
+        .map((item: any) => item) as number[];
+
+      if (validLocationId.length > locationId.length) {
+        const differentLocationId = validLocationId.filter(
+          (id: number) => !locationId.includes(id)
+        );
+
+        console.log("sdskdjs", differentLocationId);
+        console.log("ma ma");
+      } else if (validLocationId.length < locationId.length) {
+        const differentLocationId = locationId.filter(
+          (id: number) => !validLocationId.includes(id)
+        );
+
+        console.log("sdskdjs", differentLocationId);
+        console.log("nyi nyi");
+      } else {
+        const differentLocationId = locationId.filter(
+          (id: number) => !validLocationId.includes(id)
+        );
+
+        console.log("sdskdjs", differentLocationId);
+        console.log("ko nyi nyi");
+      }
+      res.status(200).json({ text: "Im ok..." });
     } else if (req.method === "GET") {
       const id = req.query.id;
 

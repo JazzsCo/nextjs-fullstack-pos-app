@@ -1,16 +1,7 @@
 import axios from "axios";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
 import Layout from "@/components/Layout";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { AppContext } from "@/contexts/AppContext";
-// import MenuCatSelect from "@/components/MenuCatSelect";
-// import LocationsSelect from "@/components/LocationsSelect";
-// import {
-//   menu_cats as MenuCategory,
-//   menu_cats,
-//   menus_menu_cats_locations,
-// } from "@prisma/client";
 import { LocationId } from "@/libs/locationId";
 import { Button, Input } from "@material-tailwind/react";
 import Dialog from "@mui/material/Dialog";
@@ -51,8 +42,6 @@ export default function MenuCategories() {
     menuCatIds.includes(item.id)
   );
 
-  console.log("sdsdsds", menuCatByMenu);
-
   const handleOpen = () => setOpen(!open);
 
   const menuStateChange = (childStateSelectedMenuIds: any) => {
@@ -62,7 +51,7 @@ export default function MenuCategories() {
     });
   };
 
-  const handleSubmit = async () => {
+  const createMenuCategory = async () => {
     const url = `/api/menuCategories`;
 
     const res = await axios.post(url, {
@@ -99,7 +88,7 @@ export default function MenuCategories() {
             onStateChange={menuStateChange}
           />
 
-          <Button onClick={handleSubmit} variant="gradient">
+          <Button onClick={createMenuCategory} variant="gradient">
             Create Menu Category
           </Button>
         </div>

@@ -2,11 +2,25 @@
 /* eslint-disable @next/next/no-img-element */
 import Layout from "@/components/Layout";
 import { AppContext } from "@/contexts/AppContext";
-import type { menus as Menu } from "@prisma/client";
+import type {
+  menus as Menu,
+  addon_cats,
+  addons,
+  addons_addon_cats,
+  locations,
+  menu_cats,
+  menus,
+  menus_addon_cats,
+  menus_locations,
+  menus_menu_cats,
+} from "@prisma/client";
 import { useRouter } from "next/router";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Button, Box, Modal, Checkbox } from "@mui/material";
+import { Box, Modal, Checkbox } from "@mui/material";
 import axios from "axios";
+import { Button } from "@material-tailwind/react";
+import LocationsSelect from "@/components/LocationsSelect";
+import MenuUpdate from "@/components/MenuUpdate";
 
 const style = {
   position: "absolute" as "absolute",
@@ -23,180 +37,130 @@ const style = {
 };
 
 const MenuById = () => {
-  const { menus, fetchData } = useContext(AppContext);
+  const {
+    menus,
+    menuCategories,
+    addonCategories,
+    locations,
+    menusMenuCat,
+    addonAddonCat,
+    addons,
+    menusAddonCat,
+    menusLocation,
+    fetchData,
+  } = useContext(AppContext);
 
   const router = useRouter();
   const { id } = router.query;
 
-  const [menu, setMenu] = useState<Menu>();
+  const currentMenu = menus.filter((item: menus) => item.id === Number(id))[0];
 
-  useEffect(() => {
-    setMenu(menus.find((item) => item.id.toString() === id?.toString()));
-  }, [menus, menu]);
+  const menuCatIds = menusMenuCat
+    .filter((item: menus_menu_cats) => item.menu_id === Number(id))
+    .map((item: menus_menu_cats) => item.menu_cat_id);
 
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const menuCatByMenu = menuCategories.filter((item: menu_cats) =>
+    menuCatIds.includes(item.id)
+  );
 
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_ENDPOINT;
+  const addonCatIds = menusAddonCat
+    .filter((item: menus_addon_cats) => item.menu_id === Number(id))
+    .map((item: menus_addon_cats) => item.addon_cat_id);
 
-  const url = `${apiBaseUrl}/menusPost?id=${id}`;
+  const addonCatByMenu = addonCategories.filter((item: addon_cats) =>
+    addonCatIds.includes(item.id)
+  );
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const menu = {
-      name: formData.get("name"),
-      price: formData.get("price"),
-    };
-    await axios
-      .put(url, {
-        menu,
-      })
-      .then((res) => {
-        console.log(res.data);
-        return res;
-      })
-      .catch((err) => {
-        return err;
-      });
-    fetchData();
-  };
+  const addonIds = addonAddonCat
+    .filter((item: addons_addon_cats) =>
+      addonCatIds.includes(item.addon_cat_id)
+    )
+    .map((item: addons_addon_cats) => item.addon_id);
+
+  const addonByAddonCat = addons.filter((item: addons) =>
+    addonIds.includes(item.id)
+  );
+
+  const currentLocationIds = menusLocation
+    .filter((item: menus_locations) => item.menu_id === Number(id))
+    .map((item: menus_locations) => item.location_id)
+    .filter((item: any) => item) as number[];
+
+  const currentLocation = locations.filter((item: locations) =>
+    currentLocationIds.includes(item.id)
+  );
+  // .map((item: locations) => item.location_name);
 
   return (
     <Layout>
-      {menu ? (
-        <div>
-          <div className="flex flex-col items-center my-28">
-            <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-              <img
-                className="p-8 rounded-[2.5rem]"
-                src={menu?.image_url}
-                alt="product image"
-              />
+      <div className="flex my-16 gap-3 ml-[18rem] flex-wrap">
+        <div className="w-full max-w-sm bg-white hover:bg-gray-100 border border-gray-200 cursor-pointer rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+          <img
+            className="p-8 rounded-[2.5rem]"
+            src={currentMenu?.image_url}
+            alt="product image"
+          />
 
-              <div className="px-5 pb-5">
-                <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                  {menu?.name}
-                </h5>
+          <div className="px-5 pb-5">
+            <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+              {currentMenu?.name}
+            </h5>
 
-                <div className="flex items-center mt-2.5 mb-5">
-                  <svg
-                    aria-hidden="true"
-                    className="w-5 h-5 text-yellow-300"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
+            <div className="flex flex-col float-left space-y-3">
+              <span className="text-3xl font-bold text-gray-900 dark:text-white">
+                ${currentMenu?.price}
+              </span>
+
+              <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                Menu Categry
+              </h5>
+
+              <div>
+                {menuCatByMenu.map((item: menu_cats) => (
+                  <span
+                    key={item.id}
+                    className="text-xl font-bold text-gray-900 dark:text-white"
                   >
-                    <title>First star</title>
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    className="w-5 h-5 text-yellow-300"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <title>Second star</title>
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    className="w-5 h-5 text-yellow-300"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <title>Third star</title>
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    className="w-5 h-5 text-yellow-300"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <title>Fourth star</title>
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    className="w-5 h-5 text-yellow-300"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <title>Fifth star</title>
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                  </svg>
-                  <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-3">
-                    5.0
+                    {item.menu_cat_name}
                   </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-3xl font-bold text-gray-900 dark:text-white">
-                    ${menu?.price}
-                  </span>
-                  <div>
-                    <Button variant="outlined" onClick={handleOpen}>
-                      Update Menu
-                    </Button>
-
-                    <Modal
-                      sx={{}}
-                      open={open}
-                      onClose={handleClose}
-                      aria-labelledby="modal-modal-title"
-                      aria-describedby="modal-modal-description"
-                    >
-                      <Box sx={style}>
-                        <form onSubmit={handleSubmit}>
-                          <div className="mb-6">
-                            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                              Name
-                            </label>
-                            <input
-                              type="text"
-                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                              defaultValue={menu?.name}
-                              name="name"
-                              required
-                            />
-                          </div>
-                          <div className="mb-6">
-                            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                              Price
-                            </label>
-                            <input
-                              type="number"
-                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                              defaultValue={menu?.price}
-                              name="price"
-                              required
-                            />
-                          </div>
-                          <div className="flex justify-end">
-                            <button
-                              type="submit"
-                              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                            >
-                              Update
-                            </button>
-                          </div>
-                        </form>
-                      </Box>
-                    </Modal>
-                  </div>
-                </div>
+                ))}
               </div>
+
+              <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                Addon Categry
+              </h5>
+
+              <div>
+                {addonCatByMenu.map((item: addon_cats) => (
+                  <span
+                    key={item.id}
+                    className="text-xl font-bold text-gray-900 dark:text-white"
+                  >
+                    {item.addon_cat_name}
+                  </span>
+                ))}
+              </div>
+
+              <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                Addon
+              </h5>
+
+              <div>
+                {addonByAddonCat.map((item: addons) => (
+                  <span
+                    key={item.id}
+                    className="text-xl font-bold text-gray-900 dark:text-white"
+                  >
+                    {item.addon_name}
+                  </span>
+                ))}
+              </div>
+
+              <MenuUpdate menu={currentMenu} location={currentLocation} />
             </div>
           </div>
         </div>
-      ) : (
-        <h1>hello</h1>
-      )}
+      </div>
     </Layout>
   );
 };

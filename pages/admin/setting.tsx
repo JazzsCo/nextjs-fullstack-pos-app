@@ -4,14 +4,12 @@ import { AppContext } from "@/contexts/AppContext";
 import type { locations as Location } from "@prisma/client";
 import {
   Box,
-  Button,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import axios from "axios";
 
 const Setting = () => {
   const { locations } = useContext(AppContext);
@@ -37,7 +35,6 @@ const Setting = () => {
       );
       setSelectedLocation(selectedLocation);
     }
-    // }
   }, [locations]);
 
   return (
