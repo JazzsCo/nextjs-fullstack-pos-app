@@ -45,28 +45,39 @@ export default async function handler(
         .map((item: menus_locations) => item.location_id)
         .map((item: any) => item) as number[];
 
-      if (validLocationId.length > locationId.length) {
-        const differentLocationId = validLocationId.filter(
-          (id: number) => !locationId.includes(id)
+      const differentLocationIdUpdate = locationId.filter(
+        (id: number) => !validLocationId.includes(id)
+      );
+
+      const differentLocationIdDelete = validLocationId.filter(
+        (id: number) => !locationId.includes(id)
+      );
+
+      if (differentLocationIdUpdate.length > 0) {
+        const menuLocationUpdate = differentLocationIdUpdate.map(
+          (locId: number) => {
+            return { menu_id: Number(id), location_id: locId };
+          }
         );
 
-        console.log("sdskdjs", differentLocationId);
-        console.log("ma ma");
-      } else if (validLocationId.length < locationId.length) {
-        const differentLocationId = locationId.filter(
-          (id: number) => !validLocationId.includes(id)
-        );
-
-        console.log("sdskdjs", differentLocationId);
-        console.log("nyi nyi");
-      } else {
-        const differentLocationId = locationId.filter(
-          (id: number) => !validLocationId.includes(id)
-        );
-
-        console.log("sdskdjs", differentLocationId);
-        console.log("ko nyi nyi");
+        await prisma.menus_locations.createMany({
+          data: menuLocationUpdate,
+        });
       }
+
+      if (differentLocationIdDelete.length > 0)
+        await prisma.menus_locations.deleteMany({
+          where: {
+            menu_id: Number(id),
+            location_id: {
+              in: differentLocationIdDelete,
+            },
+          },
+        });
+
+      console.log("Update", differentLocationIdUpdate);
+      console.log("Delete", differentLocationIdDelete);
+
       res.status(200).json({ text: "Im ok..." });
     } else if (req.method === "GET") {
       const id = req.query.id;
