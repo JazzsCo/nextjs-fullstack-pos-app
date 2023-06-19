@@ -18,7 +18,7 @@ import { useRouter } from "next/router";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Box, Modal, Checkbox } from "@mui/material";
 import axios from "axios";
-import { Button } from "@material-tailwind/react";
+import { Button, menu } from "@material-tailwind/react";
 import LocationsSelect from "@/components/LocationsSelect";
 import MenuUpdate from "@/components/MenuUpdate";
 import { LocationId } from "@/libs/locationId";
@@ -33,6 +33,10 @@ const MenuCatById = () => {
 
   const locationId = Number(LocationId());
 
+  const currentMenuCat = menuCategories.filter(
+    (item: menu_cats) => item.id === Number(id)
+  )[0];
+
   const menuIds = menusLocation
     .filter((item: menus_locations) => item.location_id === locationId)
     .map((item: menus_locations) => item.menu_id);
@@ -41,9 +45,9 @@ const MenuCatById = () => {
     menuIds.includes(item.id)
   );
 
-  const currentMenuCat = menuCategories.filter(
-    (item: menu_cats) => item.id === Number(id)
-  )[0];
+  const menusNotHaveLocationIds = menus
+    .filter((item: menus) => !getMenusByLocationIds.includes(item))
+    .map((item: menus) => item.id);
 
   const selectedMenuIds = menusMenuCat
     .filter((item: menus_menu_cats) => item.menu_cat_id === Number(id))
@@ -57,10 +61,11 @@ const MenuCatById = () => {
     <Layout>
       <div className="flex my-16 gap-3 ml-[18rem]">
         <div className="w-[10rem] h-[7rem] flex flex-col items-center justify-center bg-blue-gray-200 rounded-md">
-          <h1>{currentMenuCat.menu_cat_name}</h1>
+          <h1>{currentMenuCat?.menu_cat_name}</h1>
           <MenuCatUpdate
             menus={getMenusByLocationIds}
             selectedMenus={selectedMenus}
+            menuNotHaveLocationIds={menusNotHaveLocationIds}
             menuCat={currentMenuCat}
           />
         </div>

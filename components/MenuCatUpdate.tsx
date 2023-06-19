@@ -23,9 +23,15 @@ interface Props {
   menus: menus[];
   selectedMenus: menus[];
   menuCat: menu_cats;
+  menuNotHaveLocationIds: Number[];
 }
 
-const MenuCatUpdate = ({ menus, selectedMenus, menuCat }: Props) => {
+const MenuCatUpdate = ({
+  menus,
+  selectedMenus,
+  menuCat,
+  menuNotHaveLocationIds,
+}: Props) => {
   const [menuId, setMenuId] = useState<number[]>([]);
 
   const [open, setOpen] = useState(false);
@@ -39,7 +45,10 @@ const MenuCatUpdate = ({ menus, selectedMenus, menuCat }: Props) => {
   };
 
   const menuCatUpdate = async () => {
-    const res = await axios.put(`/api/menusPost?id=`, { menuId });
+    const res = await axios.put(`/api/menuCategories?id=${menuCat.id}`, {
+      menuId,
+      menuNotHaveLocationIds,
+    });
 
     console.log(res);
   };
