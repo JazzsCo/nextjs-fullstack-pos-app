@@ -75,10 +75,7 @@ export default async function handler(
           },
         });
 
-      console.log("Update", differentLocationIdUpdate);
-      console.log("Delete", differentLocationIdDelete);
-
-      res.status(200).json({ text: "Im ok..." });
+      res.status(200).json({ test: "Im ok..." });
     } else if (req.method === "GET") {
       const id = req.query.id;
 
@@ -161,11 +158,6 @@ export default async function handler(
 
       res.send({
         menus,
-        // menuCategories,
-        // addonCategories,
-        // addons,
-        // addonAddonCat,
-        // menusAddonCat,
         menusMenuCat,
       });
     }

@@ -12,6 +12,7 @@ import {
   menus_locations,
   menus_menu_cats,
 } from "@prisma/client";
+import Link from "next/link";
 
 export default function MenuCategories() {
   const locationId = Number(LocationId());
@@ -96,12 +97,14 @@ export default function MenuCategories() {
 
       <div className="ml-[17rem] mt-16 flex justify-start space-x-3">
         {menuCatByMenu.map((item: menu_cats) => (
-          <div
-            key={item.id}
-            className="w-[10rem] h-[7rem] flex flex-col items-center justify-center bg-blue-gray-200 rounded-md"
-          >
-            <h1>{item.menu_cat_name}</h1>
-          </div>
+          <Link key={item.id} href={`/admin/menu-categories/${item.id}`}>
+            <div
+              key={item.id}
+              className="w-[10rem] h-[7rem] cursor-pointer hover:bg-blue-gray-400 flex flex-col items-center justify-center bg-blue-gray-200 rounded-md"
+            >
+              <h1>{item.menu_cat_name}</h1>
+            </div>
+          </Link>
         ))}
       </div>
     </Layout>

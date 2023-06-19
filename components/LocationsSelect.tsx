@@ -34,8 +34,8 @@ function getStyles(name: string, personName: string[], theme: Theme) {
   };
 }
 
-export default function LocationsSelect({ onStateChange, locations }: Props) {
-  // const { locations } = useContext(AppContext);
+export default function LocationsSelect({ onStateChange }: Props) {
+  const { locations } = useContext(AppContext);
   const theme = useTheme();
   const [personName, setPersonName] = React.useState<string[]>([]);
 
