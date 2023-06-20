@@ -22,6 +22,12 @@ interface Props {
 }
 
 const MenuUpdate = ({ menu, location }: Props) => {
+  const { fetchData } = useContext(AppContext);
+
+  const [updateMenu, setUpdateMenu] = useState({
+    name: menu?.name,
+    price: menu?.price,
+  });
   const [locationId, setLocationId] = useState<number[]>([]);
 
   const [open, setOpen] = useState(false);
@@ -35,9 +41,12 @@ const MenuUpdate = ({ menu, location }: Props) => {
   };
 
   const menuUpdate = async () => {
-    const res = await axios.put(`/api/menusPost?id=${menu.id}`, { locationId });
+    await axios.put(`/api/menusPost?id=${menu.id}`, {
+      updateMenu,
+      locationId,
+    });
 
-    console.log(res);
+    fetchData();
   };
 
   return (
@@ -50,14 +59,24 @@ const MenuUpdate = ({ menu, location }: Props) => {
 
       <Dialog open={open} onClose={handleOpen}>
         <div className="w-full flex flex-col items-center px-20 py-24 space-y-3">
-          <div className="w-[280px]">
-            {/* <Input
+          <div className="w-[300px] space-y-3">
+            <Input
               type="text"
-              label="Addon Category Name"
+              label="Menu Name"
+              defaultValue={updateMenu.name}
               onChange={(e) =>
-                setAddonCatName({ ...addonCatName, name: e.target.value })
+                setUpdateMenu({ ...updateMenu, name: e.target.value })
               }
-            /> */}
+            />
+
+            <Input
+              type="number"
+              label="Price"
+              defaultValue={updateMenu.price}
+              onChange={(e) =>
+                setUpdateMenu({ ...updateMenu, price: Number(e.target.value) })
+              }
+            />
           </div>
 
           <LocationUpdate

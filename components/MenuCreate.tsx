@@ -6,7 +6,7 @@ import axios from "axios";
 import { Button, Input, Typography } from "@material-tailwind/react";
 import Dialog from "@mui/material/Dialog";
 
-export default function MunuForm() {
+export default function MenuCreate() {
   const { fetchData } = useContext(AppContext);
 
   const [menuImage, setMenuImage] = useState<File>();

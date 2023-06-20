@@ -23,9 +23,10 @@ import LocationsSelect from "@/components/LocationsSelect";
 import MenuUpdate from "@/components/MenuUpdate";
 import { LocationId } from "@/libs/locationId";
 import MenuCatUpdate from "@/components/MenuCatUpdate";
+import MenuCards from "@/components/MenuCards";
 
 const MenuCatById = () => {
-  const { menus, menuCategories, menusMenuCat, menusLocation, fetchData } =
+  const { menus, menuCategories, menusMenuCat, menusLocation } =
     useContext(AppContext);
 
   const router = useRouter();
@@ -59,17 +60,16 @@ const MenuCatById = () => {
 
   return (
     <Layout>
-      <div className="flex my-16 gap-3 ml-[18rem]">
-        <div className="w-[10rem] h-[7rem] flex flex-col items-center justify-center bg-blue-gray-200 rounded-md">
-          <h1>{currentMenuCat?.menu_cat_name}</h1>
-          <MenuCatUpdate
-            menus={getMenusByLocationIds}
-            selectedMenus={selectedMenus}
-            menuNotHaveLocationIds={menusNotHaveLocationIds}
-            menuCat={currentMenuCat}
-          />
-        </div>
+      <div className="w-[10rem] h-[7rem] ml-[18rem] my-16 flex flex-col items-center justify-center bg-blue-gray-200 rounded-md">
+        <h1>{currentMenuCat?.menu_cat_name}</h1>
+        <MenuCatUpdate
+          menus={getMenusByLocationIds}
+          selectedMenus={selectedMenus}
+          menuNotHaveLocationIds={menusNotHaveLocationIds}
+          menuCat={currentMenuCat}
+        />
       </div>
+      <MenuCards menus={selectedMenus} />
     </Layout>
   );
 };

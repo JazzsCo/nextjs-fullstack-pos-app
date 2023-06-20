@@ -1,40 +1,20 @@
-/* eslint-disable react/jsx-no-undef */
-/* eslint-disable @next/next/no-img-element */
-import Layout from "@/components/Layout";
+import { useContext } from "react";
+import { useRouter } from "next/router";
 import { AppContext } from "@/contexts/AppContext";
 import type {
-  menus as Menu,
+  menus,
   addon_cats,
   addons,
   addons_addon_cats,
   locations,
   menu_cats,
-  menus,
   menus_addon_cats,
   menus_locations,
   menus_menu_cats,
 } from "@prisma/client";
-import { useRouter } from "next/router";
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Box, Modal, Checkbox } from "@mui/material";
-import axios from "axios";
-import { Button } from "@material-tailwind/react";
-import LocationsSelect from "@/components/LocationsSelect";
-import MenuUpdate from "@/components/MenuUpdate";
 
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  borderRadius: 2,
-  borderColor: "white",
-  p: 4,
-};
+import Layout from "@/components/Layout";
+import MenuUpdate from "@/components/MenuUpdate";
 
 const MenuById = () => {
   const {
@@ -89,14 +69,13 @@ const MenuById = () => {
   const currentLocation = locations.filter((item: locations) =>
     currentLocationIds.includes(item.id)
   );
-  // .map((item: locations) => item.location_name);
 
   return (
     <Layout>
       <div className="flex my-16 gap-3 ml-[18rem] flex-wrap">
-        <div className="w-full max-w-sm bg-white hover:bg-gray-100 border border-gray-200 cursor-pointer rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+        <div className="w-full max-w-sm h-auto bg-white hover:bg-gray-100 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <img
-            className="p-8 rounded-[2.5rem]"
+            className="p-8 rounded-[2.5rem] max-w-[18rem]"
             src={currentMenu?.image_url}
             alt="product image"
           />

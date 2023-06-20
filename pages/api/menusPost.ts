@@ -36,6 +36,17 @@ export default async function handler(
     } else if (req.method === "PUT") {
       const { id } = req.query;
       const { locationId } = req.body;
+      const { name, price } = req.body.updateMenu;
+
+      await prisma.menus.update({
+        where: {
+          id: Number(id),
+        },
+        data: {
+          name,
+          price,
+        },
+      });
 
       const validLocationId = (
         await prisma.menus_locations.findMany({

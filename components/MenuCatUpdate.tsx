@@ -1,22 +1,12 @@
-import Layout from "@/components/Layout";
-import { Dialog } from "@mui/material";
-import React, { useContext, useState } from "react";
 import axios from "axios";
+import { useContext, useState } from "react";
+
+import { menu_cats, menus } from "@prisma/client";
 import { AppContext } from "@/contexts/AppContext";
-import { LocationId } from "@/libs/locationId";
-import MenuSelect from "@/components/MenuSelect";
-import { FcInfo } from "react-icons/fc";
-import {
-  addon_cats,
-  locations,
-  menu_cats,
-  menus,
-  menus_addon_cats,
-  menus_locations,
-} from "@prisma/client";
+
+import { Dialog } from "@mui/material";
 import { Button, Input } from "@material-tailwind/react";
-import LocationsSelect from "./LocationsSelect";
-import LocationUpdate from "./LocationUpdate";
+
 import MenuListUpdate from "./MenuListUpdate";
 
 interface Props {
@@ -32,6 +22,9 @@ const MenuCatUpdate = ({
   menuCat,
   menuNotHaveLocationIds,
 }: Props) => {
+  const { fetchData } = useContext(AppContext);
+
+  const [menuCatName, setMenuCatName] = useState(menuCat?.menu_cat_name);
   const [menuId, setMenuId] = useState<number[]>([]);
 
   const [open, setOpen] = useState(false);
@@ -45,34 +38,30 @@ const MenuCatUpdate = ({
   };
 
   const menuCatUpdate = async () => {
-    const res = await axios.put(`/api/menuCategories?id=${menuCat.id}`, {
+    await axios.put(`/api/menuCategories?id=${menuCat.id}`, {
       menuId,
+      menuCatName,
       menuNotHaveLocationIds,
     });
 
-    console.log(res);
+    fetchData();
   };
-
-  console.log(menuId);
 
   return (
     <div>
-      <div>
-        <Button onClick={handleOpen}>
-          <FcInfo />
-        </Button>
+      <div className="absolute top-[5.5rem] right-10">
+        <Button onClick={handleOpen}>Update</Button>
       </div>
 
       <Dialog open={open} onClose={handleOpen}>
         <div className="w-full flex flex-col items-center px-20 py-24 space-y-3">
-          <div className="w-[280px]">
-            {/* <Input
+          <div className="w-[300px]">
+            <Input
               type="text"
-              label="Addon Category Name"
-              onChange={(e) =>
-                setAddonCatName({ ...addonCatName, name: e.target.value })
-              }
-            /> */}
+              label="Menu Category Name"
+              defaultValue={menuCatName}
+              onChange={(e) => setMenuCatName(e.target.value)}
+            />
           </div>
 
           <MenuListUpdate

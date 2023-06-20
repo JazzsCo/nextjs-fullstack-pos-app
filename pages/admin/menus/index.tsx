@@ -1,10 +1,11 @@
+import Link from "next/link";
 import { useContext } from "react";
 import { AppContext } from "@/contexts/AppContext";
-import Layout from "@/components/Layout";
-import type { menus, menus_locations } from "@prisma/client";
 import { LocationId } from "@/libs/locationId";
-import MenuForm from "@/components/MenuForm";
-import Link from "next/link";
+import type { menus, menus_locations } from "@prisma/client";
+
+import Layout from "@/components/Layout";
+import MenuCreate from "@/components/MenuCreate";
 
 export default function Menus() {
   const locationId = Number(LocationId());
@@ -19,75 +20,37 @@ export default function Menus() {
     menuIds.includes(item.id)
   );
 
-  // const menusCat = (id: number) => {
-  //   const menuMenuCatIds = menusMenuCatAddonCatLocation
-  //     .filter((menuCat) => menuCat.menu_id === id)
-  //     .map((menuCat) => menuCat.menu_cat_id);
-
-  //   const menuCatNames = menuCategories
-  //     .filter((menuCat) => menuMenuCatIds.includes(menuCat.id))
-  //     .map((menuCat) => menuCat.menu_cat_name);
-
-  //   return (
-  //     <div>
-  //       {menuCatNames.map((menuCat, index) => (
-  //         <div key={index}>{menuCat}</div>
-  //       ))}
-  //     </div>
-  //   );
-  // };
-
-  // const addonsCat = (id: number) => {
-  //   const menuAddonCatIds = menusAddonCat
-  //     .filter((addonCat) => addonCat.menu_id === id)
-  //     .map((addonCat) => addonCat.addon_cat_id);
-
-  //   const addonCatNames = addonCategories
-  //     .filter((addonCat) => menuAddonCatIds.includes(addonCat.id))
-  //     .map((addonCat) => addonCat.addon_cat_name);
-
-  //   return (
-  //     <div>
-  //       {addonCatNames.map((addonCat, index) => (
-  //         <div key={index}>{addonCat}</div>
-  //       ))}
-  //     </div>
-  //   );
-  // };
-
   return (
     <Layout>
       <div className="absolute top-[5.5rem] right-10">
-        <MenuForm />
+        <MenuCreate />
       </div>
       <div className="flex my-16 gap-3 ml-[18rem] flex-wrap">
-        {getMenusByLocationIds &&
-          getMenusByLocationIds.map((menu: menus) => (
-            <Link
-              className="w-full max-w-sm bg-white hover:bg-gray-100 border border-gray-200 cursor-pointer rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
-              key={menu.id}
-              href={`/admin/menus/${menu.id}`}
-            >
-              <img
-                className="p-8 rounded-[2.5rem]"
-                src={menu.image_url}
-                alt="product image"
-              />
+        {getMenusByLocationIds.map((menu: menus) => (
+          <Link
+            className="w-full max-w-sm bg-white hover:bg-gray-100 border border-gray-200 cursor-pointer rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+            key={menu.id}
+            href={`/admin/menus/${menu.id}`}
+          >
+            <img
+              className="p-8 rounded-[2.5rem] max-w-[18rem]"
+              src={menu.image_url}
+              alt="product image"
+            />
 
-              <div className="px-5 pb-5">
-                <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                  {menu.name}
-                </h5>
+            <div className="px-5 pb-5">
+              <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                {menu.name}
+              </h5>
 
-                <div className="flex items-center justify-between">
-                  <span className="text-3xl font-bold text-gray-900 dark:text-white">
-                    ${menu.price}
-                  </span>
-                  <div></div>
-                </div>
+              <div className="flex items-center justify-between">
+                <span className="text-3xl font-bold text-gray-900 dark:text-white">
+                  ${menu.price}
+                </span>
               </div>
-            </Link>
-          ))}
+            </div>
+          </Link>
+        ))}
       </div>
     </Layout>
   );

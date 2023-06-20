@@ -29,7 +29,16 @@ export default async function handler(
       res.status(200).json({ text: "Its ok" });
     } else if (req.method === "PUT") {
       const { id } = req.query;
-      const { menuId, menuNotHaveLocationIds } = req.body;
+      const { menuId, menuCatName, menuNotHaveLocationIds } = req.body;
+
+      await prisma.menu_cats.update({
+        where: {
+          id: Number(id),
+        },
+        data: {
+          menu_cat_name: menuCatName,
+        },
+      });
 
       const validMenuId = (
         await prisma.menus_menu_cats.findMany({
@@ -40,8 +49,6 @@ export default async function handler(
       const notDeleteMenuIds = validMenuId.filter((item: number) =>
         menuNotHaveLocationIds.includes(item)
       );
-
-      console.log("sdskdjsdjsd", notDeleteMenuIds);
 
       const differentMenuIdUpdate = menuId.filter(
         (id: number) => !validMenuId.includes(id)
@@ -68,8 +75,8 @@ export default async function handler(
           where: {
             menu_cat_id: Number(id),
             menu_id: {
-              notIn: notDeleteMenuIds,
               in: differentMenuIdDelete,
+              notIn: notDeleteMenuIds,
             },
           },
         });
