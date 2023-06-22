@@ -2,21 +2,20 @@ import Link from "next/link";
 import { useContext } from "react";
 import { AppContext } from "@/contexts/AppContext";
 import { LocationId } from "@/libs/locationId";
-import type { menus, menus_locations } from "@prisma/client";
+import type { menus } from "@prisma/client";
 
 import Layout from "@/components/Layout";
 import MenuCreate from "@/components/MenuCreate";
+import { getMenuIdsByLocationId } from "@/libs/custom";
 
 export default function Menus() {
   const locationId = Number(LocationId());
 
   const { menus, menusLocation } = useContext(AppContext);
 
-  const menuIds = menusLocation
-    .filter((item: menus_locations) => item.location_id === locationId)
-    .map((item: menus_locations) => item.menu_id);
+  const menuIds = getMenuIdsByLocationId(locationId, menusLocation);
 
-  const getMenusByLocationIds = menus.filter((item: menus) =>
+  const getMenusByLocationId = menus.filter((item: menus) =>
     menuIds.includes(item.id)
   );
 
@@ -26,7 +25,7 @@ export default function Menus() {
         <MenuCreate />
       </div>
       <div className="flex my-16 gap-3 ml-[18rem] flex-wrap">
-        {getMenusByLocationIds.map((menu: menus) => (
+        {getMenusByLocationId.map((menu: menus) => (
           <Link
             className="w-full max-w-sm bg-white hover:bg-gray-100 border border-gray-200 cursor-pointer rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
             key={menu.id}

@@ -12,6 +12,7 @@ import {
 
 import Layout from "@/components/Layout";
 import MenuCatCreate from "@/components/MenuCatCreate";
+import { getMenuIdsByLocationId } from "@/libs/custom";
 
 export default function MenuCategories() {
   const locationId = Number(LocationId());
@@ -19,21 +20,11 @@ export default function MenuCategories() {
   const { menus, menuCategories, menusMenuCat, menusLocation } =
     useContext(AppContext);
 
-  const menuIds = menusLocation
-    .filter((item: menus_locations) => item.location_id === locationId)
-    .map((item: menus_locations) => item.menu_id);
+  const menuIds = getMenuIdsByLocationId(locationId, menusLocation);
 
-  const getMenusByLocationIds = menus.filter((item: menus) =>
+  const getMenusByLocationId = menus.filter((item: menus) =>
     menuIds.includes(item.id)
   );
-
-  // const menuCatIds = menusMenuCat
-  //   .filter((item: menus_menu_cats) => menuIds.includes(item.menu_id))
-  //   .map((item: menus_menu_cats) => item.menu_cat_id);
-
-  // const menuCatByMenu = menuCategories.filter((item: menu_cats) =>
-  //   menuCatIds.includes(item.id)
-  // );
 
   const menuCountByMenuCatIds = (id: number) => {
     const menuIdByMenuCat = menusMenuCat
@@ -50,7 +41,7 @@ export default function MenuCategories() {
   return (
     <Layout>
       <div className="absolute top-[5.5rem] right-10">
-        <MenuCatCreate menus={getMenusByLocationIds} />
+        <MenuCatCreate menus={getMenusByLocationId} />
       </div>
 
       <div className="ml-[17rem] mt-16 flex justify-start space-x-3">

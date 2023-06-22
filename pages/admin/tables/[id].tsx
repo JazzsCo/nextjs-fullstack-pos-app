@@ -10,12 +10,13 @@ const EditTable = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const { tables } = useContext(AppContext);
+  const { tables, fetchData } = useContext(AppContext);
 
   const table = tables.filter((table) => table.id === Number(id))[0];
 
   const deleteTable = async () => {
     await axios.delete(`/api/tables?id=${table.id}`);
+    fetchData();
   };
 
   return (

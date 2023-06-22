@@ -12,6 +12,7 @@ import {
   menus_locations,
 } from "@prisma/client";
 import { Button, Input } from "@material-tailwind/react";
+import { getMenuIdsByLocationId } from "@/libs/custom";
 
 const AddonCategory = () => {
   const locationId = Number(LocationId());
@@ -26,9 +27,7 @@ const AddonCategory = () => {
   const { menus, addonCategories, menusAddonCat, menusLocation, fetchData } =
     useContext(AppContext);
 
-  const menuIds = menusLocation
-    .filter((item: menus_locations) => item.location_id === locationId)
-    .map((item: menus_locations) => item.menu_id);
+  const menuIds = getMenuIdsByLocationId(locationId, menusLocation);
 
   const getMenusByLocationIds = menus.filter((item: menus) =>
     menuIds.includes(item.id)

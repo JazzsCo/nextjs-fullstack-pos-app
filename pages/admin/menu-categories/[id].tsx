@@ -24,6 +24,7 @@ import MenuUpdate from "@/components/MenuUpdate";
 import { LocationId } from "@/libs/locationId";
 import MenuCatUpdate from "@/components/MenuCatUpdate";
 import MenuCards from "@/components/MenuCards";
+import { getMenuIdsByLocationId } from "@/libs/custom";
 
 const MenuCatById = () => {
   const { menus, menuCategories, menusMenuCat, menusLocation } =
@@ -38,23 +39,21 @@ const MenuCatById = () => {
     (item: menu_cats) => item.id === Number(id)
   )[0];
 
-  const menuIds = menusLocation
-    .filter((item: menus_locations) => item.location_id === locationId)
-    .map((item: menus_locations) => item.menu_id);
+  const menuIds = getMenuIdsByLocationId(locationId, menusLocation);
 
-  const getMenusByLocationIds = menus.filter((item: menus) =>
+  const getMenusByLocationId = menus.filter((item: menus) =>
     menuIds.includes(item.id)
   );
 
   const menusNotHaveLocationIds = menus
-    .filter((item: menus) => !getMenusByLocationIds.includes(item))
+    .filter((item: menus) => !getMenusByLocationId.includes(item))
     .map((item: menus) => item.id);
 
   const selectedMenuIds = menusMenuCat
     .filter((item: menus_menu_cats) => item.menu_cat_id === Number(id))
     .map((item: menus_menu_cats) => item.menu_id);
 
-  const selectedMenus = getMenusByLocationIds.filter((item: menus) =>
+  const selectedMenus = getMenusByLocationId.filter((item: menus) =>
     selectedMenuIds.includes(item.id)
   );
 
@@ -63,7 +62,7 @@ const MenuCatById = () => {
       <div className="w-[10rem] h-[7rem] ml-[18rem] my-16 flex flex-col items-center justify-center bg-blue-gray-200 rounded-md">
         <h1>{currentMenuCat?.menu_cat_name}</h1>
         <MenuCatUpdate
-          menus={getMenusByLocationIds}
+          menus={getMenusByLocationId}
           selectedMenus={selectedMenus}
           menuNotHaveLocationIds={menusNotHaveLocationIds}
           menuCat={currentMenuCat}

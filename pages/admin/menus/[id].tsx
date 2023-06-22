@@ -15,6 +15,12 @@ import type {
 
 import Layout from "@/components/Layout";
 import MenuUpdate from "@/components/MenuUpdate";
+import {
+  getAddonCatIdsByMenuId,
+  getAddonIdsByAddonCatIds,
+  getMenuCatIdsByMenuId,
+  getSelectedLocationIdsByMenuId,
+} from "@/libs/custom";
 
 const MenuById = () => {
   const {
@@ -27,7 +33,6 @@ const MenuById = () => {
     addons,
     menusAddonCat,
     menusLocation,
-    fetchData,
   } = useContext(AppContext);
 
   const router = useRouter();
@@ -35,39 +40,28 @@ const MenuById = () => {
 
   const currentMenu = menus.filter((item: menus) => item.id === Number(id))[0];
 
-  const menuCatIds = menusMenuCat
-    .filter((item: menus_menu_cats) => item.menu_id === Number(id))
-    .map((item: menus_menu_cats) => item.menu_cat_id);
+  const menuCatIds = getMenuCatIdsByMenuId(id, menusMenuCat);
 
   const menuCatByMenu = menuCategories.filter((item: menu_cats) =>
     menuCatIds.includes(item.id)
   );
 
-  const addonCatIds = menusAddonCat
-    .filter((item: menus_addon_cats) => item.menu_id === Number(id))
-    .map((item: menus_addon_cats) => item.addon_cat_id);
+  const addonCatIds = getAddonCatIdsByMenuId(id, menusAddonCat);
 
   const addonCatByMenu = addonCategories.filter((item: addon_cats) =>
     addonCatIds.includes(item.id)
   );
 
-  const addonIds = addonAddonCat
-    .filter((item: addons_addon_cats) =>
-      addonCatIds.includes(item.addon_cat_id)
-    )
-    .map((item: addons_addon_cats) => item.addon_id);
+  const addonIds = getAddonIdsByAddonCatIds(addonCatIds, addonAddonCat);
 
   const addonByAddonCat = addons.filter((item: addons) =>
     addonIds.includes(item.id)
   );
 
-  const currentLocationIds = menusLocation
-    .filter((item: menus_locations) => item.menu_id === Number(id))
-    .map((item: menus_locations) => item.location_id)
-    .filter((item: any) => item) as number[];
+  const selectedLocationIds = getSelectedLocationIdsByMenuId(id, menusLocation);
 
-  const currentLocation = locations.filter((item: locations) =>
-    currentLocationIds.includes(item.id)
+  const selectedLocation = locations.filter((item: locations) =>
+    selectedLocationIds.includes(item.id)
   );
 
   return (
@@ -135,7 +129,7 @@ const MenuById = () => {
                 ))}
               </div>
 
-              <MenuUpdate menu={currentMenu} location={currentLocation} />
+              <MenuUpdate menu={currentMenu} location={selectedLocation} />
             </div>
           </div>
         </div>
