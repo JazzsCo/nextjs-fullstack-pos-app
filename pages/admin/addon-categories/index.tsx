@@ -35,6 +35,8 @@ const AddonCategory = () => {
 
   const addonCatIds = getAddonCatIdsByMenuIds(menuIds, menusAddonCat);
 
+  console.log("first");
+
   const getAddonCatByMenuIds = addonCategories.filter((item: addon_cats) =>
     addonCatIds.includes(item.id)
   );
