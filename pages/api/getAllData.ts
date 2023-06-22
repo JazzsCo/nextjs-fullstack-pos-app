@@ -18,6 +18,7 @@ export default async function handler(
       const menusAddonCat = await prisma.menus_addon_cats.findMany();
       const addonAddonCat = await prisma.addons_addon_cats.findMany();
       const menusMenuCat = await prisma.menus_menu_cats.findMany();
+      const tables = await prisma.tables.findMany();
 
       res.status(200).send({
         menus,
@@ -25,6 +26,7 @@ export default async function handler(
         addonCategories,
         addons,
         menusLocation,
+        tables,
         locations,
         menusAddonCat,
         addonAddonCat,

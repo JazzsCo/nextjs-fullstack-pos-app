@@ -41,12 +41,12 @@ const sidebarMenuItems = [
     route: "/admin/addons",
   },
 
-  // {
-  //   id: 5,
-  //   label: "Addon Categories",
-  //   icon: <LunchDiningIcon />,
-  //   route: "/admin/create-addons",
-  // },
+  {
+    id: 9,
+    label: "Tables",
+    icon: <LunchDiningIcon />,
+    route: "/admin/tables",
+  },
   {
     id: 7,
     label: "Locations",

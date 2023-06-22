@@ -1,4 +1,5 @@
 interface Config {
+  // backofficeApiBaseUrl: any;
   apiBaseUrl: string;
   jwtSecret: string;
   spaceAccessKeyId: string;

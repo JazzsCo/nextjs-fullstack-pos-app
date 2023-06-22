@@ -12,6 +12,7 @@ import type {
   locations as Location,
   menus_locations,
   menus_menu_cats,
+  tables,
 } from "@prisma/client";
 
 interface AppContextType {
@@ -21,6 +22,7 @@ interface AppContextType {
   addonCategories: AddonCategory[];
   addonAddonCat: AddonAddonCat[];
   menusAddonCat: MenuAddonCat[];
+  tables: tables[];
   locations: Location[];
   menusLocation: menus_locations[];
   menusMenuCat: menus_menu_cats[];
@@ -38,6 +40,7 @@ export const defaultContext: AppContextType = {
   menusAddonCat: [],
   menusLocation: [],
   menusMenuCat: [],
+  tables: [],
   locations: [],
   accessToken: "",
   updateData: () => {},
@@ -62,6 +65,7 @@ const AppProvider = ({ children }: any) => {
       addonCategories,
       addons,
       menusLocation,
+      tables,
       locations,
       menusAddonCat,
       addonAddonCat,
@@ -76,6 +80,7 @@ const AppProvider = ({ children }: any) => {
       addons,
       menusLocation,
       menusMenuCat,
+      tables,
       locations,
       menusAddonCat,
       addonAddonCat,
