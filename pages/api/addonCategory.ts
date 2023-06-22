@@ -28,38 +28,61 @@ export default async function handler(
       });
 
       res.status(200).send("ok");
-    } else if (req.method === "GET") {
-      // const { id } = req.query;
-      // console.log("id : ", id);
-      // const menuIds = (
-      //   await prisma.menus_menu_cats_locations.findMany({
-      //     where: {
-      //       location_id: Number(id),
-      //     },
-      //   })
-      // )
-      //   .map((item: menus_menu_cats_locations) => item.menu_id)
-      //   .filter((item: any) => typeof item === "number") as number[];
-      // console.log("menids : ", menuIds);
-      // const addonCatIds = (
-      //   await prisma.menus_addon_cats.findMany({
-      //     where: {
-      //       menu_id: {
-      //         in: menuIds,
-      //       },
-      //     },
-      //   })
-      // ).map((item: menus_addon_cats) => item.addon_cat_id);
-      // console.log("addonCatIds : ", addonCatIds);
-      // const addonCategories = await prisma.addon_cats.findMany({
-      //   where: {
-      //     id: {
-      //       in: addonCatIds,
-      //     },
-      //   },
-      // });
-      // console.log("addonCategories : ", addonCategories);
-      // res.status(200).send({ addonCategories });
+    } else if (req.method === "PUT") {
+      const { id } = req.query;
+      const { menuId, addonCatName, menuNotHaveLocationIds } = req.body;
+
+      await prisma.addon_cats.update({
+        where: {
+          id: Number(id),
+        },
+        data: {
+          addon_cat_name: addonCatName,
+        },
+      });
+
+      const validMenuId = (
+        await prisma.menus_addon_cats.findMany({
+          where: { addon_cat_id: Number(id) },
+        })
+      ).map((item: menus_addon_cats) => item.menu_id);
+
+      const notDeleteMenuIds = validMenuId.filter((item: number) =>
+        menuNotHaveLocationIds.includes(item)
+      );
+
+      const differentMenuIdUpdate = menuId.filter(
+        (id: number) => !validMenuId.includes(id)
+      );
+
+      const differentMenuIdDelete = validMenuId.filter(
+        (id: number) => !menuId.includes(id)
+      );
+
+      if (differentMenuIdUpdate.length > 0) {
+        const menuAddonCatUpdate = differentMenuIdUpdate.map(
+          (menuId: number) => {
+            return { addon_cat_id: Number(id), menu_id: menuId };
+          }
+        );
+
+        await prisma.menus_addon_cats.createMany({
+          data: menuAddonCatUpdate,
+        });
+      }
+
+      if (differentMenuIdDelete.length > 0)
+        await prisma.menus_addon_cats.deleteMany({
+          where: {
+            addon_cat_id: Number(id),
+            menu_id: {
+              in: differentMenuIdDelete,
+              notIn: notDeleteMenuIds,
+            },
+          },
+        });
+
+      res.status(200).json({ test: "Im ok..." });
     }
   } catch (error) {
     console.log("error", error);

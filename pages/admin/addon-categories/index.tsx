@@ -1,23 +1,16 @@
+import Link from "next/link";
+import { useContext } from "react";
+import { addon_cats, menus, menus_addon_cats } from "@prisma/client";
+
 import Layout from "@/components/Layout";
-import { Dialog } from "@mui/material";
-import React, { useContext, useState } from "react";
-import axios from "axios";
-import { AppContext } from "@/contexts/AppContext";
+import AddonCatCreate from "@/components/AddonCatCreate";
+
 import { LocationId } from "@/libs/locationId";
-import MenuSelect from "@/components/MenuSelect";
-import { addon_cats, menus } from "@prisma/client";
-import { Button, Input } from "@material-tailwind/react";
-import { getAddonCatIdsByMenuIds, getMenuIdsByLocationId } from "@/libs/custom";
+import { AppContext } from "@/contexts/AppContext";
+import { getMenuIdsByLocationId } from "@/libs/custom";
 
 const AddonCategory = () => {
   const locationId = Number(LocationId());
-
-  const [open, setOpen] = useState(false);
-
-  const [addonCatName, setAddonCatName] = useState({
-    name: "",
-    menuIds: [],
-  });
 
   const { menus, addonCategories, menusAddonCat, menusLocation, fetchData } =
     useContext(AppContext);
@@ -28,78 +21,40 @@ const AddonCategory = () => {
     menuIds.includes(item.id)
   );
 
-  const addonCatIds = getAddonCatIdsByMenuIds(menuIds, menusAddonCat);
+  // const addonCatIds = getAddonCatIdsByMenuIds(menuIds, menusAddonCat);
 
-  const getAddonCatByMenuIds = addonCategories.filter((item: addon_cats) =>
-    addonCatIds.includes(item.id)
-  );
+  // const getAddonCatByMenuIds = addonCategories.filter((item: addon_cats) =>
+  //   addonCatIds.includes(item.id)
+  // );
 
-  const handleOpen = () => {
-    setOpen(!open);
-    setAddonCatName({
-      name: "",
-      menuIds: [],
-    });
-  };
+  const menuCountByAddonCatIds = (id: number) => {
+    const menuIdByAddonCat = menusAddonCat
+      .filter((item: menus_addon_cats) => item.addon_cat_id === id)
+      .map((item: menus_addon_cats) => item.menu_id);
 
-  const menuStateChange = (childStateSelectedMenuIds: any) => {
-    setAddonCatName({
-      ...addonCatName,
-      menuIds: childStateSelectedMenuIds,
-    });
-  };
+    const count = menuIds.filter((item: number) =>
+      menuIdByAddonCat.includes(item)
+    );
 
-  const createAddonCategory = async () => {
-    const res = await axios.post(`/api/addonCategory`, {
-      addonCatName,
-    });
-
-    setAddonCatName({
-      name: "",
-      menuIds: [],
-    });
-
-    fetchData();
+    return count.length;
   };
 
   return (
     <Layout>
       <div className="absolute top-[5.5rem] right-10">
-        <Button onClick={handleOpen} variant="gradient">
-          Create Addon Category
-        </Button>
+        <AddonCatCreate menu={getMenusByLocationIds} />
       </div>
 
-      <Dialog open={open} onClose={handleOpen}>
-        <div className="w-full flex flex-col items-center px-20 py-24 space-y-3">
-          <div className="w-[280px]">
-            <Input
-              type="text"
-              label="Addon Category Name"
-              onChange={(e) =>
-                setAddonCatName({ ...addonCatName, name: e.target.value })
-              }
-            />
-          </div>
-          <MenuSelect
-            menus={getMenusByLocationIds}
-            onStateChange={menuStateChange}
-          />
-
-          <Button onClick={createAddonCategory} variant="gradient">
-            Create Addon Category
-          </Button>
-        </div>
-      </Dialog>
-
       <div className="ml-[17rem] mt-16 flex justify-start space-x-3">
-        {getAddonCatByMenuIds.map((item: addon_cats) => (
-          <div
-            key={item.id}
-            className="w-[10rem] h-[7rem] flex flex-col items-center justify-center bg-blue-gray-200 rounded-md"
-          >
-            <h1>{item.addon_cat_name}</h1>
-          </div>
+        {addonCategories.map((item: addon_cats) => (
+          <Link key={item.id} href={`/admin/addon-categories/${item.id}`}>
+            <div className="flex flex-col items-center justify-center space-y-2">
+              <div className="w-[10rem] h-[7rem] cursor-pointer hover:bg-blue-gray-400 flex flex-col items-center justify-center bg-blue-gray-200 rounded-md">
+                <h1>{menuCountByAddonCatIds(item.id)} menus</h1>
+              </div>
+              <h1>{item.addon_cat_name}</h1>
+            </div>
+          </Link>
         ))}
       </div>
     </Layout>

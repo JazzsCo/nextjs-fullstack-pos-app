@@ -6,7 +6,7 @@ import TableUpdate from "@/components/TableUpdate";
 import DeleteDialog from "@/components/DeleteDialog";
 import axios from "axios";
 
-const EditTable = () => {
+const TableById = () => {
   const router = useRouter();
   const { id } = router.query;
 
@@ -39,4 +39,4 @@ const EditTable = () => {
   );
 };
 
-export default EditTable;
+export default TableById;
