@@ -5,12 +5,7 @@ import axios from "axios";
 import { AppContext } from "@/contexts/AppContext";
 import { LocationId } from "@/libs/locationId";
 import MenuSelect from "@/components/MenuSelect";
-import {
-  addon_cats,
-  menus,
-  menus_addon_cats,
-  menus_locations,
-} from "@prisma/client";
+import { addon_cats, menus } from "@prisma/client";
 import { Button, Input } from "@material-tailwind/react";
 import { getAddonCatIdsByMenuIds, getMenuIdsByLocationId } from "@/libs/custom";
 
@@ -34,8 +29,6 @@ const AddonCategory = () => {
   );
 
   const addonCatIds = getAddonCatIdsByMenuIds(menuIds, menusAddonCat);
-
-  console.log("first");
 
   const getAddonCatByMenuIds = addonCategories.filter((item: addon_cats) =>
     addonCatIds.includes(item.id)

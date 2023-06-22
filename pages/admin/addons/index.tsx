@@ -5,15 +5,14 @@ import React, { useContext, useState } from "react";
 import axios from "axios";
 import { AppContext } from "@/contexts/AppContext";
 import { LocationId } from "@/libs/locationId";
-import {
-  addon_cats,
-  addons,
-  addons_addon_cats,
-  menus_addon_cats,
-  menus_locations,
-} from "@prisma/client";
+import { addon_cats, addons } from "@prisma/client";
 import AddonCatSelect from "@/components/AddonCatSelect";
 import { Button, Input } from "@material-tailwind/react";
+import {
+  getAddonCatIdsByMenuIds,
+  getAddonIdsByAddonCatIds,
+  getMenuIdsByLocationId,
+} from "@/libs/custom";
 const CreateAddons = () => {
   const locationId = Number(LocationId());
 
@@ -36,26 +35,21 @@ const CreateAddons = () => {
     fetchData,
   } = useContext(AppContext);
 
-  const menuIds = menusLocation
-    .filter((item: menus_locations) => item.location_id === locationId)
-    .map((item: menus_locations) => item.menu_id);
+  const menuIds = getMenuIdsByLocationId(locationId, menusLocation);
 
-  const addonCatIds = menusAddonCat
-    .filter((item: menus_addon_cats) => menuIds.includes(item.menu_id))
-    .map((item: menus_addon_cats) => item.addon_cat_id);
+  const addonCatIds = getAddonCatIdsByMenuIds(menuIds, menusAddonCat);
 
   const addonCatByMenu = addonCategories.filter((item: addon_cats) =>
     addonCatIds.includes(item.id)
   );
 
-  const addonIdss = addonAddonCat
-    .filter((item: addons_addon_cats) =>
-      addonCatIds.includes(item.addon_cat_id)
-    )
-    .map((item: addons_addon_cats) => item.addon_id);
+  const getAddonByAddonCatIds = getAddonIdsByAddonCatIds(
+    addonCatIds,
+    addonAddonCat
+  );
 
   const addonByAddonCat = addons.filter((item: addons) =>
-    addonIdss.includes(item.id)
+    getAddonByAddonCatIds.includes(item.id)
   );
 
   const handleOpen = () => {
