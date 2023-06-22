@@ -32,6 +32,15 @@ export const getAddonCatIdsByMenuId = (
     .map((item: menus_addon_cats) => item.addon_cat_id);
 };
 
+export const getAddonCatIdsByMenuIds = (
+  menuIds: number[],
+  menusAddonCat: menus_addon_cats[]
+) => {
+  return menusAddonCat
+    .filter((item: menus_addon_cats) => menuIds.includes(item.menu_id))
+    .map((item: menus_addon_cats) => item.addon_cat_id);
+};
+
 export const getAddonIdsByAddonCatIds = (
   addonCatIds: number[],
   addonAddonCat: addons_addon_cats[]

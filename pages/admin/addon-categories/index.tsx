@@ -12,7 +12,7 @@ import {
   menus_locations,
 } from "@prisma/client";
 import { Button, Input } from "@material-tailwind/react";
-import { getMenuIdsByLocationId } from "@/libs/custom";
+import { getAddonCatIdsByMenuIds, getMenuIdsByLocationId } from "@/libs/custom";
 
 const AddonCategory = () => {
   const locationId = Number(LocationId());
@@ -33,11 +33,9 @@ const AddonCategory = () => {
     menuIds.includes(item.id)
   );
 
-  const addonCatIds = menusAddonCat
-    .filter((item: menus_addon_cats) => menuIds.includes(item.menu_id))
-    .map((item: menus_addon_cats) => item.addon_cat_id);
+  const addonCatIds = getAddonCatIdsByMenuIds(menuIds, menusAddonCat);
 
-  const addonCatByMenu = addonCategories.filter((item: addon_cats) =>
+  const getAddonCatByMenuIds = addonCategories.filter((item: addon_cats) =>
     addonCatIds.includes(item.id)
   );
 
@@ -100,7 +98,7 @@ const AddonCategory = () => {
       </Dialog>
 
       <div className="ml-[17rem] mt-16 flex justify-start space-x-3">
-        {addonCatByMenu.map((item: addon_cats) => (
+        {getAddonCatByMenuIds.map((item: addon_cats) => (
           <div
             key={item.id}
             className="w-[10rem] h-[7rem] flex flex-col items-center justify-center bg-blue-gray-200 rounded-md"
