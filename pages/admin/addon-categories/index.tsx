@@ -37,6 +37,8 @@ const AddonCategory = () => {
     .filter((item: menus_addon_cats) => menuIds.includes(item.menu_id))
     .map((item: menus_addon_cats) => item.addon_cat_id);
 
+  console.log("first");
+
   const addonCatByMenu = addonCategories.filter((item: addon_cats) =>
     addonCatIds.includes(item.id)
   );
