@@ -1,33 +1,20 @@
-/* eslint-disable react/jsx-no-undef */
-/* eslint-disable @next/next/no-img-element */
-import Layout from "@/components/Layout";
-import { AppContext } from "@/contexts/AppContext";
-import type {
-  menus as Menu,
-  addon_cats,
-  addons,
-  addons_addon_cats,
-  locations,
-  menu_cats,
-  menus,
-  menus_addon_cats,
-  menus_locations,
-  menus_menu_cats,
-} from "@prisma/client";
-import { useRouter } from "next/router";
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Box, Modal, Checkbox } from "@mui/material";
 import axios from "axios";
-import { Button, menu } from "@material-tailwind/react";
-import LocationsSelect from "@/components/LocationsSelect";
-import MenuUpdate from "@/components/MenuUpdate";
+import { useContext } from "react";
+import { useRouter } from "next/router";
+
 import { LocationId } from "@/libs/locationId";
-import MenuCatUpdate from "@/components/MenuCatUpdate";
-import MenuCards from "@/components/MenuCards";
+import { AppContext } from "@/contexts/AppContext";
 import { getMenuIdsByLocationId } from "@/libs/custom";
 
+import Layout from "@/components/Layout";
+import MenuCards from "@/components/MenuCards";
+import DeleteDialog from "@/components/DeleteDialog";
+import MenuCatUpdate from "@/components/MenuCatUpdate";
+
+import type { menu_cats, menus, menus_menu_cats } from "@prisma/client";
+
 const MenuCatById = () => {
-  const { menus, menuCategories, menusMenuCat, menusLocation } =
+  const { menus, menuCategories, menusMenuCat, menusLocation, fetchData } =
     useContext(AppContext);
 
   const router = useRouter();
@@ -57,16 +44,29 @@ const MenuCatById = () => {
     selectedMenuIds.includes(item.id)
   );
 
+  const deleteMenuCat = async () => {
+    await axios.delete(`/api/menuCategories?id=${id}`);
+
+    router.push("/admin/menu-categories");
+
+    fetchData();
+  };
+
   return (
     <Layout>
+      <div className="absolute top-[5.5rem] right-10">
+        <div className="flex justify-around space-x-2 mr-2">
+          <MenuCatUpdate
+            menus={getMenusByLocationId}
+            selectedMenus={selectedMenus}
+            menuNotHaveLocationIds={menusNotHaveLocationIds}
+            menuCat={currentMenuCat}
+          />
+          <DeleteDialog callback={deleteMenuCat} />
+        </div>
+      </div>
       <div className="w-[10rem] h-[7rem] ml-[18rem] my-16 flex flex-col items-center justify-center bg-blue-gray-200 rounded-md">
         <h1>{currentMenuCat?.menu_cat_name}</h1>
-        <MenuCatUpdate
-          menus={getMenusByLocationId}
-          selectedMenus={selectedMenus}
-          menuNotHaveLocationIds={menusNotHaveLocationIds}
-          menuCat={currentMenuCat}
-        />
       </div>
       <MenuCards menus={selectedMenus} />
     </Layout>

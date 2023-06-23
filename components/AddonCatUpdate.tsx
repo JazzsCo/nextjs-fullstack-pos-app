@@ -49,9 +49,7 @@ const AddonCatUpdate = ({
 
   return (
     <div>
-      <div className="absolute top-[5.5rem] right-10">
-        <Button onClick={handleOpen}>Update</Button>
-      </div>
+      <Button onClick={handleOpen}>Update</Button>
 
       <Dialog open={open} onClose={handleOpen}>
         <div className="w-full flex flex-col items-center px-20 py-24 space-y-3">

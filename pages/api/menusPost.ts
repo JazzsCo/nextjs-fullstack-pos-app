@@ -87,90 +87,17 @@ export default async function handler(
         });
 
       res.status(200).json({ test: "Im ok..." });
-    } else if (req.method === "GET") {
-      const id = req.query.id;
+    } else if (req.method === "DELETE") {
+      const { id } = req.query;
 
-      const menusIds = (
-        await prisma.menus_locations.findMany({
-          where: {
-            location_id: Number(id),
-          },
-        })
-      )
-        .map((item) => item.menu_id)
-        .filter((item) => typeof item === "number") as number[];
+      if (!id) return res.send(400);
 
-      const menus = await prisma.menus.findMany({
-        where: {
-          id: {
-            in: menusIds,
-          },
-        },
+      await prisma.menus.update({
+        data: { is_archived: true },
+        where: { id: Number(id) },
       });
 
-      const menusMenuCat = await prisma.menus_locations.findMany({
-        where: {
-          menu_id: {
-            in: menusIds,
-          },
-        },
-      });
-
-      // const menuCategoriesIds = menusMenuCat
-      //   .map((item) => item.menu_cat_id)
-      //   .filter((item) => typeof item === "number") as number[];
-
-      // const menuCategories = await prisma.menu_cats.findMany({
-      //   where: {
-      //     id: {
-      //       in: menuCategoriesIds,
-      //     },
-      //   },
-      // });
-
-      // const menusAddonCat =
-      //   await prisma.menus_menu_cats_locations.findMany({
-      //     where: {
-      //       menu_id: {
-      //         in: menusIds,
-      //       },
-      //     },
-      //   });
-
-      // const addonCategoriesIds = menusAddonCat
-      //   .map((item) => item.addon_cat_id)
-      //   .filter((item) => typeof item === "number") as number[];
-
-      // const addonCategories = await prisma.addon_cats.findMany({
-      //   where: {
-      //     id: {
-      //       in: addonCategoriesIds,
-      //     },
-      //   },
-      // });
-
-      // const addonAddonCat = await prisma.addons_addon_cats.findMany({
-      //   where: {
-      //     addon_cat_id: {
-      //       in: addonCategoriesIds,
-      //     },
-      //   },
-      // });
-
-      // const addonIds = addonAddonCat.map((item) => item.addon_id);
-
-      // const addons = await prisma.addons.findMany({
-      //   where: {
-      //     id: {
-      //       in: addonIds,
-      //     },
-      //   },
-      // });
-
-      res.send({
-        menus,
-        menusMenuCat,
-      });
+      return res.status(200).json({ ok: "There will be ok" });
     }
   } catch (err) {
     console.log("error", err);

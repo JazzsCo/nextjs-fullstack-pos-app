@@ -9,7 +9,6 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { useRouter } from "next/router";
 
 interface Props {
   callback: () => void;
@@ -18,14 +17,7 @@ interface Props {
 const DeleteDialog = ({ callback }: Props) => {
   const [open, setOpen] = useState(false);
 
-  const router = useRouter();
-
   const handleOpen = () => setOpen(!open);
-
-  const handleClick = () => {
-    callback();
-    router.push("/admin/tables");
-  };
 
   return (
     <div>
@@ -45,7 +37,7 @@ const DeleteDialog = ({ callback }: Props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleOpen}>Cancel</Button>
-          <Button color="deep-orange" onClick={handleClick}>
+          <Button color="deep-orange" onClick={() => callback()}>
             Delete
           </Button>
         </DialogActions>

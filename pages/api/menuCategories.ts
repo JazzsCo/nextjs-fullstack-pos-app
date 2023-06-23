@@ -82,6 +82,17 @@ export default async function handler(
         });
 
       res.status(200).json({ test: "Im ok..." });
+    } else if (req.method === "DELETE") {
+      const { id } = req.query;
+
+      if (!id) return res.send(400);
+
+      await prisma.menu_cats.update({
+        data: { is_archived: true },
+        where: { id: Number(id) },
+      });
+
+      return res.status(200).json({ ok: "There will be ok" });
     }
   } catch (err) {
     console.log("error", err);

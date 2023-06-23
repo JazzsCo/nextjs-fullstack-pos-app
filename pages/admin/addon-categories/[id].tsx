@@ -1,15 +1,20 @@
-import Layout from "@/components/Layout";
-import { AppContext } from "@/contexts/AppContext";
-import type { addon_cats, menus, menus_addon_cats } from "@prisma/client";
+import axios from "axios";
+import { useContext } from "react";
 import { useRouter } from "next/router";
-import React, { useContext } from "react";
+
 import { LocationId } from "@/libs/locationId";
-import MenuCards from "@/components/MenuCards";
+import { AppContext } from "@/contexts/AppContext";
 import { getMenuIdsByLocationId } from "@/libs/custom";
+
+import Layout from "@/components/Layout";
+import MenuCards from "@/components/MenuCards";
+import DeleteDialog from "@/components/DeleteDialog";
 import AddonCatUpdate from "@/components/AddonCatUpdate";
 
+import type { addon_cats, menus, menus_addon_cats } from "@prisma/client";
+
 const AddonCatById = () => {
-  const { menus, addonCategories, menusAddonCat, menusLocation } =
+  const { menus, addonCategories, menusAddonCat, menusLocation, fetchData } =
     useContext(AppContext);
 
   const router = useRouter();
@@ -39,16 +44,29 @@ const AddonCatById = () => {
     selectedMenuIds.includes(item.id)
   );
 
+  const deleteAddonCat = async () => {
+    await axios.delete(`/api/addonCategory?id=${id}`);
+
+    router.push("/admin/addon-categories");
+
+    fetchData();
+  };
+
   return (
     <Layout>
+      <div className="absolute top-[5.5rem] right-10">
+        <div className="flex justify-around space-x-2 mr-2">
+          <AddonCatUpdate
+            menus={getMenusByLocationId}
+            selectedMenus={selectedMenus}
+            menuNotHaveLocationIds={menusNotHaveLocationIds}
+            addonCat={currentAddonCat}
+          />
+          <DeleteDialog callback={deleteAddonCat} />
+        </div>
+      </div>
       <div className="w-[10rem] h-[7rem] ml-[18rem] my-16 flex flex-col items-center justify-center bg-blue-gray-200 rounded-md">
         <h1>{currentAddonCat?.addon_cat_name}</h1>
-        <AddonCatUpdate
-          menus={getMenusByLocationId}
-          selectedMenus={selectedMenus}
-          menuNotHaveLocationIds={menusNotHaveLocationIds}
-          addonCat={currentAddonCat}
-        />
       </div>
       <MenuCards menus={selectedMenus} />
     </Layout>

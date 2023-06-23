@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useContext } from "react";
 import { useRouter } from "next/router";
 import { AppContext } from "@/contexts/AppContext";
@@ -5,16 +6,13 @@ import type {
   menus,
   addon_cats,
   addons,
-  addons_addon_cats,
   locations,
   menu_cats,
-  menus_addon_cats,
-  menus_locations,
-  menus_menu_cats,
 } from "@prisma/client";
 
 import Layout from "@/components/Layout";
 import MenuUpdate from "@/components/MenuUpdate";
+import DeleteDialog from "@/components/DeleteDialog";
 import {
   getAddonCatIdsByMenuId,
   getAddonIdsByAddonCatIds,
@@ -33,6 +31,7 @@ const MenuById = () => {
     addons,
     menusAddonCat,
     menusLocation,
+    fetchData,
   } = useContext(AppContext);
 
   const router = useRouter();
@@ -64,8 +63,21 @@ const MenuById = () => {
     selectedLocationIds.includes(item.id)
   );
 
+  const deleteMenu = async () => {
+    await axios.delete(`/api/menusPost?id=${id}`);
+
+    router.push("/admin/menus");
+
+    fetchData();
+  };
+
   return (
     <Layout>
+      <div className="absolute top-[5.5rem] right-10">
+        <div className="flex justify-around space-x-2 mr-2">
+          <DeleteDialog callback={deleteMenu} />
+        </div>
+      </div>
       <div className="flex my-16 gap-3 ml-[18rem] flex-wrap">
         <div className="w-full max-w-sm h-auto bg-white hover:bg-gray-100 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <img

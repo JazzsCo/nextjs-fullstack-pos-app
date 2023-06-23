@@ -40,38 +40,17 @@ export default async function handler(
       );
 
       res.status(200).send("ok");
-    } else if (req.method === "GET") {
-      // const { id } = req.query;
-      // console.log("id : ", id);
-      // const menuIds = (
-      //   await prisma.menus_menu_cats_locations.findMany({
-      //     where: {
-      //       location_id: Number(id),
-      //     },
-      //   })
-      // )
-      //   .map((item: menus_menu_cats_locations) => item.menu_id)
-      //   .filter((item: any) => typeof item === "number") as number[];
-      // console.log("menids : ", menuIds);
-      // const addonCatIds = (
-      //   await prisma.menus_addon_cats.findMany({
-      //     where: {
-      //       menu_id: {
-      //         in: menuIds,
-      //       },
-      //     },
-      //   })
-      // ).map((item: menus_addon_cats) => item.addon_cat_id);
-      // console.log("addonCatIds : ", addonCatIds);
-      // const addonCategories = await prisma.addon_cats.findMany({
-      //   where: {
-      //     id: {
-      //       in: addonCatIds,
-      //     },
-      //   },
-      // });
-      // console.log("addonCategories : ", addonCategories);
-      // res.status(200).send({ addonCategories });
+    } else if (req.method === "DELETE") {
+      const { id } = req.query;
+
+      if (!id) return res.send(400);
+
+      await prisma.addons.update({
+        data: { is_archived: true },
+        where: { id: Number(id) },
+      });
+
+      return res.status(200).json({ ok: "There will be ok" });
     }
   } catch (error) {
     console.log("error", error);

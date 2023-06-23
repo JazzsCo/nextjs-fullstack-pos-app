@@ -15,13 +15,16 @@ const TableById = () => {
   const table = tables.filter((table) => table.id === Number(id))[0];
 
   const deleteTable = async () => {
-    await axios.delete(`/api/tables?id=${table.id}`);
+    await axios.delete(`/api/tables?id=${id}`);
+
+    router.push("/admin/tables");
+
     fetchData();
   };
 
   return (
     <Layout>
-      <div className="absolute top-[5.5rem] right-1">
+      <div className="absolute top-[5.5rem] right-10">
         <div className="flex justify-around space-x-2 mr-2">
           <TableUpdate table={table} />
           <DeleteDialog callback={deleteTable} />
