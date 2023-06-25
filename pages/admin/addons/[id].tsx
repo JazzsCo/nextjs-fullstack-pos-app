@@ -3,13 +3,13 @@ import { useContext } from "react";
 import { useRouter } from "next/router";
 
 import Layout from "@/components/Layout";
-import { AppContext } from "@/contexts/AppContext";
+import { AdminContext } from "@/contexts/AdminContext";
 import DeleteDialog from "@/components/DeleteDialog";
 
 import type { addons } from "@prisma/client";
 
 const AddonById = () => {
-  const { addons, fetchData } = useContext(AppContext);
+  const { addons, fetchData } = useContext(AdminContext);
 
   const router = useRouter();
   const { id } = router.query;

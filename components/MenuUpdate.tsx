@@ -2,7 +2,7 @@ import Layout from "@/components/Layout";
 import { Dialog } from "@mui/material";
 import React, { useContext, useState } from "react";
 import axios from "axios";
-import { AppContext } from "@/contexts/AppContext";
+import { AdminContext } from "@/contexts/AdminContext";
 import { LocationId } from "@/libs/locationId";
 import MenuSelect from "@/components/MenuSelect";
 import {
@@ -22,7 +22,7 @@ interface Props {
 }
 
 const MenuUpdate = ({ menu, location }: Props) => {
-  const { fetchData } = useContext(AppContext);
+  const { fetchData } = useContext(AdminContext);
 
   const [updateMenu, setUpdateMenu] = useState({
     name: menu?.name,

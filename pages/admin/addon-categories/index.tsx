@@ -6,14 +6,14 @@ import Layout from "@/components/Layout";
 import AddonCatCreate from "@/components/AddonCatCreate";
 
 import { LocationId } from "@/libs/locationId";
-import { AppContext } from "@/contexts/AppContext";
+import { AdminContext } from "@/contexts/AdminContext";
 import { getMenuIdsByLocationId } from "@/libs/custom";
 
 const AddonCategory = () => {
   const locationId = Number(LocationId());
 
   const { menus, addonCategories, menusAddonCat, menusLocation, fetchData } =
-    useContext(AppContext);
+    useContext(AdminContext);
 
   const menuIds = getMenuIdsByLocationId(locationId, menusLocation);
 

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useContext } from "react";
 
-import { AppContext } from "@/contexts/AppContext";
+import { AdminContext } from "@/contexts/AdminContext";
 import { LocationId } from "@/libs/locationId";
 import {
   menu_cats,
@@ -18,7 +18,7 @@ export default function MenuCategories() {
   const locationId = Number(LocationId());
 
   const { menus, menuCategories, menusMenuCat, menusLocation } =
-    useContext(AppContext);
+    useContext(AdminContext);
 
   const menuIds = getMenuIdsByLocationId(locationId, menusLocation);
 

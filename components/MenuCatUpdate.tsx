@@ -2,7 +2,7 @@ import axios from "axios";
 import { useContext, useState } from "react";
 
 import { menu_cats, menus } from "@prisma/client";
-import { AppContext } from "@/contexts/AppContext";
+import { AdminContext } from "@/contexts/AdminContext";
 
 import { Dialog } from "@mui/material";
 import { Button, Input } from "@material-tailwind/react";
@@ -22,7 +22,7 @@ const MenuCatUpdate = ({
   menuCat,
   menuNotHaveLocationIds,
 }: Props) => {
-  const { fetchData } = useContext(AppContext);
+  const { fetchData } = useContext(AdminContext);
 
   const [menuCatName, setMenuCatName] = useState(menuCat?.menu_cat_name);
   const [menuId, setMenuId] = useState<number[]>([]);

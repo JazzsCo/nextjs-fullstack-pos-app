@@ -4,11 +4,11 @@ import { useContext, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import { Button, Input } from "@material-tailwind/react";
 
-import { AppContext } from "@/contexts/AppContext";
+import { AdminContext } from "@/contexts/AdminContext";
 import { LocationId } from "@/libs/locationId";
 
 const TableCreate = () => {
-  const { fetchData } = useContext(AppContext);
+  const { fetchData } = useContext(AdminContext);
 
   const [open, setOpen] = useState(false);
 

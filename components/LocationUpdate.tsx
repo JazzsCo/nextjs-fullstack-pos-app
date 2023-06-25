@@ -6,7 +6,7 @@ import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
-import { AppContext } from "@/contexts/AppContext";
+import { AdminContext } from "@/contexts/AdminContext";
 import { useContext, useEffect } from "react";
 import { locations } from "@prisma/client";
 
@@ -33,7 +33,7 @@ export default function LocationUpdate({ location, onStateChange }: Props) {
 
   const [personName, setPersonName] = React.useState<string[]>(locationNames);
 
-  const { locations } = useContext(AppContext);
+  const { locations } = useContext(AdminContext);
 
   const handleChange = (event: SelectChangeEvent<typeof personName>) => {
     const {

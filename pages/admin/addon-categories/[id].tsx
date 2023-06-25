@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { useRouter } from "next/router";
 
 import { LocationId } from "@/libs/locationId";
-import { AppContext } from "@/contexts/AppContext";
+import { AdminContext } from "@/contexts/AdminContext";
 import { getMenuIdsByLocationId } from "@/libs/custom";
 
 import Layout from "@/components/Layout";
@@ -15,7 +15,7 @@ import type { addon_cats, menus, menus_addon_cats } from "@prisma/client";
 
 const AddonCatById = () => {
   const { menus, addonCategories, menusAddonCat, menusLocation, fetchData } =
-    useContext(AppContext);
+    useContext(AdminContext);
 
   const router = useRouter();
   const { id } = router.query;

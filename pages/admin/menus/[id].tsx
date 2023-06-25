@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useContext } from "react";
 import { useRouter } from "next/router";
-import { AppContext } from "@/contexts/AppContext";
+import { AdminContext } from "@/contexts/AdminContext";
 import type {
   menus,
   addon_cats,
@@ -32,7 +32,7 @@ const MenuById = () => {
     menusAddonCat,
     menusLocation,
     fetchData,
-  } = useContext(AppContext);
+  } = useContext(AdminContext);
 
   const router = useRouter();
   const { id } = router.query;

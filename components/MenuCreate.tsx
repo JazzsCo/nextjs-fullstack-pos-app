@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { AppContext } from "../contexts/AppContext";
+import { AdminContext } from "../contexts/AdminContext";
 import FileDropZone from "./FileDropZone";
 import LocationsSelect from "./LocationsSelect";
 import axios from "axios";
@@ -7,7 +7,7 @@ import { Button, Input, Typography } from "@material-tailwind/react";
 import Dialog from "@mui/material/Dialog";
 
 export default function MenuCreate() {
-  const { fetchData } = useContext(AppContext);
+  const { fetchData } = useContext(AdminContext);
 
   const [menuImage, setMenuImage] = useState<File>();
 

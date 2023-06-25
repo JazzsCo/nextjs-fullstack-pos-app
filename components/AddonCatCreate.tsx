@@ -6,14 +6,14 @@ import MenuSelect from "./MenuSelect";
 
 import { Dialog } from "@mui/material";
 import { Button, Input } from "@material-tailwind/react";
-import { AppContext } from "@/contexts/AppContext";
+import { AdminContext } from "@/contexts/AdminContext";
 
 interface Props {
   menu: menus[];
 }
 
 const AddonCatCreate = ({ menu }: Props) => {
-  const { fetchData } = useContext(AppContext);
+  const { fetchData } = useContext(AdminContext);
 
   const [open, setOpen] = useState(false);
 

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useContext } from "react";
-import { AppContext } from "@/contexts/AppContext";
+import { AdminContext } from "@/contexts/AdminContext";
 import { LocationId } from "@/libs/locationId";
 import type { menus } from "@prisma/client";
 
@@ -11,7 +11,7 @@ import { getMenuIdsByLocationId } from "@/libs/custom";
 export default function Menus() {
   const locationId = Number(LocationId());
 
-  const { menus, menusLocation } = useContext(AppContext);
+  const { menus, menusLocation } = useContext(AdminContext);
 
   const menuIds = getMenuIdsByLocationId(locationId, menusLocation);
 

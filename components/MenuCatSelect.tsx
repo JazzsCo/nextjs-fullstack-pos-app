@@ -7,7 +7,7 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useContext } from "react";
 import { title } from "process";
-import { AppContext } from "../contexts/AppContext";
+import { AdminContext } from "../contexts/AdminContext";
 import { menu_cats as MenuCategories } from "@prisma/client";
 
 interface Props {

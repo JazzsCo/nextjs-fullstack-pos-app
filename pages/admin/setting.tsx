@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import Layout from "@/components/Layout";
-import { AppContext } from "@/contexts/AppContext";
+import { AdminContext } from "@/contexts/AdminContext";
 import type { locations as Location } from "@prisma/client";
 import {
   Box,
@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 
 const Setting = () => {
-  const { locations } = useContext(AppContext);
+  const { locations } = useContext(AdminContext);
 
   const [selectedLocation, setSelectedLocation] = useState<
     Location | undefined

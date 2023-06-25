@@ -11,9 +11,6 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useContext, useEffect, useState } from "react";
-import { Menu } from "../../typings/types";
-import { AppContext } from "../../contexts/AppContext";
-import Layout from "../../components/Layout";
 import Link from "next/link";
 import { useRouter } from "next/router";
 

@@ -6,7 +6,7 @@ import { Button, Input } from "@material-tailwind/react";
 import AddonCatSelect from "./AddonCatSelect";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-import { AppContext } from "@/contexts/AppContext";
+import { AdminContext } from "@/contexts/AdminContext";
 import { addon_cats } from "@prisma/client";
 
 interface Props {
@@ -24,7 +24,7 @@ const AddonCreate = ({ addonCategories }: Props) => {
   const [addonName, setAddonName] = useState<String[]>([]);
   const [addonPrice, setAddonPrice] = useState<Number[]>([]);
 
-  const { fetchData } = useContext(AppContext);
+  const { fetchData } = useContext(AdminContext);
 
   const handleOpen = () => {
     setOpen(!open);

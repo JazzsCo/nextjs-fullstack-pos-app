@@ -4,11 +4,11 @@ import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import Layout from "@/components/Layout";
 import { useContext, useState } from "react";
-import { AppContext } from "@/contexts/AppContext";
+import { AdminContext } from "@/contexts/AdminContext";
 import LocationsSelect from "@/components/LocationsSelect";
 
 export default function MenuCategories() {
-  const { fetchData } = useContext(AppContext);
+  const { fetchData } = useContext(AdminContext);
 
   const [name, setname] = useState("");
 

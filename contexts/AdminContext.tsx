@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useCallback } from "react";
+import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import type {
@@ -15,7 +15,7 @@ import type {
   tables,
 } from "@prisma/client";
 
-interface AppContextType {
+interface AdminContextType {
   menus: Menu[];
   menuCategories: MenuCategory[];
   addons: Addon[];
@@ -31,7 +31,7 @@ interface AppContextType {
   fetchData: () => void;
 }
 
-export const defaultContext: AppContextType = {
+const defaultContext: AdminContextType = {
   menus: [],
   menuCategories: [],
   addons: [],
@@ -47,14 +47,14 @@ export const defaultContext: AppContextType = {
   fetchData: () => {},
 };
 
-export const AppContext = createContext<AppContextType>(defaultContext);
+export const AdminContext = createContext<AdminContextType>(defaultContext);
 
-const AppProvider = ({ children }: any) => {
+const AdminProvider = ({ children }: any) => {
   const { data: session } = useSession();
 
   const [data, updateData] = useState(defaultContext);
 
-  console.log("data is", data);
+  // console.log("data is", data);
 
   const fetchData = async () => {
     const res = await axios.get(`/api/getAllData`);
@@ -92,10 +92,10 @@ const AppProvider = ({ children }: any) => {
   }, [session]);
 
   return (
-    <AppContext.Provider value={{ ...data, updateData, fetchData }}>
+    <AdminContext.Provider value={{ ...data, updateData, fetchData }}>
       {children}
-    </AppContext.Provider>
+    </AdminContext.Provider>
   );
 };
 
-export default AppProvider;
+export default AdminProvider;

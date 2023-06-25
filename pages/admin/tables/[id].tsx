@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
 import { useContext } from "react";
-import { AppContext } from "@/contexts/AppContext";
+import { AdminContext } from "@/contexts/AdminContext";
 import TableUpdate from "@/components/TableUpdate";
 import DeleteDialog from "@/components/DeleteDialog";
 import axios from "axios";
@@ -10,7 +10,7 @@ const TableById = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const { tables, fetchData } = useContext(AppContext);
+  const { tables, fetchData } = useContext(AdminContext);
 
   const table = tables.filter((table) => table.id === Number(id))[0];
 

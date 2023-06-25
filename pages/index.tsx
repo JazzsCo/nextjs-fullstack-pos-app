@@ -11,7 +11,7 @@ export default function Home() {
           </Button>
         </Link>
 
-        <Link href={"/user"}>
+        <Link href={"/order"}>
           <Button className="w-44" variant="gradient">
             User
           </Button>
