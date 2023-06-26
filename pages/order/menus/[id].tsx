@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useRouter } from "next/router";
 
 import { addon_cats, addons, addons_addon_cats, menus } from "@prisma/client";
@@ -8,7 +8,14 @@ import {
   getAddonCatIdsByMenuId,
   getAddonIdsByAddonCatIds,
 } from "@/libs/custom";
-import { Checkbox, Radio } from "@material-tailwind/react";
+import { Checkbox } from "@material-tailwind/react";
+
+import * as React from "react";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 
 const MenuById = () => {
   const router = useRouter();
@@ -16,6 +23,10 @@ const MenuById = () => {
 
   const { menus, addonCategories, addons, menusAddonCat, addonAddonCat } =
     useContext(OrderContext);
+
+  const [orderAddonIds, setOrderAddonIds] = useState<Number[]>([]);
+
+  console.log(orderAddonIds);
 
   const currentMenu = menus.filter((item: menus) => item.id === Number(id))[0];
 
@@ -41,21 +52,27 @@ const MenuById = () => {
     );
 
     return (
-      <div>
+      <FormControl>
         {is_required ? (
           <div>
             <div className="bg-blue-gray-100 px-2 rounded-md mb-3">
               required
             </div>
             <div className="flex flex-col justify-center items-center -ml-44">
-              {addonsByAddonCat.map(({ id, addon_name }) => (
-                <Radio
-                  key={id}
-                  id={addon_name}
-                  name="type"
-                  label={addon_name}
-                />
-              ))}
+              <RadioGroup
+                onChange={(e, value) =>
+                  setOrderAddonIds([...orderAddonIds, Number(value)])
+                }
+              >
+                {addonsByAddonCat.map(({ id, addon_name }) => (
+                  <FormControlLabel
+                    key={id}
+                    value={id}
+                    control={<Radio />}
+                    label={addon_name}
+                  />
+                ))}
+              </RadioGroup>
             </div>
           </div>
         ) : (
@@ -67,28 +84,36 @@ const MenuById = () => {
               {addonsByAddonCat.map(({ id, addon_name }) => (
                 <Checkbox
                   key={id}
-                  id={addon_name}
+                  id={id}
                   label={addon_name}
                   ripple={true}
+                  onChange={(e) =>
+                    setOrderAddonIds([
+                      ...orderAddonIds,
+                      Number(e.currentTarget.id),
+                    ])
+                  }
                 />
               ))}
             </div>
           </div>
         )}
-      </div>
+      </FormControl>
     );
   };
 
   return (
-    <div className="mt-4 ml-5 font-sans space-y-6">
-      <h1>Menu Name: {currentMenu?.name}</h1>
-      <div>
-        {addonCatsByMenu.map(({ id, addon_cat_name, is_required }) => (
-          <div key={id} className="flex space-x-16 mb-7">
-            <h2>{addon_cat_name}</h2>
-            <div>{addonsByAddonCat(id, is_required)}</div>
-          </div>
-        ))}
+    <div className="flex justify-center">
+      <div className="mt-6 space-y-6">
+        <h1>Menu Name: {currentMenu?.name}</h1>
+        <div>
+          {addonCatsByMenu.map(({ id, addon_cat_name, is_required }) => (
+            <div key={id} className="flex space-x-16 mb-7">
+              <h2>{addon_cat_name}</h2>
+              <div>{addonsByAddonCat(id, is_required)}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
