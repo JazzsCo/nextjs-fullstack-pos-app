@@ -1,15 +1,19 @@
+import Link from "next/link";
+
 import { menus } from "@prisma/client";
 
 interface Props {
   menus: menus[];
+  query?: any;
 }
 
-const MenuCards = ({ menus }: Props) => {
+const MenuCards = ({ menus, query }: Props) => {
   return (
     <div className="flex flex-wrap justify-start ml-[18rem] space-x-4 space-y-3">
       {menus.map((item: menus) => (
-        <div
+        <Link
           key={item.id}
+          href={{ pathname: `/order/menus/${item.id}`, query: query }}
           className="w-full max-w-sm bg-white hover:bg-gray-100 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
         >
           <img
@@ -28,7 +32,7 @@ const MenuCards = ({ menus }: Props) => {
               </span>
             </div>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );

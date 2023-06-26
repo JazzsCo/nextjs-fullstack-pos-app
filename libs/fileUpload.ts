@@ -30,7 +30,7 @@ export const fileUpload = multer({
 }).array("files", 1);
 
 export const generateLinkForQRCode = (locationId: number, tableId: number) => {
-  return `http://localhost:3000/order?locationId=${locationId}&tableId=${tableId}`;
+  return `http://localhost:3000/order?locationId=${locationId}&&tableId=${tableId}`;
 };
 
 export const qrCodeImageUpload = async (
