@@ -88,7 +88,7 @@ const MenuById = () => {
                   key={id}
                   value={id}
                   label={addon_name}
-                  name="type"
+                  name={String(id)}
                   checked={
                     orderAddonIds.find(
                       (selectedAddonId) => selectedAddonId === id
