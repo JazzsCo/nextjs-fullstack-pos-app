@@ -8,14 +8,7 @@ import {
   getAddonCatIdsByMenuId,
   getAddonIdsByAddonCatIds,
 } from "@/libs/custom";
-import { Checkbox } from "@material-tailwind/react";
-
-import * as React from "react";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
+import { Checkbox, Radio } from "@material-tailwind/react";
 
 const MenuById = () => {
   const router = useRouter();
@@ -36,11 +29,42 @@ const MenuById = () => {
     addonCatIds.includes(item.id)
   );
 
-  const addonIds = getAddonIdsByAddonCatIds(addonCatIds, addonAddonCat);
+  const orderAddonsChange = (selectedAddonId: number) => {
+    const isRequiredAddonCatId = addonAddonCat.filter(
+      (item: addons_addon_cats) => item.addon_id === selectedAddonId
+    )[0].addon_cat_id;
 
-  const addonsByAddonCats = addons.filter((item: addons) =>
-    addonIds.includes(item.id)
-  );
+    const isRequiredAddonCat = addonCatsByMenu.filter(
+      (item: addon_cats) => item.id === isRequiredAddonCatId
+    )[0];
+
+    const isRequiredAddonIds = addonAddonCat
+      .filter(
+        (item: addons_addon_cats) => item.addon_cat_id === isRequiredAddonCatId
+      )
+      .map((item: addons_addon_cats) => item.addon_id);
+
+    if (isRequiredAddonCat.is_required) {
+      const resultBoolean = isRequiredAddonIds.every((addonId) => {
+        return !orderAddonIds.includes(addonId);
+      });
+
+      resultBoolean
+        ? setOrderAddonIds([...orderAddonIds, selectedAddonId])
+        : setOrderAddonIds([
+            ...orderAddonIds.filter(
+              (id) => !isRequiredAddonIds.includes(Number(id))
+            ),
+            selectedAddonId,
+          ]);
+    } else {
+      !orderAddonIds.includes(selectedAddonId)
+        ? setOrderAddonIds([...orderAddonIds, selectedAddonId])
+        : setOrderAddonIds(
+            orderAddonIds.filter((id) => id !== selectedAddonId)
+          );
+    }
+  };
 
   const addonsByAddonCat = (id: number, is_required: boolean) => {
     const addonIdsByAddonCatId = addonAddonCat
@@ -52,27 +76,29 @@ const MenuById = () => {
     );
 
     return (
-      <FormControl>
+      <div>
         {is_required ? (
           <div>
             <div className="bg-blue-gray-100 px-2 rounded-md mb-3">
               required
             </div>
             <div className="flex flex-col justify-center items-center -ml-44">
-              <RadioGroup
-                onChange={(e, value) =>
-                  setOrderAddonIds([...orderAddonIds, Number(value)])
-                }
-              >
-                {addonsByAddonCat.map(({ id, addon_name }) => (
-                  <FormControlLabel
-                    key={id}
-                    value={id}
-                    control={<Radio />}
-                    label={addon_name}
-                  />
-                ))}
-              </RadioGroup>
+              {addonsByAddonCat.map(({ id, addon_name }) => (
+                <Radio
+                  key={id}
+                  value={id}
+                  label={addon_name}
+                  name="type"
+                  checked={
+                    orderAddonIds.find(
+                      (selectedAddonId) => selectedAddonId === id
+                    )
+                      ? true
+                      : false
+                  }
+                  onChange={(e) => orderAddonsChange(Number(e.target.value))}
+                />
+              ))}
             </div>
           </div>
         ) : (
@@ -84,21 +110,22 @@ const MenuById = () => {
               {addonsByAddonCat.map(({ id, addon_name }) => (
                 <Checkbox
                   key={id}
-                  id={id}
+                  value={id}
                   label={addon_name}
-                  ripple={true}
-                  onChange={(e) =>
-                    setOrderAddonIds([
-                      ...orderAddonIds,
-                      Number(e.currentTarget.id),
-                    ])
+                  checked={
+                    orderAddonIds.find(
+                      (selectedAddonId) => selectedAddonId === id
+                    )
+                      ? true
+                      : false
                   }
+                  onChange={(e) => orderAddonsChange(Number(e.target.value))}
                 />
               ))}
             </div>
           </div>
         )}
-      </FormControl>
+      </div>
     );
   };
 
