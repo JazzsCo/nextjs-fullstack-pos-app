@@ -8,14 +8,6 @@ export enum OrderlineStatus {
 
 export interface Orderline {
   menu: Menu;
-  addon?: Addon[];
-  quantity: number;
-  status: OrderlineStatus;
-}
-
-export interface Order {
-  id?: number;
-  isPaid: boolean;
-  tableId: number;
-  orderLines: Orderline[];
+  addons: Addon[];
+  quantity?: number;
 }

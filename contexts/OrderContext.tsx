@@ -12,7 +12,7 @@ import {
   menus_locations,
   menus_menu_cats,
 } from "@prisma/client";
-import { Order } from "@/libs/types";
+import { Orderline } from "@/libs/types";
 
 interface OrderContextType {
   menus: menus[];
@@ -26,7 +26,7 @@ interface OrderContextType {
   menusLocation: menus_locations[];
   updateData: (value: any) => void;
   fetchData: () => void;
-  cart: Order | null;
+  orderlines: Orderline[];
 }
 
 const defaultContext: OrderContextType = {
@@ -41,7 +41,7 @@ const defaultContext: OrderContextType = {
   locations: [],
   updateData: () => {},
   fetchData: () => {},
-  cart: null,
+  orderlines: [],
 };
 
 export const OrderContext = createContext<OrderContextType>(defaultContext);

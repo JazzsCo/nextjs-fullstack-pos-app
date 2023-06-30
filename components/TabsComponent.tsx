@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useContext } from "react";
 import { useRouter } from "next/router";
 
@@ -8,6 +9,8 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
+
+import { BsFillCartPlusFill } from "react-icons/bs";
 
 import MenuCards from "./MenuCards";
 import { OrderContext } from "@/contexts/OrderContext";
@@ -31,21 +34,27 @@ export default function TabsComponent() {
   };
 
   return (
-    <Tabs value={"Main Dash"}>
-      <TabsHeader>
-        {menuCategories.map(({ id, menu_cat_name }) => (
-          <Tab key={id} value={menu_cat_name}>
-            {menu_cat_name}
-          </Tab>
-        ))}
-      </TabsHeader>
-      <TabsBody>
-        {menuCategories.map(({ id, menu_cat_name }) => (
-          <TabPanel key={id} value={menu_cat_name}>
-            {menusByMenuCatId(id)}
-          </TabPanel>
-        ))}
-      </TabsBody>
-    </Tabs>
+    <div>
+      <Link href={{ pathname: "/order/cart", query }}>
+        <BsFillCartPlusFill />
+      </Link>
+
+      <Tabs value={"Main Dash"}>
+        <TabsHeader>
+          {menuCategories.map(({ id, menu_cat_name }) => (
+            <Tab key={id} value={menu_cat_name}>
+              {menu_cat_name}
+            </Tab>
+          ))}
+        </TabsHeader>
+        <TabsBody>
+          {menuCategories.map(({ id, menu_cat_name }) => (
+            <TabPanel key={id} value={menu_cat_name}>
+              {menusByMenuCatId(id)}
+            </TabPanel>
+          ))}
+        </TabsBody>
+      </Tabs>
+    </div>
   );
 }
