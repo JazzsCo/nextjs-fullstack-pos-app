@@ -45,6 +45,10 @@ const MenuById = () => {
     addonCatIds.includes(item.id)
   );
 
+  const isRequiredAddonCats = addonCatsByMenu.filter(
+    (item) => item.is_required === true
+  );
+
   const addToCart = () => {
     updateData({
       ...data,
@@ -204,6 +208,10 @@ const MenuById = () => {
   };
 
   useEffect(() => {
+    if (isRequiredAddonCats.length) {
+      setDisabled(true);
+    }
+
     if (updateCartItem) {
       const selectedAddonsIds = cart
         .find((item) => item.menu.id === Number(id))
@@ -214,27 +222,23 @@ const MenuById = () => {
   }, [updateCartItem]);
 
   useEffect(() => {
-    console.log(orderAddonIds.length);
-    if (orderAddonIds.length) {
-      const addonCatIdsByAddon = addonAddonCat
-        .filter((item) => orderAddonIds.includes(item.addon_id))
-        .map((item) => item.addon_cat_id);
+    const addonCatIdsByAddonIds = addonAddonCat
+      .filter((item) => orderAddonIds.includes(item.addon_id))
+      .map((item) => item.addon_cat_id);
 
-      const addonCats = addonCategories.filter((item) =>
-        addonCatIdsByAddon.includes(item.id)
-      );
+    const addonCats = addonCategories.filter((item) =>
+      addonCatIdsByAddonIds.includes(item.id)
+    );
 
-      console.log(addonCats);
+    const requiredAddonCats = addonCats.filter(
+      (item) => item.is_required === true
+    );
 
-      addonCats.map((item) => item.is_required === true)
-        ? setDisabled(disabled)
+    if (requiredAddonCats.length) {
+      isRequiredAddonCats.every((item) => requiredAddonCats.includes(item))
+        ? setDisabled(false)
         : null;
-      console.log("first");
     }
-
-    addonCatsByMenu.some((item) => item.is_required === true)
-      ? setDisabled(!disabled)
-      : null;
   }, [orderAddonIds]);
 
   return (
