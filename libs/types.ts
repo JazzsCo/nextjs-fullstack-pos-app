@@ -6,8 +6,8 @@ export enum OrderlineStatus {
   COMPLETE = "COMPLETE",
 }
 
-export interface Orderline {
+export interface CartItem {
   menu: Menu;
   addons: Addon[];
-  quantity?: number;
+  quantity: number;
 }

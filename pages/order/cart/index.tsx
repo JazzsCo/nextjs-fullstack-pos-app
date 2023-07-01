@@ -5,31 +5,31 @@ import { useRouter } from "next/router";
 import { useContext, useEffect } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Orderline } from "@/libs/types";
+import { CartItem } from "@/libs/types";
 
 const Review = () => {
   const { ...data } = useContext(OrderContext);
-  const { orderlines, updateData, fetchData } = useContext(OrderContext);
+  const { cart, updateData, fetchData } = useContext(OrderContext);
   const router = useRouter();
   const query = router.query;
 
-  const removeOrderlinFromCart = (orderline: Orderline) => {
-    const remainingOrderlines = orderlines.filter(
-      (item) => item.menu.id !== orderline.menu.id
+  const removeOrderlinFromCart = (cartItem: CartItem) => {
+    const remainingOrderlines = cart.filter(
+      (item) => item.menu.id !== cartItem.menu.id
     );
     updateData({ ...data, orderlines: remainingOrderlines });
   };
 
-  const editOrder = (orderline: Orderline) => {
+  const editOrder = (cartItem: CartItem) => {
     router.push({
-      pathname: `/order/menus/${orderline.menu.id}`,
+      pathname: `/order/menus/${cartItem.menu.id}`,
       query,
     });
   };
 
   const confirmOrder = async () => {
     const { locationId, tableId } = query;
-    const isValid = locationId && tableId && orderlines.length;
+    const isValid = locationId && tableId && cart.length;
 
     if (!isValid) return alert("Required locationId and tableId");
     const response = await fetch(
@@ -39,7 +39,7 @@ const Review = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ orderlines }),
+        body: JSON.stringify({ cart }),
       }
     );
     const responseJSON = await response.json();
@@ -48,7 +48,7 @@ const Review = () => {
     router.push({ pathname: `/order/activeOrder/${order.id}`, query });
   };
 
-  if (!orderlines.length)
+  if (!cart.length)
     return (
       <div>
         <h1>You Not Order . . .</h1>
@@ -90,8 +90,8 @@ const Review = () => {
         <Typography variant="h5" sx={{ textAlign: "center", mb: 3 }}>
           Review your order
         </Typography>
-        {orderlines.map((orderline, index) => {
-          const { menu, addons, quantity } = orderline;
+        {cart.map((cartItem, index) => {
+          const { menu, addons, quantity } = cartItem;
           return (
             <Box key={index}>
               <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -127,11 +127,11 @@ const Review = () => {
               >
                 <DeleteIcon
                   sx={{ mr: 2, cursor: "pointer" }}
-                  onClick={() => removeOrderlinFromCart(orderline)}
+                  onClick={() => removeOrderlinFromCart(cartItem)}
                 />
                 <EditIcon
                   sx={{ cursor: "pointer" }}
-                  onClick={() => editOrder(orderline)}
+                  onClick={() => editOrder(cartItem)}
                 />
               </Box>
             </Box>

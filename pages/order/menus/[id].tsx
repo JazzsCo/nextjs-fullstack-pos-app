@@ -3,9 +3,12 @@ import { useRouter } from "next/router";
 
 import { addon_cats, addons, addons_addon_cats, menus } from "@prisma/client";
 
-import { OrderContext } from "@/contexts/OrderContext";
-import { getAddonCatIdsByMenuId } from "@/libs/custom";
 import { Checkbox, Radio } from "@material-tailwind/react";
+
+import { getAddonCatIdsByMenuId } from "@/libs/custom";
+import { OrderContext } from "@/contexts/OrderContext";
+import QuantitySelector from "@/components/QuantitySelector";
+import { Button } from "@mui/material";
 
 const MenuById = () => {
   const router = useRouter();
@@ -19,11 +22,14 @@ const MenuById = () => {
     addons,
     menusAddonCat,
     addonAddonCat,
-    orderlines,
+    cart,
     updateData,
   } = useContext(OrderContext);
 
   const { ...data } = useContext(OrderContext);
+
+  const [quantity, setQuantity] = useState(1);
+  const [disabled, setDisabled] = useState(false);
 
   const [orderAddonIds, setOrderAddonIds] = useState<Number[]>([]);
 
@@ -42,11 +48,12 @@ const MenuById = () => {
   const addToCart = () => {
     updateData({
       ...data,
-      orderlines: [
-        ...data.orderlines,
+      cart: [
+        ...data.cart,
         {
           menu: currentMenu,
           addons: selectedAddons,
+          quantity,
         },
       ],
     });
@@ -59,25 +66,20 @@ const MenuById = () => {
     });
   };
 
-  const updateOrderLine = orderlines.find(
-    (item) => item.menu.id === Number(id)
-  );
+  const updateCartItem = cart.find((item) => item.menu.id === Number(id));
 
   const updateToCart = () => {
-    if (updateOrderLine) {
-      const otherOrderLines = orderlines.filter(
-        (item) => item !== updateOrderLine
-      );
-
-      console.log(otherOrderLines);
+    if (updateCartItem) {
+      const otherCartItem = cart.filter((item) => item !== updateCartItem);
 
       updateData({
         ...data,
-        orderlines: [
-          ...otherOrderLines,
+        cart: [
+          ...otherCartItem,
           {
             menu: currentMenu,
             addons: selectedAddons,
+            quantity,
           },
         ],
       });
@@ -191,15 +193,49 @@ const MenuById = () => {
     );
   };
 
+  const handleQuantityDecrease = () => {
+    const newValue = quantity - 1 === 0 ? 1 : quantity - 1;
+    setQuantity(newValue);
+  };
+
+  const handleQuantityIncrease = () => {
+    const newValue = quantity + 1;
+    setQuantity(newValue);
+  };
+
   useEffect(() => {
-    if (updateOrderLine) {
-      const selectedAddonsIds = orderlines
+    if (updateCartItem) {
+      const selectedAddonsIds = cart
         .find((item) => item.menu.id === Number(id))
         ?.addons.map((item) => item.id) as Number[];
 
       setOrderAddonIds(selectedAddonsIds);
     }
-  }, [updateOrderLine]);
+  }, [updateCartItem]);
+
+  useEffect(() => {
+    console.log(orderAddonIds.length);
+    if (orderAddonIds.length) {
+      const addonCatIdsByAddon = addonAddonCat
+        .filter((item) => orderAddonIds.includes(item.addon_id))
+        .map((item) => item.addon_cat_id);
+
+      const addonCats = addonCategories.filter((item) =>
+        addonCatIdsByAddon.includes(item.id)
+      );
+
+      console.log(addonCats);
+
+      addonCats.map((item) => item.is_required === true)
+        ? setDisabled(disabled)
+        : null;
+      console.log("first");
+    }
+
+    addonCatsByMenu.some((item) => item.is_required === true)
+      ? setDisabled(!disabled)
+      : null;
+  }, [orderAddonIds]);
 
   return (
     <div className="flex justify-center">
@@ -214,12 +250,20 @@ const MenuById = () => {
           ))}
         </div>
         <div>
-          <button
-            className="px-4 py-2 text-gray-200 bg-cyan-500 cursor-pointer rounded-lg hover:bg-cyan-600"
-            onClick={updateOrderLine ? updateToCart : addToCart}
+          <QuantitySelector
+            value={quantity}
+            onIncrease={handleQuantityIncrease}
+            onDecrease={handleQuantityDecrease}
+          />
+        </div>
+        <div>
+          <Button
+            onClick={updateCartItem ? updateToCart : addToCart}
+            disabled={disabled}
+            variant="contained"
           >
-            {updateOrderLine ? "UPDATE TO CART" : "ADD TO CART"}
-          </button>
+            {updateCartItem ? "UPDATE TO CART" : "ADD TO CART"}
+          </Button>
         </div>
       </div>
     </div>
