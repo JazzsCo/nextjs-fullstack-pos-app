@@ -11,7 +11,7 @@ model addon_cats {
   id                Int                 @id @default(autoincrement())
   addon_cat_name    String
   is_required       Boolean             @default(true)
-  is_archived  Boolean   @default(false)
+  is_archived       Boolean             @default(false)
   addons_addon_cats addons_addon_cats[]
   menus_addon_cats  menus_addon_cats[]
 }
@@ -21,8 +21,9 @@ model addons {
   addon_name        String
   price             Int
   is_available      Boolean             @default(true)
-  is_archived  Boolean   @default(false)
+  is_archived       Boolean             @default(false)
   addons_addon_cats addons_addon_cats[]
+  orderlines        orderlines[]
 }
 
 model addons_addon_cats {
@@ -37,15 +38,16 @@ model locations {
   id                                   Int               @id @default(autoincrement())
   location_name                        String
   address                              String?
-  is_archived  Boolean   @default(false)
+  is_archived                          Boolean           @default(false)
   menus_menu_cats_addon_cats_locations menus_locations[]
   tables                               tables[]
+  orders                               orders[]
 }
 
 model menu_cats {
   id              Int               @id @default(autoincrement())
   menu_cat_name   String
-  is_archived  Boolean   @default(false)
+  is_archived     Boolean           @default(false)
   menus_menu_cats menus_menu_cats[]
 }
 
@@ -71,10 +73,11 @@ model menus {
   name                                 String
   price                                Int
   image_url                            String
-  is_archived  Boolean   @default(false)
+  is_archived                          Boolean            @default(false)
   menus_menu_cats_addon_cats_locations menus_locations[]
   menus_addon_cats                     menus_addon_cats[]
   menus_menu_cats                      menus_menu_cats[]
+  orderlines                           orderlines[]
 }
 
 model menus_addon_cats {
@@ -92,4 +95,39 @@ model tables {
   locations_id Int
   is_archived  Boolean   @default(false)
   locations    locations @relation(fields: [locations_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  orders       orders[]
+}
+
+model orders {
+  id           Int          @id @default(autoincrement())
+  locations_id Int
+  tables_id    Int
+  is_paid      Boolean      @default(false)
+  price        Int?         @default(0)
+  locations    locations    @relation(fields: [locations_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tables       tables       @relation(fields: [tables_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  orderlines   orderlines[]
+}
+
+model orderlines {
+  id           Int         @id @default(autoincrement())
+  orders_id    Int
+  menu_id      Int
+  addons_id    Int?
+  quantity     Int         @default(1)
+  order_status OrderStatus @default(PENDING)
+  orders       orders      @relation(fields: [orders_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  menus        menus       @relation(fields: [menu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  addons       addons?     @relation(fields: [addons_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+enum OrderStatus {
+  PENDING
+  PREPARING
+  COMPLETE
+}
+
+enum Role {
+  user
+  admin
 }

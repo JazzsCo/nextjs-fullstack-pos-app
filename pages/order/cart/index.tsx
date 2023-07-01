@@ -13,6 +13,48 @@ const Review = () => {
   const router = useRouter();
   const query = router.query;
 
+  const removeOrderlinFromCart = (orderline: Orderline) => {
+    const remainingOrderlines = orderlines.filter(
+      (item) => item.menu.id !== orderline.menu.id
+    );
+    updateData({ ...data, orderlines: remainingOrderlines });
+  };
+
+  const editOrder = (orderline: Orderline) => {
+    router.push({
+      pathname: `/order/menus/${orderline.menu.id}`,
+      query,
+    });
+  };
+
+  const confirmOrder = async () => {
+    const { locationId, tableId } = query;
+    const isValid = locationId && tableId && orderlines.length;
+
+    if (!isValid) return alert("Required locationId and tableId");
+    const response = await fetch(
+      `/api/order?locationId=${locationId}&tableId=${tableId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ orderlines }),
+      }
+    );
+    const responseJSON = await response.json();
+    const order = responseJSON.order;
+    fetchData();
+    router.push({ pathname: `/order/activeOrder/${order.id}`, query });
+  };
+
+  if (!orderlines.length)
+    return (
+      <div>
+        <h1>You Not Order . . .</h1>
+      </div>
+    );
+
   const renderAddons = (addons: Addon[]) => {
     if (!addons.length) return;
     return addons.map((item) => {
@@ -31,40 +73,6 @@ const Review = () => {
       );
     });
   };
-
-  const removeOrderlinFromCart = (orderline: Orderline) => {
-    const remainingOrderlines = orderlines.filter(
-      (item) => item.menu.id !== orderline.menu.id
-    );
-    updateData({ ...data, orderlines: remainingOrderlines });
-  };
-
-  // const confirmOrder = async () => {
-  //     const { locationId, tableId } = query;
-  //     const isValid = locationId && tableId && orderlines.length;
-  //     if (!isValid) return alert("Required locationId and tableId");
-  //     const response = await fetch(
-  //       `${config.orderApiBaseUrl}?locationId=${locationId}&tableId=${tableId}`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ orderlines }),
-  //       }
-  //     );
-  //     const responseJSON = await response.json();
-  //     const order = responseJSON.order;
-  //     fetchData();
-  //     router.push({ pathname: `/order/activeOrder/${order.id}`, query });
-  //   };
-
-  if (!orderlines.length)
-    return (
-      <div>
-        <h1>You Not Order . . .</h1>
-      </div>
-    );
 
   return (
     <Box
@@ -123,20 +131,15 @@ const Review = () => {
                 />
                 <EditIcon
                   sx={{ cursor: "pointer" }}
-                  onClick={() =>
-                    router.push({
-                      pathname: `/order/menus/${orderline.menu.id}`,
-                      query,
-                    })
-                  }
+                  onClick={() => editOrder(orderline)}
                 />
               </Box>
             </Box>
           );
         })}
-        {/* <Box sx={{ mt: 3, textAlign: "center" }} onClick={confirmOrder}>
+        <Box sx={{ mt: 3, textAlign: "center" }} onClick={confirmOrder}>
           <Button variant="contained">Confirm order</Button>
-        </Box> */}
+        </Box>
       </Box>
     </Box>
   );
