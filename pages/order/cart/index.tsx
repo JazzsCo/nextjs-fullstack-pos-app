@@ -1,11 +1,15 @@
-import { OrderContext } from "@/contexts/OrderContext";
-import { Avatar, Box, Button, Typography } from "@mui/material";
-import { addons as Addon } from "@prisma/client";
+import axios from "axios";
+import { useContext } from "react";
 import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
+
+import { addons as Addon } from "@prisma/client";
+
+import { CartItem } from "@/libs/types";
+import { OrderContext } from "@/contexts/OrderContext";
+
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { CartItem } from "@/libs/types";
+import { Avatar, Box, Button, Typography } from "@mui/material";
 
 const Review = () => {
   const { ...data } = useContext(OrderContext);
@@ -30,20 +34,18 @@ const Review = () => {
   const confirmOrder = async () => {
     const { locationId, tableId } = query;
 
-    const response = await fetch(
+    const res = await axios.post(
       `/api/order?locationId=${locationId}&tableId=${tableId}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ cart }),
-      }
+      { cart }
     );
-    const responseJSON = await response.json();
-    const order = responseJSON.order;
-    fetchData();
-    router.push({ pathname: `/order/activeOrder/${order.id}`, query });
+
+    const { order } = res.data;
+
+    console.log(order);
+
+    // fetchData();
+
+    // router.push({ pathname: `/order/activeOrder/${order.id}`, query });
   };
 
   if (!cart.length)

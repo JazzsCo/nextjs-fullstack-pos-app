@@ -4,6 +4,7 @@ import {
   menus_locations,
   menus_menu_cats,
 } from "@prisma/client";
+import { CartItem } from "./types";
 
 export const getMenuIdsByLocationId = (
   locationId: number,
@@ -60,4 +61,14 @@ export const getSelectedLocationIdsByMenuId = (
     .filter((item: menus_locations) => item.menu_id === Number(id))
     .map((item: menus_locations) => item.location_id)
     .filter((item: any) => item) as number[];
+};
+
+export const getOrdersTotalPrice = (cart: CartItem[]) => {
+  return cart.reduce((prev, curr) => {
+    const menuPrice = curr.menu.price;
+    const addonPrice = curr.addons.reduce((prevAddon, currAddon) => {
+      return (prevAddon += currAddon.price);
+    }, 0);
+    return (prev += (menuPrice + addonPrice) * curr.quantity);
+  }, 0);
 };

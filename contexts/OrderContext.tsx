@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useRouter } from "next/router";
 
 import { createContext, useState, useEffect } from "react";
@@ -55,7 +56,9 @@ export const OrderContext = createContext<OrderContextType>(defaultContext);
 const OrderProvider = (props: any) => {
   const router = useRouter();
   const query = router.query;
+
   const locationId = query.locationId;
+
   const [data, updateData] = useState(defaultContext);
 
   console.log(data);
@@ -63,8 +66,7 @@ const OrderProvider = (props: any) => {
   const fetchData = async () => {
     if (!locationId) return;
 
-    const response = await fetch(`/api/order?locationId=${locationId}`);
-    const responseJson = await response.json();
+    const res = await axios.get(`/api/order?locationId=${locationId}`);
 
     const {
       menus,
@@ -76,7 +78,9 @@ const OrderProvider = (props: any) => {
       locations,
       menusAddonCat,
       addonAddonCat,
-    } = responseJson;
+      orders,
+      orderlines,
+    } = res.data;
     updateData({
       ...data,
       menus,
@@ -88,6 +92,8 @@ const OrderProvider = (props: any) => {
       locations,
       menusAddonCat,
       addonAddonCat,
+      orders,
+      orderlines,
     });
   };
 
