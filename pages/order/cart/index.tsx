@@ -29,9 +29,7 @@ const Review = () => {
 
   const confirmOrder = async () => {
     const { locationId, tableId } = query;
-    const isValid = locationId && tableId && cart.length;
 
-    if (!isValid) return alert("Required locationId and tableId");
     const response = await fetch(
       `/api/order?locationId=${locationId}&tableId=${tableId}`,
       {

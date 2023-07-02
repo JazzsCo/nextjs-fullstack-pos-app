@@ -213,11 +213,17 @@ const MenuById = () => {
     }
 
     if (updateCartItem) {
-      const selectedAddonsIds = cart
-        .find((item) => item.menu.id === Number(id))
-        ?.addons.map((item) => item.id) as Number[];
+      const selectedCartItem = cart.find((item) => item.menu.id === Number(id));
+
+      const selectedAddonsIds = selectedCartItem?.addons.map(
+        (item) => item.id
+      ) as Number[];
 
       setOrderAddonIds(selectedAddonsIds);
+
+      const selectedQuantity = selectedCartItem?.quantity;
+
+      selectedQuantity && setQuantity(selectedQuantity);
     }
   }, [updateCartItem]);
 

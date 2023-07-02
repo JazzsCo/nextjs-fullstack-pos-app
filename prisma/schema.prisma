@@ -12,6 +12,8 @@ model addon_cats {
   addon_cat_name    String
   is_required       Boolean             @default(true)
   is_archived       Boolean             @default(false)
+   createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @default(now()) @updatedAt
   addons_addon_cats addons_addon_cats[]
   menus_addon_cats  menus_addon_cats[]
 }
@@ -22,6 +24,8 @@ model addons {
   price             Int
   is_available      Boolean             @default(true)
   is_archived       Boolean             @default(false)
+   createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @default(now()) @updatedAt
   addons_addon_cats addons_addon_cats[]
   orderlines        orderlines[]
 }
@@ -30,6 +34,8 @@ model addons_addon_cats {
   id           Int        @id @default(autoincrement())
   addon_id     Int
   addon_cat_id Int
+   createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @default(now()) @updatedAt
   addon_cats   addon_cats @relation(fields: [addon_cat_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   addons       addons     @relation(fields: [addon_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
@@ -39,6 +45,8 @@ model locations {
   location_name                        String
   address                              String?
   is_archived                          Boolean           @default(false)
+   createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @default(now()) @updatedAt
   menus_menu_cats_addon_cats_locations menus_locations[]
   tables                               tables[]
   orders                               orders[]
@@ -48,6 +56,8 @@ model menu_cats {
   id              Int               @id @default(autoincrement())
   menu_cat_name   String
   is_archived     Boolean           @default(false)
+   createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @default(now()) @updatedAt
   menus_menu_cats menus_menu_cats[]
 }
 
@@ -56,6 +66,8 @@ model menus_locations {
   menu_id      Int
   location_id  Int?
   is_available Boolean?   @default(true)
+   createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @default(now()) @updatedAt
   locations    locations? @relation(fields: [location_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   menus        menus      @relation(fields: [menu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
@@ -64,6 +76,8 @@ model menus_menu_cats {
   id          Int       @id @default(autoincrement())
   menu_id     Int
   menu_cat_id Int
+   createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @default(now()) @updatedAt
   menus       menus     @relation(fields: [menu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   menu_cats   menu_cats @relation(fields: [menu_cat_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
@@ -74,6 +88,8 @@ model menus {
   price                                Int
   image_url                            String
   is_archived                          Boolean            @default(false)
+   createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @default(now()) @updatedAt
   menus_menu_cats_addon_cats_locations menus_locations[]
   menus_addon_cats                     menus_addon_cats[]
   menus_menu_cats                      menus_menu_cats[]
@@ -84,6 +100,8 @@ model menus_addon_cats {
   id           Int        @id @default(autoincrement())
   menu_id      Int
   addon_cat_id Int
+   createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @default(now()) @updatedAt
   menus        menus      @relation(fields: [menu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   addon_cats   addon_cats @relation(fields: [addon_cat_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
@@ -94,6 +112,8 @@ model tables {
   table_url    String?
   locations_id Int
   is_archived  Boolean   @default(false)
+   createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @default(now()) @updatedAt
   locations    locations @relation(fields: [locations_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   orders       orders[]
 }
@@ -104,6 +124,8 @@ model orders {
   tables_id    Int
   is_paid      Boolean      @default(false)
   price        Int?         @default(0)
+   createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @default(now()) @updatedAt
   locations    locations    @relation(fields: [locations_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   tables       tables       @relation(fields: [tables_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   orderlines   orderlines[]
@@ -116,6 +138,8 @@ model orderlines {
   addons_id    Int?
   quantity     Int         @default(1)
   order_status OrderStatus @default(PENDING)
+   createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @default(now()) @updatedAt
   orders       orders      @relation(fields: [orders_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   menus        menus       @relation(fields: [menu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   addons       addons?     @relation(fields: [addons_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -125,6 +149,7 @@ enum OrderStatus {
   PENDING
   PREPARING
   COMPLETE
+  REJECTED
 }
 
 enum Role {

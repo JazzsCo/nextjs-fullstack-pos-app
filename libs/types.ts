@@ -4,6 +4,7 @@ export enum OrderlineStatus {
   PENDING = "PENDING",
   PREPARING = "PREPARING",
   COMPLETE = "COMPLETE",
+  REJECTED = "REJECTED",
 }
 
 export interface CartItem {
