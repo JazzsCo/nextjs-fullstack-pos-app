@@ -2,14 +2,14 @@
 import { prisma } from "@/libs/db";
 import type { NextApiRequest, NextApiResponse } from "next";
 import {
-  type menus as Menu,
+  OrderStatus,
+  type menus,
   type addons_addon_cats,
   type menus_addon_cats,
   type menus_locations,
   type menus_menu_cats,
 } from "@prisma/client";
 import { getOrdersTotalPrice } from "@/libs/custom";
-import { OrderlineStatus } from "@/libs/types";
 
 export default async function handler(
   req: NextApiRequest,
@@ -138,7 +138,7 @@ export default async function handler(
             addons_id: item.id,
             orders_id: order.id,
             quantity: orderline.quantity,
-            order_status: OrderlineStatus.PENDING,
+            order_status: OrderStatus.PENDING,
           }));
 
           await prisma.orderlines.createMany({ data: orderlineData });
@@ -148,7 +148,7 @@ export default async function handler(
               menu_id: menu.id,
               orders_id: order.id,
               quantity: orderline.quantity,
-              order_status: OrderlineStatus.PENDING,
+              order_status: OrderStatus.PENDING,
             },
           });
         }

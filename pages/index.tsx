@@ -11,7 +11,7 @@ export default function Home() {
           </Button>
         </Link>
 
-        <Link href={"/order"}>
+        <Link href={"/order?locationId=2&tableId=2"}>
           <Button className="w-44" variant="gradient">
             User
           </Button>

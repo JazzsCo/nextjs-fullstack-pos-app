@@ -12,8 +12,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Avatar, Box, Button, Typography } from "@mui/material";
 
 const Review = () => {
-  const { ...data } = useContext(OrderContext);
-  const { cart, updateData, fetchData } = useContext(OrderContext);
+  const { cart, updateData, fetchData, ...data } = useContext(OrderContext);
+
   const router = useRouter();
   const query = router.query;
 
@@ -21,7 +21,7 @@ const Review = () => {
     const remainingOrderlines = cart.filter(
       (item) => item.menu.id !== cartItem.menu.id
     );
-    updateData({ ...data, orderlines: remainingOrderlines });
+    updateData({ ...data, cart: remainingOrderlines });
   };
 
   const editOrder = (cartItem: CartItem) => {
@@ -41,11 +41,9 @@ const Review = () => {
 
     const { order } = res.data;
 
-    console.log(order);
+    fetchData();
 
-    // fetchData();
-
-    // router.push({ pathname: `/order/activeOrder/${order.id}`, query });
+    router.push({ pathname: `/order/active-order/${order.id}`, query });
   };
 
   if (!cart.length)
