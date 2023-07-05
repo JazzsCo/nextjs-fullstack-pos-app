@@ -13,6 +13,8 @@ import type {
   menus_locations,
   menus_menu_cats,
   tables,
+  orders,
+  orderlines,
 } from "@prisma/client";
 
 interface AdminContextType {
@@ -26,7 +28,8 @@ interface AdminContextType {
   locations: Location[];
   menusLocation: menus_locations[];
   menusMenuCat: menus_menu_cats[];
-  accessToken: string;
+  orders: orders[];
+  orderlines: orderlines[];
   updateData: (value: any) => void;
   fetchData: () => void;
 }
@@ -42,7 +45,8 @@ const defaultContext: AdminContextType = {
   menusMenuCat: [],
   tables: [],
   locations: [],
-  accessToken: "",
+  orderlines: [],
+  orders: [],
   updateData: () => {},
   fetchData: () => {},
 };
@@ -70,6 +74,8 @@ const AdminProvider = ({ children }: any) => {
       menusAddonCat,
       addonAddonCat,
       menusMenuCat,
+      orders,
+      orderlines,
     } = res.data;
 
     updateData({
@@ -84,6 +90,8 @@ const AdminProvider = ({ children }: any) => {
       locations,
       menusAddonCat,
       addonAddonCat,
+      orders,
+      orderlines,
     });
   };
 

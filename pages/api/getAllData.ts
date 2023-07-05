@@ -36,6 +36,8 @@ export default async function handler(
       const menusAddonCat = await prisma.menus_addon_cats.findMany();
       const addonAddonCat = await prisma.addons_addon_cats.findMany();
       const menusMenuCat = await prisma.menus_menu_cats.findMany();
+      const orders = await prisma.orders.findMany();
+      const orderlines = await prisma.orderlines.findMany();
 
       res.status(200).send({
         menus,
@@ -48,6 +50,8 @@ export default async function handler(
         menusAddonCat,
         addonAddonCat,
         menusMenuCat,
+        orders,
+        orderlines,
       });
     }
   } catch (error) {

@@ -7,7 +7,7 @@ import { useContext, useState } from "react";
 import { AdminContext } from "@/contexts/AdminContext";
 import LocationsSelect from "@/components/LocationsSelect";
 
-export default function MenuCategories() {
+export default function Locations() {
   const { fetchData } = useContext(AdminContext);
 
   const [name, setname] = useState("");

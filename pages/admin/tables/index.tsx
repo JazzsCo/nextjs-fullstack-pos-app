@@ -1,14 +1,14 @@
 import { useContext, useState } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
-import { AppContext } from "@/contexts/AppContext";
+import { AdminContext } from "@/contexts/AdminContext";
 import axios from "axios";
 import { LocationId } from "@/libs/locationId";
 import { tables } from "@prisma/client";
 import TableCreate from "@/components/TableCreate";
 
 const Tables = () => {
-  const { tables } = useContext(AppContext);
+  const { tables } = useContext(AdminContext);
 
   const locationId = LocationId();
 
