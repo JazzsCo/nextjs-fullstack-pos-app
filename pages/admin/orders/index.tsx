@@ -1,5 +1,4 @@
 import Layout from "@/components/Layout";
-import { config } from "@/config/config";
 import { AdminContext } from "@/contexts/AdminContext";
 import { LocationId } from "@/libs/locationId";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -33,6 +32,7 @@ import {
   addons_addon_cats as AddonAddonCategory,
   orderlines,
 } from "@prisma/client";
+import axios from "axios";
 import { useContext, useState } from "react";
 
 interface Props {
@@ -54,6 +54,24 @@ const Row = ({
 }: Props) => {
   const { fetchData } = useContext(AdminContext);
   const [open, setOpen] = useState(false);
+
+  const getMenuIdsByOrderlines = () => {
+    return [...new Set(orderlines.map((orderline) => orderline.menu_id))];
+  };
+
+  const handleUpdateOrderStatus = async (
+    evt: SelectChangeEvent<"PENDING" | "PREPARING" | "COMPLETE" | "REJECTED">,
+    menuId: number
+  ) => {
+    const status = evt.target.value;
+
+    const res = await axios.put(
+      `/api/admin/orderlines?orderId=${order.id}&menuId=${menuId}`,
+      { status }
+    );
+
+    fetchData();
+  };
 
   const renderMenusAddonsFromOrder = () => {
     const orderlineMenuIds = getMenuIdsByOrderlines();
@@ -79,164 +97,153 @@ const Row = ({
         ?.quantity as number;
 
       // find respective addons' addoncategories
-      const addonsWithCategories: { [key: number]: Addon[] } = {};
+      const addonsWithCategories: { [key: string]: Addon[] } = {};
 
       orderlineAddons.forEach((item) => {
         const addonCatId = addonAddonCat.find(
           (addonCat) => addonCat.addon_id === item.id
-        )?.addon_cat_id;
+        )?.addon_cat_id as number;
 
         const addonCategory = addonCategories.find(
           (addonCategory) => addonCategory.id === addonCatId
         ) as AddonCategory;
 
-        if (!addonsWithCategories[addonCategory.id]) {
-          addonsWithCategories[addonCategory.id] = [item];
+        if (!addonsWithCategories[addonCategory.addon_cat_name]) {
+          addonsWithCategories[addonCategory.addon_cat_name] = [item];
         } else {
-          addonsWithCategories[addonCategory.id] = [
-            ...addonsWithCategories[addonCategory.id],
+          addonsWithCategories[addonCategory.addon_cat_name] = [
+            ...addonsWithCategories[addonCategory.addon_cat_name],
             item,
           ];
         }
       });
 
-      return { menu: orderlineMenu, addonsWithCategories, status, quantity };
+      return { menu: orderlineMenu, status, addonsWithCategories, quantity };
     });
 
     return (
       <>
-        {orderlineMenus.map((item, index) => (
-          <Box key={index} sx={{ mr: 2 }}>
-            <Paper
-              elevation={3}
-              sx={{
-                width: 250,
-                height: 300,
-                p: 2,
-              }}
-            >
-              <Box
+        {orderlineMenus.map(
+          ({ menu, quantity, status, addonsWithCategories }, index) => (
+            <Box key={index} sx={{ mr: 2 }}>
+              <Paper
+                elevation={3}
                 sx={{
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
+                  width: 300,
+                  height: 350,
+                  p: 2,
                 }}
               >
-                <Box>
-                  <Box
-                    sx={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <Typography variant="h6">{item.menu.name}</Typography>
-                    <Typography
-                      variant="h6"
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Box>
+                    <Box
+                      sx={{ display: "flex", justifyContent: "space-between" }}
+                    >
+                      <Typography variant="h6">{menu.name}</Typography>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          backgroundColor: "#1B9C85",
+                          borderRadius: "50%",
+                          width: 30,
+                          height: 30,
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          color: "white",
+                        }}
+                      >
+                        {quantity}
+                      </Typography>
+                    </Box>
+                    <Divider sx={{ my: 1 }} />
+                    <Box
                       sx={{
-                        backgroundColor: "#1B9C85",
-                        borderRadius: "50%",
-                        width: 30,
-                        height: 30,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        color: "white",
+                        maxHeight: "180px",
+                        overflowY: "scroll",
                       }}
                     >
-                      {item.quantity}
-                    </Typography>
-                  </Box>
-                  <Divider sx={{ my: 1 }} />
-                  <Box
-                    sx={{
-                      maxHeight: "180px",
-                      overflow: "scroll",
-                    }}
-                  >
-                    {Object.keys(item.addonsWithCategories).map(
-                      (addonCategoryId) => {
-                        const addonCategory = addonCategories.find(
-                          (item) => item.id === Number(addonCategoryId)
-                        ) as AddonCategory;
-                        const addons = item.addonsWithCategories[
-                          Number(addonCategoryId)
-                        ] as Addon[];
-                        return (
-                          <Box sx={{ mb: 1.5 }} key={addonCategoryId}>
-                            <Typography sx={{ fontWeight: "bold" }}>
-                              {addonCategory.addon_cat_name}
-                            </Typography>
-                            <Box sx={{ pl: 2 }}>
-                              {addons.map((item) => {
-                                return (
-                                  <Box key={item.id}>
-                                    <Typography
-                                      variant="body1"
-                                      sx={{ fontStyle: "italic" }}
-                                    >
-                                      {item.addon_name}
-                                    </Typography>
-                                  </Box>
-                                );
-                              })}
+                      {Object.keys(addonsWithCategories).map(
+                        (addonCategory, index) => {
+                          const addons = addonsWithCategories[
+                            addonCategory
+                          ] as Addon[];
+
+                          return (
+                            <Box sx={{ mb: 1.5 }} key={index}>
+                              <Typography sx={{ fontWeight: "bold" }}>
+                                {addonCategory}
+                              </Typography>
+                              <Box sx={{ pl: 2 }}>
+                                {addons.map(({ id, addon_name }) => {
+                                  return (
+                                    <Box key={id}>
+                                      <Typography
+                                        variant="body1"
+                                        sx={{ fontStyle: "italic" }}
+                                      >
+                                        {addon_name}
+                                      </Typography>
+                                    </Box>
+                                  );
+                                })}
+                              </Box>
                             </Box>
-                          </Box>
-                        );
-                      }
-                    )}
+                          );
+                        }
+                      )}
+                    </Box>
+                  </Box>
+                  <Box>
+                    <Divider sx={{ mb: 2 }} />
+                    <Box
+                      sx={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <FormControl sx={{ width: "100%" }}>
+                        <InputLabel>Status</InputLabel>
+                        <Select
+                          id={String(menu.id)}
+                          value={status}
+                          label="Status"
+                          onChange={(evt) =>
+                            handleUpdateOrderStatus(evt, menu.id)
+                          }
+                        >
+                          <MenuItem value={OrderStatus.PENDING}>
+                            Pending
+                          </MenuItem>
+                          <MenuItem value={OrderStatus.PREPARING}>
+                            Preparing
+                          </MenuItem>
+                          <MenuItem value={OrderStatus.COMPLETE}>
+                            Complete
+                          </MenuItem>
+                          <MenuItem value={OrderStatus.REJECTED}>
+                            Reject
+                          </MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
                   </Box>
                 </Box>
-                <Box>
-                  <Divider sx={{ mb: 2 }} />
-                  <Box
-                    sx={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <FormControl sx={{ width: "100%" }}>
-                      <InputLabel>Status</InputLabel>
-                      <Select
-                        value={item.status}
-                        label="Status"
-                        onChange={handleUpdateOrderStatus}
-                      >
-                        <MenuItem value={OrderStatus.PENDING}>Pending</MenuItem>
-                        <MenuItem value={OrderStatus.PREPARING}>
-                          Preparing
-                        </MenuItem>
-                        <MenuItem value={OrderStatus.COMPLETE}>
-                          Complete
-                        </MenuItem>
-                        <MenuItem value={OrderStatus.REJECTED}>Reject</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Box>
-                </Box>
-              </Box>
-            </Paper>
-          </Box>
-        ))}{" "}
+              </Paper>
+            </Box>
+          )
+        )}
       </>
     );
-  };
-
-  const handleUpdateOrderStatus = async (
-    evt: SelectChangeEvent<"PENDING" | "PREPARING" | "COMPLETE" | "REJECTED">
-  ) => {
-    const { orders_id: orderId, menu_id: menuId } = orderlines[0];
-    await fetch(`/api/admin/orderlines`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ orderId, menuId, status: evt.target.value }),
-    });
-    fetchData();
-  };
-
-  const getMenuIdsByOrderlines = () => {
-    return [...new Set(orderlines.map((orderline) => orderline.menu_id))];
   };
 
   return (
