@@ -64,7 +64,7 @@ const MenuById = () => {
   );
 
   const deleteMenu = async () => {
-    await axios.delete(`/api/menusPost?id=${id}`);
+    await axios.delete(`/api/admin/menus?id=${id}`);
 
     router.push("/admin/menus");
 

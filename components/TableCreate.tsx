@@ -25,7 +25,7 @@ const TableCreate = () => {
     const isValid = newTable.name;
     if (!isValid) return alert("Please enter table name");
 
-    await axios.post("/api/tables", { newTable });
+    await axios.post("/api/admin/tables", { newTable });
 
     fetchData();
     setOpen(false);

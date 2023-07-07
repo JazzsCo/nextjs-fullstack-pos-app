@@ -45,7 +45,7 @@ const MenuCatById = () => {
   );
 
   const deleteMenuCat = async () => {
-    await axios.delete(`/api/menuCategories?id=${id}`);
+    await axios.delete(`/api/admin/menuCategories?id=${id}`);
 
     router.push("/admin/menu-categories");
 

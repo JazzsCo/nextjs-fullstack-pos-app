@@ -38,7 +38,7 @@ const MenuCatUpdate = ({
   };
 
   const menuCatUpdate = async () => {
-    await axios.put(`/api/menuCategories?id=${menuCat.id}`, {
+    await axios.put(`/api/admin/menuCategories?id=${menuCat.id}`, {
       menuId,
       menuCatName,
       menuNotHaveLocationIds,

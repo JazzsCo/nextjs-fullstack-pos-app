@@ -38,7 +38,7 @@ const AddonCatCreate = ({ menu }: Props) => {
   };
 
   const createAddonCategory = async () => {
-    const res = await axios.post(`/api/addonCategory`, {
+    const res = await axios.post(`/api/admin/addonCategories`, {
       addonCatName,
     });
 

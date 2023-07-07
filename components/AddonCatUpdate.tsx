@@ -38,7 +38,7 @@ const AddonCatUpdate = ({
   };
 
   const menuCatUpdate = async () => {
-    await axios.put(`/api/addonCategory?id=${addonCat.id}`, {
+    await axios.put(`/api/admin/addonCategories?id=${addonCat.id}`, {
       menuId,
       addonCatName,
       menuNotHaveLocationIds,

@@ -15,7 +15,7 @@ const TableById = () => {
   const table = tables.filter((table) => table.id === Number(id))[0];
 
   const deleteTable = async () => {
-    await axios.delete(`/api/tables?id=${id}`);
+    await axios.delete(`/api/admin/tables?id=${id}`);
 
     router.push("/admin/tables");
 

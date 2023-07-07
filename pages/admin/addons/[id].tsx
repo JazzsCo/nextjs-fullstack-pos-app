@@ -19,7 +19,7 @@ const AddonById = () => {
   )[0];
 
   const deleteAddon = async () => {
-    await axios.delete(`/api/createAddon?id=${id}`);
+    await axios.delete(`/api/admin/addons?id=${id}`);
 
     router.push("/admin/addons");
 

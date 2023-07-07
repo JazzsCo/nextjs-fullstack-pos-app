@@ -45,7 +45,7 @@ const AddonCatById = () => {
   );
 
   const deleteAddonCat = async () => {
-    await axios.delete(`/api/addonCategory?id=${id}`);
+    await axios.delete(`/api/admin/addonCategories?id=${id}`);
 
     router.push("/admin/addon-categories");
 

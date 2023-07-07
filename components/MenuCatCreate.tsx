@@ -32,7 +32,7 @@ const MenuCatCreate = ({ menus }: Props) => {
   };
 
   const createMenuCategory = async () => {
-    const res = await axios.post(`/api/menuCategories`, {
+    const res = await axios.post(`/api/admin/menuCategories`, {
       menuCat,
     });
 

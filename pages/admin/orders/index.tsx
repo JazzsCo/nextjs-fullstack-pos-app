@@ -59,7 +59,7 @@ const Row = ({
     return [...new Set(orderlines.map((orderline) => orderline.menu_id))];
   };
 
-  const handleUpdateOrderStatus = async (
+  const updateOrderStatus = async (
     evt: SelectChangeEvent<"PENDING" | "PREPARING" | "COMPLETE" | "REJECTED">,
     menuId: number
   ) => {
@@ -217,9 +217,7 @@ const Row = ({
                           id={String(menu.id)}
                           value={status}
                           label="Status"
-                          onChange={(evt) =>
-                            handleUpdateOrderStatus(evt, menu.id)
-                          }
+                          onChange={(evt) => updateOrderStatus(evt, menu.id)}
                         >
                           <MenuItem value={OrderStatus.PENDING}>
                             Pending

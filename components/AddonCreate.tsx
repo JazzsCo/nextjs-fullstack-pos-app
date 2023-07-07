@@ -64,7 +64,7 @@ const AddonCreate = ({ addonCategories }: Props) => {
   };
 
   const createAddon = async () => {
-    const res = await axios.post(`/api/createAddon`, {
+    const res = await axios.post(`/api/admin/addons`, {
       addonCatName,
       addonName,
       addonPrice,

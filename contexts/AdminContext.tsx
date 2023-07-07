@@ -61,7 +61,7 @@ const AdminProvider = ({ children }: any) => {
   // console.log("data is", data);
 
   const fetchData = async () => {
-    const res = await axios.get(`/api/getAllData`);
+    const res = await axios.get(`/api/admin`);
 
     const {
       menus,

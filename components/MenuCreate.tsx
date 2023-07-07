@@ -44,7 +44,7 @@ export default function MenuCreate() {
         // setMenu({ ...menu, imageUrl: imageUrl });
 
         if (imageUrl) {
-          const res = await axios.post(`/api/menusPost`, { menu, imageUrl });
+          const res = await axios.post(`/api/admin/menus`, { menu, imageUrl });
           console.log(res);
         }
 

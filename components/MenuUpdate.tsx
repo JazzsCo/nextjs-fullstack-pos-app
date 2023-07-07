@@ -41,7 +41,7 @@ const MenuUpdate = ({ menu, location }: Props) => {
   };
 
   const menuUpdate = async () => {
-    await axios.put(`/api/menusPost?id=${menu.id}`, {
+    await axios.put(`/api/admin/menus?id=${menu.id}`, {
       updateMenu,
       locationId,
     });

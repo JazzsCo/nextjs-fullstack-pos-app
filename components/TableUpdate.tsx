@@ -21,7 +21,7 @@ const TableCreate = ({ table }: Props) => {
   const handleOpen = () => setOpen(!open);
 
   const updateTable = async () => {
-    await axios.put(`/api/tables?id=${table.id}`, { updateTableName });
+    await axios.put(`/api/admin/tables?id=${table.id}`, { updateTableName });
 
     fetchData();
   };

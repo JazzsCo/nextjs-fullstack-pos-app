@@ -15,7 +15,7 @@ export default function Locations() {
   const createLocation = async () => {
     if (!name) return console.log("This is empty...");
 
-    const res = await axios.post(`/api/locations`, {
+    const res = await axios.post(`/api/admin/locations`, {
       name,
     });
 
