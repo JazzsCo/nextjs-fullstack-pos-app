@@ -10,7 +10,7 @@ const ActiveOrder = () => {
 
   const orderId = router.query.id as string;
 
-  const { orders, cart, updateData } = useContext(OrderContext);
+  const { orders, updateData, ...data } = useContext(OrderContext);
 
   const order = orders.find((item) => item.id === Number(orderId));
 
