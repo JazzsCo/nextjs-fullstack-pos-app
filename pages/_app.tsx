@@ -7,7 +7,7 @@ import { Provider } from "react-redux";
 
 import AdminProvider from "@/contexts/AdminContext";
 import OrderProvider from "@/contexts/OrderContext";
-import { store } from "./store";
+import { store } from "../store";
 
 const queryClient = new QueryClient();
 

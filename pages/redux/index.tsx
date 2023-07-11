@@ -2,9 +2,9 @@ import {
   decrement,
   fetchContent,
   increment,
-} from "../store/slices/counterSlice";
+} from "@/store/slices/counterSlice";
 import { Box, Button, Typography } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 const ReduxConcepts = () => {
   const count = useAppSelector((state) => state.counter.value);
