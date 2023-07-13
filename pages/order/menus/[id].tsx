@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { v4 as uuid } from "uuid";
 
 import { addon_cats, addons, addons_addon_cats, menus } from "@prisma/client";
 
@@ -55,6 +56,7 @@ const MenuById = () => {
       cart: [
         ...data.cart,
         {
+          id: uuid(),
           menu: currentMenu,
           addons: selectedAddons,
           quantity,
@@ -74,7 +76,9 @@ const MenuById = () => {
 
   const updateToCart = () => {
     if (updateCartItem) {
-      const otherCartItem = cart.filter((item) => item !== updateCartItem);
+      const otherCartItem = cart.filter(
+        (item) => item.id !== updateCartItem.id
+      );
 
       updateData({
         ...data,

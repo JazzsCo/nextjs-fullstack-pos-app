@@ -46,14 +46,14 @@ export default function TabsComponent() {
 
       <Tabs value={"Main Dash"}>
         <TabsHeader>
-          {menuCategories.map(({ id, menu_cat_name }) => (
+          {menuCategories?.map(({ id, menu_cat_name }) => (
             <Tab key={id} value={menu_cat_name}>
               {menu_cat_name}
             </Tab>
           ))}
         </TabsHeader>
         <TabsBody>
-          {menuCategories.map(({ id, menu_cat_name }) => (
+          {menuCategories?.map(({ id, menu_cat_name }) => (
             <TabPanel key={id} value={menu_cat_name}>
               {menusByMenuCatId(id)}
             </TabPanel>

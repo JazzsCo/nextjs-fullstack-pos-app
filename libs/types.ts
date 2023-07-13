@@ -8,6 +8,7 @@ export enum OrderlineStatus {
 }
 
 export interface CartItem {
+  id: string;
   menu: Menu;
   addons: Addon[];
   quantity: number;

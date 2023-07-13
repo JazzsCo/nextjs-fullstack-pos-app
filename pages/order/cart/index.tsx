@@ -26,7 +26,7 @@ const Review = () => {
 
   const editOrder = (cartItem: CartItem) => {
     router.push({
-      pathname: `/order/menus/${cartItem.menu.id}`,
+      pathname: `/order/menus/${cartItem.id}`,
       query,
     });
   };
