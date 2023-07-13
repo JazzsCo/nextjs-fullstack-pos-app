@@ -1,10 +1,37 @@
 import { configureStore } from "@reduxjs/toolkit";
-import counterSlice from "./slices/counterSlice";
-// ...
+import menusSlice from "./slices/menusSlice";
+import orderlinesSlice from "./slices/orderlinesSlice";
+import ordersSlice from "./slices/ordersSlice";
+import tablesSlice from "./slices/tablesSlice";
+import appSlice from "./slices/appSlice";
+import addonCatsSlice from "./slices/addonCatsSlice";
+import addonsSlice from "./slices/addonsSlice";
+import cartsSlice from "./slices/cartsSlice";
+import companySlice from "./slices/companySlice";
+import locationsSlice from "./slices/locationsSlice";
+import menuCatsSlice from "./slices/menuCatsSlice";
+import menusAddonCatsSlice from "./slices/menusAddonCatsSlice";
+import menusLocationsSlice from "./slices/menusLocationsSlice";
+import menusMenuCatsSlice from "./slices/menusMenuCatsSlice";
+import addonsAddonCatsSlice from "./slices/addonsAddonCatsSlice";
 
 export const store = configureStore({
   reducer: {
-    counter: counterSlice,
+    app: appSlice,
+    addonCats: addonCatsSlice,
+    addons: addonsSlice,
+    cart: cartsSlice,
+    company: companySlice,
+    locations: locationsSlice,
+    menuCats: menuCatsSlice,
+    menusAddonCats: menusAddonCatsSlice,
+    menusMenuCats: menusMenuCatsSlice,
+    menusLocations: menusLocationsSlice,
+    addonsAddonCats: addonsAddonCatsSlice,
+    menus: menusSlice,
+    orderlines: orderlinesSlice,
+    orders: ordersSlice,
+    tables: tablesSlice,
   },
 });
 
