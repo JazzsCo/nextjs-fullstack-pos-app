@@ -10,18 +10,20 @@ import { OrderContext } from "@/contexts/OrderContext";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Avatar, Box, Button, Typography } from "@mui/material";
+import { useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
 
 const Review = () => {
-  const { cart, updateData, fetchData, ...data } = useContext(OrderContext);
+  const { carts, ...data } = useAppSelector(appData);
 
   const router = useRouter();
   const query = router.query;
 
   const removeOrderlinFromCart = (cartItem: CartItem) => {
-    const remainingOrderlines = cart.filter(
+    const remainingOrderlines = carts.filter(
       (item) => item.menu.id !== cartItem.menu.id
     );
-    updateData({ ...data, cart: remainingOrderlines });
+    // updateData({ ...data, cart: remainingOrderlines });
   };
 
   const editOrder = (cartItem: CartItem) => {
@@ -36,17 +38,17 @@ const Review = () => {
 
     const res = await axios.post(
       `/api/order?locationId=${locationId}&tableId=${tableId}`,
-      { cart }
+      { carts }
     );
 
     const { order } = res.data;
 
-    fetchData();
+    // fetchData();
 
     router.push({ pathname: `/order/active-order/${order.id}`, query });
   };
 
-  if (!cart.length)
+  if (!carts.length)
     return (
       <div>
         <h1>You Not Order . . .</h1>
@@ -88,7 +90,7 @@ const Review = () => {
         <Typography variant="h5" sx={{ textAlign: "center", mb: 3 }}>
           Review your order
         </Typography>
-        {cart.map((cartItem, index) => {
+        {carts.map((cartItem, index) => {
           const { menu, addons, quantity } = cartItem;
           return (
             <Box key={index}>

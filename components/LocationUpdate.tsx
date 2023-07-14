@@ -1,4 +1,3 @@
-import * as React from "react";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -6,9 +5,11 @@ import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
-import { AdminContext } from "@/contexts/AdminContext";
-import { useContext, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { locations } from "@prisma/client";
+
+import { useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
 
 interface Props {
   onStateChange?: (childStateSelectedLocationId: any) => void;
@@ -31,9 +32,9 @@ export default function LocationUpdate({ location, onStateChange }: Props) {
 
   const locationNames = location.map((item: locations) => item.location_name);
 
-  const [personName, setPersonName] = React.useState<string[]>(locationNames);
+  const [personName, setPersonName] = useState<string[]>(locationNames);
 
-  const { locations } = useContext(AdminContext);
+  const { locations } = useAppSelector(appData);
 
   const handleChange = (event: SelectChangeEvent<typeof personName>) => {
     const {

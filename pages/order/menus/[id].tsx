@@ -10,6 +10,9 @@ import { getAddonCatIdsByMenuId } from "@/libs/custom";
 import { OrderContext } from "@/contexts/OrderContext";
 import QuantitySelector from "@/components/QuantitySelector";
 import { Button } from "@mui/material";
+import { useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
+import { AddRoadRounded } from "@mui/icons-material";
 
 const MenuById = () => {
   const router = useRouter();
@@ -21,13 +24,12 @@ const MenuById = () => {
     menus,
     addonCategories,
     addons,
-    menusAddonCat,
-    addonAddonCat,
-    cart,
-    updateData,
-  } = useContext(OrderContext);
+    menusAddonCats,
+    addonsAddonCats,
+    carts,
+  } = useAppSelector(appData);
 
-  const { ...data } = useContext(OrderContext);
+  const { ...data } = useAppSelector(appData);
 
   const [quantity, setQuantity] = useState(1);
   const [disabled, setDisabled] = useState(false);
@@ -40,7 +42,7 @@ const MenuById = () => {
 
   const currentMenu = menus.filter((item: menus) => item.id === Number(id))[0];
 
-  const addonCatIds = getAddonCatIdsByMenuId(id, menusAddonCat);
+  const addonCatIds = getAddonCatIdsByMenuId(id, menusAddonCats);
 
   const addonCatsByMenu = addonCategories.filter((item: addon_cats) =>
     addonCatIds.includes(item.id)
@@ -51,18 +53,18 @@ const MenuById = () => {
   );
 
   const addToCart = () => {
-    updateData({
-      ...data,
-      cart: [
-        ...data.cart,
-        {
-          id: uuid(),
-          menu: currentMenu,
-          addons: selectedAddons,
-          quantity,
-        },
-      ],
-    });
+    // updateData({
+    //   ...data,
+    //   cart: [
+    //     ...data.cart,
+    //     {
+    //       id: uuid(),
+    //       menu: currentMenu,
+    //       addons: selectedAddons,
+    //       quantity,
+    //     },
+    //   ],
+    // });
 
     delete query.id;
 
@@ -72,25 +74,25 @@ const MenuById = () => {
     });
   };
 
-  const updateCartItem = cart.find((item) => item.menu.id === Number(id));
+  const updateCartItem = carts.find((item) => item.menu.id === Number(id));
 
   const updateToCart = () => {
     if (updateCartItem) {
-      const otherCartItem = cart.filter(
+      const otherCartItem = carts.filter(
         (item) => item.id !== updateCartItem.id
       );
 
-      updateData({
-        ...data,
-        cart: [
-          ...otherCartItem,
-          {
-            menu: currentMenu,
-            addons: selectedAddons,
-            quantity,
-          },
-        ],
-      });
+      // updateData({
+      //   ...data,
+      //   cart: [
+      //     ...otherCartItem,
+      //     {
+      //       menu: currentMenu,
+      //       addons: selectedAddons,
+      //       quantity,
+      //     },
+      //   ],
+      // });
     }
 
     delete query.id;
@@ -102,7 +104,7 @@ const MenuById = () => {
   };
 
   const orderAddonsChange = (selectedAddonId: number) => {
-    const isRequiredAddonCatId = addonAddonCat.filter(
+    const isRequiredAddonCatId = addonsAddonCats.filter(
       (item: addons_addon_cats) => item.addon_id === selectedAddonId
     )[0].addon_cat_id;
 
@@ -110,7 +112,7 @@ const MenuById = () => {
       (item: addon_cats) => item.id === isRequiredAddonCatId
     )[0];
 
-    const isRequiredAddonIds = addonAddonCat
+    const isRequiredAddonIds = addonsAddonCats
       .filter(
         (item: addons_addon_cats) => item.addon_cat_id === isRequiredAddonCatId
       )
@@ -139,7 +141,7 @@ const MenuById = () => {
   };
 
   const addonsByAddonCat = (id: number, is_required: boolean) => {
-    const addonIdsByAddonCatId = addonAddonCat
+    const addonIdsByAddonCatId = addonsAddonCats
       .filter((item: addons_addon_cats) => item.addon_cat_id === id)
       .map((item: addons_addon_cats) => item.addon_id);
 
@@ -217,7 +219,9 @@ const MenuById = () => {
     }
 
     if (updateCartItem) {
-      const selectedCartItem = cart.find((item) => item.menu.id === Number(id));
+      const selectedCartItem = carts.find(
+        (item) => item.menu.id === Number(id)
+      );
 
       const selectedAddonsIds = selectedCartItem?.addons.map(
         (item) => item.id
@@ -232,7 +236,7 @@ const MenuById = () => {
   }, [updateCartItem]);
 
   useEffect(() => {
-    const addonCatIdsByAddonIds = addonAddonCat
+    const addonCatIdsByAddonIds = addonsAddonCats
       .filter((item) => orderAddonIds.includes(item.addon_id))
       .map((item) => item.addon_cat_id);
 

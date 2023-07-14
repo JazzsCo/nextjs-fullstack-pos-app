@@ -58,8 +58,6 @@ const AdminProvider = ({ children }: any) => {
 
   const [data, updateData] = useState(defaultContext);
 
-  // console.log("data is", data);
-
   const fetchData = async () => {
     const res = await axios.get(`/api/admin`);
 

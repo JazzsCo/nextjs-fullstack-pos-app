@@ -32,10 +32,10 @@ export default async function handler(
         where: { is_archived: false },
       });
 
-      const menusLocation = await prisma.menus_locations.findMany();
-      const menusAddonCat = await prisma.menus_addon_cats.findMany();
-      const addonAddonCat = await prisma.addons_addon_cats.findMany();
-      const menusMenuCat = await prisma.menus_menu_cats.findMany();
+      const menusLocations = await prisma.menus_locations.findMany();
+      const menusAddonCats = await prisma.menus_addon_cats.findMany();
+      const addonsAddonCats = await prisma.addons_addon_cats.findMany();
+      const menusMenuCats = await prisma.menus_menu_cats.findMany();
       const orders = await prisma.orders.findMany();
       const orderlines = await prisma.orderlines.findMany();
 
@@ -44,12 +44,12 @@ export default async function handler(
         menuCategories,
         addonCategories,
         addons,
-        menusLocation,
+        menusLocations,
         tables,
         locations,
-        menusAddonCat,
-        addonAddonCat,
-        menusMenuCat,
+        menusAddonCats,
+        addonsAddonCats,
+        menusMenuCats,
         orders,
         orderlines,
       });

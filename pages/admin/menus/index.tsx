@@ -7,13 +7,15 @@ import type { menus } from "@prisma/client";
 import Layout from "@/components/Layout";
 import MenuCreate from "@/components/MenuCreate";
 import { getMenuIdsByLocationId } from "@/libs/custom";
+import { useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
 
 export default function Menus() {
   const locationId = Number(LocationId());
 
-  const { menus, menusLocation } = useContext(AdminContext);
+  const { menus, menusLocations } = useAppSelector(appData);
 
-  const menuIds = getMenuIdsByLocationId(locationId, menusLocation);
+  const menuIds = getMenuIdsByLocationId(locationId, menusLocations);
 
   const getMenusByLocationId = menus.filter((item: menus) =>
     menuIds.includes(item.id)

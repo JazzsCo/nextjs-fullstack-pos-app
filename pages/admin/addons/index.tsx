@@ -11,6 +11,8 @@ import {
   getAddonIdsByAddonCatIds,
   getMenuIdsByLocationId,
 } from "@/libs/custom";
+import { useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
 
 const CreateAddons = () => {
   const locationId = Number(LocationId());
@@ -18,14 +20,14 @@ const CreateAddons = () => {
   const {
     addonCategories,
     addons,
-    menusAddonCat,
-    addonAddonCat,
-    menusLocation,
-  } = useContext(AdminContext);
+    menusAddonCats,
+    addonsAddonCats,
+    menusLocations,
+  } = useAppSelector(appData);
 
-  const menuIds = getMenuIdsByLocationId(locationId, menusLocation);
+  const menuIds = getMenuIdsByLocationId(locationId, menusLocations);
 
-  const addonCatIds = getAddonCatIdsByMenuIds(menuIds, menusAddonCat);
+  const addonCatIds = getAddonCatIdsByMenuIds(menuIds, menusAddonCats);
 
   const addonCatByMenu = addonCategories.filter((item: addon_cats) =>
     addonCatIds.includes(item.id)
@@ -33,7 +35,7 @@ const CreateAddons = () => {
 
   const getAddonByAddonCatIds = getAddonIdsByAddonCatIds(
     addonCatIds,
-    addonAddonCat
+    addonsAddonCats
   );
 
   const addonByAddonCat = addons.filter((item: addons) =>

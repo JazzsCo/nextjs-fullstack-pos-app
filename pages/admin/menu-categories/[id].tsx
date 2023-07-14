@@ -12,10 +12,12 @@ import DeleteDialog from "@/components/DeleteDialog";
 import MenuCatUpdate from "@/components/MenuCatUpdate";
 
 import type { menu_cats, menus, menus_menu_cats } from "@prisma/client";
+import { useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
 
 const MenuCatById = () => {
-  const { menus, menuCategories, menusMenuCat, menusLocation, fetchData } =
-    useContext(AdminContext);
+  const { menus, menuCategories, menusMenuCats, menusLocations } =
+    useAppSelector(appData);
 
   const router = useRouter();
   const { id } = router.query;
@@ -26,7 +28,7 @@ const MenuCatById = () => {
     (item: menu_cats) => item.id === Number(id)
   )[0];
 
-  const menuIds = getMenuIdsByLocationId(locationId, menusLocation);
+  const menuIds = getMenuIdsByLocationId(locationId, menusLocations);
 
   const getMenusByLocationId = menus.filter((item: menus) =>
     menuIds.includes(item.id)
@@ -36,7 +38,7 @@ const MenuCatById = () => {
     .filter((item: menus) => !getMenusByLocationId.includes(item))
     .map((item: menus) => item.id);
 
-  const selectedMenuIds = menusMenuCat
+  const selectedMenuIds = menusMenuCats
     .filter((item: menus_menu_cats) => item.menu_cat_id === Number(id))
     .map((item: menus_menu_cats) => item.menu_id);
 
@@ -49,7 +51,7 @@ const MenuCatById = () => {
 
     router.push("/admin/menu-categories");
 
-    fetchData();
+    // fetchData();
   };
 
   return (

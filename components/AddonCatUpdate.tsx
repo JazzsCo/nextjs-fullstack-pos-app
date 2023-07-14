@@ -1,12 +1,10 @@
 import axios from "axios";
 import { useContext, useState } from "react";
-
-import { addon_cats, menu_cats, menus } from "@prisma/client";
-import { AdminContext } from "@/contexts/AdminContext";
-
+import { addon_cats, menus } from "@prisma/client";
 import { Dialog } from "@mui/material";
 import { Button, Input } from "@material-tailwind/react";
 
+import { AdminContext } from "@/contexts/AdminContext";
 import MenuListUpdate from "./MenuListUpdate";
 
 interface Props {

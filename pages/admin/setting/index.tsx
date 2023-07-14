@@ -10,9 +10,11 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
+import { useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
 
 const Setting = () => {
-  const { locations } = useContext(AdminContext);
+  const { locations } = useAppSelector(appData);
 
   const [selectedLocation, setSelectedLocation] = useState<
     Location | undefined

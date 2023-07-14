@@ -5,6 +5,7 @@ import {
   menus_menu_cats,
 } from "@prisma/client";
 import { CartItem } from "./types";
+import { useSession } from "next-auth/react";
 
 export const getMenuIdsByLocationId = (
   locationId: number,

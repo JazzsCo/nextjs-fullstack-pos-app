@@ -12,10 +12,12 @@ import DeleteDialog from "@/components/DeleteDialog";
 import AddonCatUpdate from "@/components/AddonCatUpdate";
 
 import type { addon_cats, menus, menus_addon_cats } from "@prisma/client";
+import { useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
 
 const AddonCatById = () => {
-  const { menus, addonCategories, menusAddonCat, menusLocation, fetchData } =
-    useContext(AdminContext);
+  const { menus, addonCategories, menusAddonCats, menusLocations } =
+    useAppSelector(appData);
 
   const router = useRouter();
   const { id } = router.query;
@@ -26,7 +28,7 @@ const AddonCatById = () => {
     (item: addon_cats) => item.id === Number(id)
   )[0];
 
-  const menuIds = getMenuIdsByLocationId(locationId, menusLocation);
+  const menuIds = getMenuIdsByLocationId(locationId, menusLocations);
 
   const getMenusByLocationId = menus.filter((item: menus) =>
     menuIds.includes(item.id)
@@ -36,7 +38,7 @@ const AddonCatById = () => {
     .filter((item: menus) => !getMenusByLocationId.includes(item))
     .map((item: menus) => item.id);
 
-  const selectedMenuIds = menusAddonCat
+  const selectedMenuIds = menusAddonCats
     .filter((item: menus_addon_cats) => item.addon_cat_id === Number(id))
     .map((item: menus_addon_cats) => item.menu_id);
 
@@ -49,7 +51,7 @@ const AddonCatById = () => {
 
     router.push("/admin/addon-categories");
 
-    fetchData();
+    // fetchData();
   };
 
   return (

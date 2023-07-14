@@ -19,6 +19,8 @@ import {
   getMenuCatIdsByMenuId,
   getSelectedLocationIdsByMenuId,
 } from "@/libs/custom";
+import { useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
 
 const MenuById = () => {
   const {
@@ -26,38 +28,40 @@ const MenuById = () => {
     menuCategories,
     addonCategories,
     locations,
-    menusMenuCat,
-    addonAddonCat,
+    menusMenuCats,
+    addonsAddonCats,
     addons,
-    menusAddonCat,
-    menusLocation,
-    fetchData,
-  } = useContext(AdminContext);
+    menusAddonCats,
+    menusLocations,
+  } = useAppSelector(appData);
 
   const router = useRouter();
   const { id } = router.query;
 
   const currentMenu = menus.filter((item: menus) => item.id === Number(id))[0];
 
-  const menuCatIds = getMenuCatIdsByMenuId(id, menusMenuCat);
+  const menuCatIds = getMenuCatIdsByMenuId(id, menusMenuCats);
 
   const menuCatByMenu = menuCategories.filter((item: menu_cats) =>
     menuCatIds.includes(item.id)
   );
 
-  const addonCatIds = getAddonCatIdsByMenuId(id, menusAddonCat);
+  const addonCatIds = getAddonCatIdsByMenuId(id, menusAddonCats);
 
   const addonCatByMenu = addonCategories.filter((item: addon_cats) =>
     addonCatIds.includes(item.id)
   );
 
-  const addonIds = getAddonIdsByAddonCatIds(addonCatIds, addonAddonCat);
+  const addonIds = getAddonIdsByAddonCatIds(addonCatIds, addonsAddonCats);
 
   const addonByAddonCat = addons.filter((item: addons) =>
     addonIds.includes(item.id)
   );
 
-  const selectedLocationIds = getSelectedLocationIdsByMenuId(id, menusLocation);
+  const selectedLocationIds = getSelectedLocationIdsByMenuId(
+    id,
+    menusLocations
+  );
 
   const selectedLocation = locations.filter((item: locations) =>
     selectedLocationIds.includes(item.id)
@@ -68,7 +72,7 @@ const MenuById = () => {
 
     router.push("/admin/menus");
 
-    fetchData();
+    // fetchData();
   };
 
   return (

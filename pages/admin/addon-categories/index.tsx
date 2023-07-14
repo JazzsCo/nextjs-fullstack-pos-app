@@ -8,14 +8,16 @@ import AddonCatCreate from "@/components/AddonCatCreate";
 import { LocationId } from "@/libs/locationId";
 import { AdminContext } from "@/contexts/AdminContext";
 import { getMenuIdsByLocationId } from "@/libs/custom";
+import { useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
 
 const AddonCategory = () => {
   const locationId = Number(LocationId());
 
-  const { menus, addonCategories, menusAddonCat, menusLocation, fetchData } =
-    useContext(AdminContext);
+  const { menus, addonCategories, menusAddonCats, menusLocations } =
+    useAppSelector(appData);
 
-  const menuIds = getMenuIdsByLocationId(locationId, menusLocation);
+  const menuIds = getMenuIdsByLocationId(locationId, menusLocations);
 
   const getMenusByLocationIds = menus.filter((item: menus) =>
     menuIds.includes(item.id)
@@ -28,7 +30,7 @@ const AddonCategory = () => {
   // );
 
   const menuCountByAddonCatIds = (id: number) => {
-    const menuIdByAddonCat = menusAddonCat
+    const menuIdByAddonCat = menusAddonCats
       .filter((item: menus_addon_cats) => item.addon_cat_id === id)
       .map((item: menus_addon_cats) => item.menu_id);
 

@@ -20,7 +20,7 @@ export const store = configureStore({
     app: appSlice,
     addonCats: addonCatsSlice,
     addons: addonsSlice,
-    cart: cartsSlice,
+    carts: cartsSlice,
     company: companySlice,
     locations: locationsSlice,
     menuCats: menuCatsSlice,

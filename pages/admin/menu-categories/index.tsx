@@ -13,21 +13,23 @@ import {
 import Layout from "@/components/Layout";
 import MenuCatCreate from "@/components/MenuCatCreate";
 import { getMenuIdsByLocationId } from "@/libs/custom";
+import { useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
 
 export default function MenuCategories() {
   const locationId = Number(LocationId());
 
-  const { menus, menuCategories, menusMenuCat, menusLocation } =
-    useContext(AdminContext);
+  const { menus, menuCategories, menusMenuCats, menusLocations } =
+    useAppSelector(appData);
 
-  const menuIds = getMenuIdsByLocationId(locationId, menusLocation);
+  const menuIds = getMenuIdsByLocationId(locationId, menusLocations);
 
   const getMenusByLocationId = menus.filter((item: menus) =>
     menuIds.includes(item.id)
   );
 
   const menuCountByMenuCatIds = (id: number) => {
-    const menuIdByMenuCat = menusMenuCat
+    const menuIdByMenuCat = menusMenuCats
       .filter((item: menus_menu_cats) => item.menu_cat_id === id)
       .map((item: menus_menu_cats) => item.menu_id);
 

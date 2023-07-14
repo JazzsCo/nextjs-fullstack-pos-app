@@ -1,4 +1,3 @@
-import { config } from "@/config/config";
 import {
   createAsyncThunk,
   createSelector,
@@ -18,6 +17,7 @@ import { setCompany } from "./companySlice";
 import { setAddonsAddonCats } from "./addonsAddonCatsSlice";
 import { setMenusMenuCats } from "./menusMenuCatsSlice";
 import { setMenusLocations } from "./menusLocationsSlice";
+import { setCart } from "./cartsSlice";
 
 interface AddonsState {
   isLoading: boolean;
@@ -31,7 +31,7 @@ const initialState: AddonsState = {
 
 export const fetchAppData = createAsyncThunk(
   "app/fetchAppData",
-  async (locationId: string, thunkAPI) => {
+  async (state, thunkAPI) => {
     thunkAPI.dispatch(setAppLoading(true));
     const response = await fetch(`/api/admin`);
     const responseJson = await response.json();
@@ -48,7 +48,6 @@ export const fetchAppData = createAsyncThunk(
       menusMenuCats,
       orders,
       orderlines,
-      company,
     } = responseJson;
     thunkAPI.dispatch(setAddons(addons));
     thunkAPI.dispatch(setMenus(menus));
@@ -62,7 +61,8 @@ export const fetchAppData = createAsyncThunk(
     thunkAPI.dispatch(setOrders(orders));
     thunkAPI.dispatch(setOrderlines(orderlines));
     thunkAPI.dispatch(setTables(tables));
-    thunkAPI.dispatch(setCompany(company));
+    thunkAPI.dispatch(setCompany([]));
+    thunkAPI.dispatch(setCart([]));
     thunkAPI.dispatch(setAppLoading(false));
   }
 );
@@ -96,22 +96,24 @@ export const selectCompany = (state: RootState) => state.company.isLoading;
 export const selectTables = (state: RootState) => state.tables.items;
 export const selectOrders = (state: RootState) => state.orders.items;
 export const selectOrderlines = (state: RootState) => state.orderlines.items;
+export const selectCarts = (state: RootState) => state.carts.items;
 
 export const appData = createSelector(
   [
-    selectMenuCats,
     selectMenus,
-    selectMenusLocations,
-    selectAddons,
+    selectMenuCats,
     selectAddonCats,
+    selectAddons,
+    selectMenusLocations,
+    selectTables,
+    selectLocations,
+    selectMenusAddonCats,
     selectAddonsAddonCats,
     selectMenusMenuCats,
-    selectMenusAddonCats,
-    selectLocations,
-    selectCompany,
-    selectTables,
     selectOrders,
     selectOrderlines,
+    selectCompany,
+    selectCarts,
   ],
   (
     menus,
@@ -126,7 +128,8 @@ export const appData = createSelector(
     menusMenuCats,
     orders,
     orderlines,
-    company
+    company,
+    carts
   ) => {
     return {
       menus,
@@ -142,6 +145,7 @@ export const appData = createSelector(
       orders,
       orderlines,
       company,
+      carts,
     };
   }
 );

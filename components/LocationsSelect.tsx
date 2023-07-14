@@ -5,9 +5,9 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { AdminContext } from "../contexts/AdminContext";
-import { useContext, useState } from "react";
 import { locations } from "@prisma/client";
+import { useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
 
 interface Props {
   onStateChange?: (childStateSelectedLocationIds: any) => void;
@@ -35,7 +35,7 @@ function getStyles(name: string, personName: string[], theme: Theme) {
 }
 
 export default function LocationsSelect({ onStateChange }: Props) {
-  const { locations } = useContext(AdminContext);
+  const { locations } = useAppSelector(appData);
   const theme = useTheme();
   const [personName, setPersonName] = React.useState<string[]>([]);
 

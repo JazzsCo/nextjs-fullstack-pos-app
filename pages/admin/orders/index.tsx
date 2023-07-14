@@ -1,6 +1,8 @@
 import Layout from "@/components/Layout";
 import { AdminContext } from "@/contexts/AdminContext";
 import { LocationId } from "@/libs/locationId";
+import { useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import {
@@ -270,8 +272,14 @@ const Row = ({
 };
 
 const Orders = () => {
-  const { orders, orderlines, menus, addons, addonCategories, addonAddonCat } =
-    useContext(AdminContext);
+  const {
+    orders,
+    orderlines,
+    menus,
+    addons,
+    addonCategories,
+    addonsAddonCats,
+  } = useAppSelector(appData);
 
   const locationId = LocationId();
 
@@ -307,7 +315,7 @@ const Orders = () => {
                   addons={addons}
                   order={order}
                   orderlines={getOrderlinesByOrderId(order.id)}
-                  addonAddonCat={addonAddonCat}
+                  addonAddonCat={addonsAddonCats}
                 />
               ))}
             </TableBody>

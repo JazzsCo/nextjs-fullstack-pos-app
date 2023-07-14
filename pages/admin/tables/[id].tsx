@@ -5,12 +5,14 @@ import { AdminContext } from "@/contexts/AdminContext";
 import TableUpdate from "@/components/TableUpdate";
 import DeleteDialog from "@/components/DeleteDialog";
 import axios from "axios";
+import { useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
 
 const TableById = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const { tables, fetchData } = useContext(AdminContext);
+  const { tables } = useAppSelector(appData);
 
   const table = tables.filter((table) => table.id === Number(id))[0];
 
@@ -19,7 +21,7 @@ const TableById = () => {
 
     router.push("/admin/tables");
 
-    fetchData();
+    // fetchData();
   };
 
   return (

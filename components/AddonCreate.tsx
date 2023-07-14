@@ -1,13 +1,12 @@
 import axios from "axios";
 import { useContext, useState } from "react";
-
 import { Dialog } from "@mui/material";
 import { Button, Input } from "@material-tailwind/react";
-import AddonCatSelect from "./AddonCatSelect";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-
-import { AdminContext } from "@/contexts/AdminContext";
 import { addon_cats } from "@prisma/client";
+
+import AddonCatSelect from "./AddonCatSelect";
+import { AdminContext } from "@/contexts/AdminContext";
 
 interface Props {
   addonCategories: addon_cats[];

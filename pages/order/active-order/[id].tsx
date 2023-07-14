@@ -3,6 +3,8 @@ import { useContext, useEffect } from "react";
 
 import { Box, Paper, Typography } from "@mui/material";
 import { OrderContext } from "@/contexts/OrderContext";
+import { useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
 
 const ActiveOrder = () => {
   const router = useRouter();
@@ -10,7 +12,7 @@ const ActiveOrder = () => {
 
   const orderId = router.query.id as string;
 
-  const { orders } = useContext(OrderContext);
+  const { orders } = useAppSelector(appData);
 
   const order = orders.find((item) => item.id === Number(orderId));
 

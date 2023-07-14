@@ -7,9 +7,11 @@ import { AdminContext } from "@/contexts/AdminContext";
 import DeleteDialog from "@/components/DeleteDialog";
 
 import type { addons } from "@prisma/client";
+import { useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
 
 const AddonById = () => {
-  const { addons, fetchData } = useContext(AdminContext);
+  const { addons } = useAppSelector(appData);
 
   const router = useRouter();
   const { id } = router.query;
@@ -23,7 +25,7 @@ const AddonById = () => {
 
     router.push("/admin/addons");
 
-    fetchData();
+    // fetchData();
   };
 
   return (

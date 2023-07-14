@@ -6,9 +6,11 @@ import axios from "axios";
 import { LocationId } from "@/libs/locationId";
 import { tables } from "@prisma/client";
 import TableCreate from "@/components/TableCreate";
+import { useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
 
 const Tables = () => {
-  const { tables } = useContext(AdminContext);
+  const { tables } = useAppSelector(appData);
 
   const locationId = LocationId();
 
