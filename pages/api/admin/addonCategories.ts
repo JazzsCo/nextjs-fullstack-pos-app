@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/libs/db";
-import { menus_addon_cats, menus_locations } from "@prisma/client";
+import { menus_addon_cats } from "@prisma/client";
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,23 +11,25 @@ export default async function handler(
     if (req.method === "POST") {
       const { name, menuIds } = req.body.addonCatName;
 
-      const addonCatResultId = (
-        await prisma.addon_cats.create({
-          data: {
-            addon_cat_name: name,
-          },
-        })
-      ).id;
-
-      const menuAddonCat = menuIds.map((id: number) => {
-        return { menu_id: id, addon_cat_id: addonCatResultId };
+      const addonCat = await prisma.addon_cats.create({
+        data: {
+          addon_cat_name: name,
+        },
       });
 
-      await prisma.menus_addon_cats.createMany({
-        data: menuAddonCat,
+      const menusAddonCats = menuIds.map((id: number) => {
+        return { menu_id: id, addon_cat_id: addonCat.id };
       });
 
-      res.status(200).send("ok");
+      const newMenusAddonCats = await prisma.$transaction(
+        menusAddonCats.map((menuAddonCat: any) =>
+          prisma.menus_addon_cats.create({
+            data: menuAddonCat,
+          })
+        )
+      );
+
+      res.status(200).send({ addonCat, newMenusAddonCats });
     } else if (req.method === "PUT") {
       const { id } = req.query;
       const { menuId, addonCatName, menuNotHaveLocationIds } = req.body;

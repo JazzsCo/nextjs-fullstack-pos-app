@@ -20,9 +20,14 @@ export const menusAddonCatsSlice = createSlice({
     setMenusAddonCats: (state, action) => {
       state.items = action.payload;
     },
+
+    addMenusAddonCats: (state, action) => {
+      state.items = [...state.items, action.payload];
+    },
   },
 });
 
-export const { setMenusAddonCats } = menusAddonCatsSlice.actions;
+export const { setMenusAddonCats, addMenusAddonCats } =
+  menusAddonCatsSlice.actions;
 
 export default menusAddonCatsSlice.reducer;

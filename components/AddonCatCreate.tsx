@@ -2,17 +2,19 @@ import axios from "axios";
 import { menus } from "@prisma/client";
 import { Dialog } from "@mui/material";
 import { Button, Input } from "@material-tailwind/react";
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 import MenuSelect from "./MenuSelect";
-import { AdminContext } from "@/contexts/AdminContext";
+import { useAppDispatch } from "@/store/hooks";
+import { addAddonCat } from "@/store/slices/addonCatsSlice";
+import { addMenusAddonCats } from "@/store/slices/menusAddonCatsSlice";
 
 interface Props {
   menu: menus[];
 }
 
 const AddonCatCreate = ({ menu }: Props) => {
-  const { fetchData } = useContext(AdminContext);
+  const dispatch = useAppDispatch();
 
   const [open, setOpen] = useState(false);
 
@@ -41,12 +43,20 @@ const AddonCatCreate = ({ menu }: Props) => {
       addonCatName,
     });
 
+    const { addonCat, newMenusAddonCats } = res.data;
+
+    console.log("addonCat", addonCat);
+
+    console.log("newMenusAddonCats", newMenusAddonCats);
+
+    dispatch(addMenusAddonCats(newMenusAddonCats));
+
+    dispatch(addAddonCat(addonCat));
+
     setAddonCatName({
       name: "",
       menuIds: [],
     });
-
-    fetchData();
   };
 
   return (

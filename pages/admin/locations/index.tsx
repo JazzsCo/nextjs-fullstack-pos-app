@@ -6,9 +6,13 @@ import Layout from "@/components/Layout";
 import { useContext, useState } from "react";
 import { AdminContext } from "@/contexts/AdminContext";
 import LocationsSelect from "@/components/LocationsSelect";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
+import { addLocation } from "@/store/slices/locationsSlice";
 
 export default function Locations() {
-  const { fetchData } = useContext(AdminContext);
+  const { locations } = useAppSelector(appData);
+  const dispatch = useAppDispatch();
 
   const [name, setname] = useState("");
 
@@ -19,8 +23,11 @@ export default function Locations() {
       name,
     });
 
+    const { location } = res.data;
+
+    dispatch(addLocation(location));
+
     setname("");
-    fetchData();
   };
 
   return (
@@ -35,6 +42,11 @@ export default function Locations() {
           marginY: 15,
         }}
       >
+        <div className="m-5">
+          {locations.map(({ id, location_name }) => (
+            <h1 key={id}>{location_name}</h1>
+          ))}
+        </div>
         <TextField
           id="standard-basic"
           label="Location Name"

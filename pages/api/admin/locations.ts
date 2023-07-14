@@ -9,13 +9,13 @@ export default async function handler(
     if (req.method === "POST") {
       const { name } = req.body;
 
-      const result = await prisma.locations.create({
+      const location = await prisma.locations.create({
         data: {
           location_name: name,
         },
       });
 
-      res.send("ok");
+      res.status(200).send({ location });
     } else if (req.method === "GET") {
       const locations = await prisma.locations.findMany();
 
