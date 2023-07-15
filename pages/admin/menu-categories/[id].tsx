@@ -12,10 +12,13 @@ import DeleteDialog from "@/components/DeleteDialog";
 import MenuCatUpdate from "@/components/MenuCatUpdate";
 
 import type { menu_cats, menus, menus_menu_cats } from "@prisma/client";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
+import { removeMenuCat } from "@/store/slices/menuCatsSlice";
 
 const MenuCatById = () => {
+  const dispatch = useAppDispatch();
+
   const { menus, menuCategories, menusMenuCats, menusLocations } =
     useAppSelector(appData);
 
@@ -47,11 +50,13 @@ const MenuCatById = () => {
   );
 
   const deleteMenuCat = async () => {
-    await axios.delete(`/api/admin/menuCategories?id=${id}`);
+    const res = await axios.delete(`/api/admin/menuCategories?id=${id}`);
+
+    const { deleteMenuCat } = res.data;
+
+    dispatch(removeMenuCat(deleteMenuCat));
 
     router.push("/admin/menu-categories");
-
-    // fetchData();
   };
 
   return (

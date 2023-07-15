@@ -7,13 +7,16 @@ import { Button, Input } from "@material-tailwind/react";
 
 import MenuSelect from "@/components/MenuSelect";
 import { AdminContext } from "@/contexts/AdminContext";
+import { useAppDispatch } from "@/store/hooks";
+import { addMenuCat } from "@/store/slices/menuCatsSlice";
+import { addMenusMenuCats } from "@/store/slices/menusMenuCatsSlice";
 
 interface Props {
   menus: menus[];
 }
 
 const MenuCatCreate = ({ menus }: Props) => {
-  const { fetchData } = useContext(AdminContext);
+  const dispatch = useAppDispatch();
 
   const [open, setOpen] = useState(false);
 
@@ -36,12 +39,15 @@ const MenuCatCreate = ({ menus }: Props) => {
       menuCat,
     });
 
+    const { menuCat: menuCatBb, newMenusMenuCats } = res.data;
+
+    dispatch(addMenuCat(menuCat));
+    dispatch(addMenusMenuCats(newMenusMenuCats));
+
     setMenuCat({
       name: "",
       menusIds: [],
     });
-
-    fetchData();
   };
 
   return (

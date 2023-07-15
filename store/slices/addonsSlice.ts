@@ -20,8 +20,10 @@ export const addonsSlice = createSlice({
     setAddons: (state, action) => {
       state.items = action.payload;
     },
-    addAddon: (state, action) => {
-      state.items = [...state.items, action.payload];
+    addAddons: (state, action) => {
+      action.payload.map((item: Addon) => {
+        state.items = [...state.items, item];
+      });
     },
     removeAddon: (state, action) => {
       state.items = state.items.filter((item) => item.id !== action.payload.id);
@@ -29,6 +31,6 @@ export const addonsSlice = createSlice({
   },
 });
 
-export const { setAddons, addAddon, removeAddon } = addonsSlice.actions;
+export const { setAddons, addAddons, removeAddon } = addonsSlice.actions;
 
 export default addonsSlice.reducer;

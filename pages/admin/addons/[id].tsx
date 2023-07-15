@@ -7,11 +7,13 @@ import { AdminContext } from "@/contexts/AdminContext";
 import DeleteDialog from "@/components/DeleteDialog";
 
 import type { addons } from "@prisma/client";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
+import { removeAddon } from "@/store/slices/addonsSlice";
 
 const AddonById = () => {
   const { addons } = useAppSelector(appData);
+  const dispatch = useAppDispatch();
 
   const router = useRouter();
   const { id } = router.query;
@@ -21,11 +23,13 @@ const AddonById = () => {
   )[0];
 
   const deleteAddon = async () => {
-    await axios.delete(`/api/admin/addons?id=${id}`);
+    const res = await axios.delete(`/api/admin/addons?id=${id}`);
+
+    const { deleteAddon } = res.data;
+
+    dispatch(removeAddon(deleteAddon));
 
     router.push("/admin/addons");
-
-    // fetchData();
   };
 
   return (

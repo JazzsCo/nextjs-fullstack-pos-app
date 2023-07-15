@@ -10,23 +10,25 @@ export default async function handler(
     if (req.method === "POST") {
       const { name, menusIds } = req.body.menuCat;
 
-      const menuCatId = (
-        await prisma.menu_cats.create({
-          data: {
-            menu_cat_name: name,
-          },
-        })
-      ).id;
+      const menuCat = await prisma.menu_cats.create({
+        data: {
+          menu_cat_name: name,
+        },
+      });
 
       const menusMenuCats = menusIds.map((id: number) => {
-        return { menu_id: id, menu_cat_id: menuCatId };
+        return { menu_id: id, menu_cat_id: menuCat.id };
       });
 
-      await prisma.menus_menu_cats.createMany({
-        data: menusMenuCats,
-      });
+      const newMenusMenuCats = await prisma.$transaction(
+        menusMenuCats.map((menuMenuCat: any) =>
+          prisma.menus_menu_cats.create({
+            data: menuMenuCat,
+          })
+        )
+      );
 
-      res.status(200).json({ text: "Its ok" });
+      res.status(200).send({ menuCat, newMenusMenuCats });
     } else if (req.method === "PUT") {
       const { id } = req.query;
       const { menuId, menuCatName, menuNotHaveLocationIds } = req.body;
@@ -87,12 +89,12 @@ export default async function handler(
 
       if (!id) return res.send(400);
 
-      await prisma.menu_cats.update({
+      const deleteMenuCat = await prisma.menu_cats.update({
         data: { is_archived: true },
         where: { id: Number(id) },
       });
 
-      return res.status(200).json({ ok: "There will be ok" });
+      return res.status(200).send({ deleteMenuCat });
     }
   } catch (err) {
     console.log("error", err);

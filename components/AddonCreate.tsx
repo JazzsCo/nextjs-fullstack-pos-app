@@ -7,12 +7,17 @@ import { addon_cats } from "@prisma/client";
 
 import AddonCatSelect from "./AddonCatSelect";
 import { AdminContext } from "@/contexts/AdminContext";
+import { useAppDispatch } from "@/store/hooks";
+import { addAddons } from "@/store/slices/addonsSlice";
+import { addAddonsAddonCats } from "@/store/slices/addonsAddonCatsSlice";
 
 interface Props {
   addonCategories: addon_cats[];
 }
 
 const AddonCreate = ({ addonCategories }: Props) => {
+  const dispatch = useAppDispatch();
+
   const [open, setOpen] = useState(false);
 
   const [count, setCount] = useState(0);
@@ -22,8 +27,6 @@ const AddonCreate = ({ addonCategories }: Props) => {
   });
   const [addonName, setAddonName] = useState<String[]>([]);
   const [addonPrice, setAddonPrice] = useState<Number[]>([]);
-
-  const { fetchData } = useContext(AdminContext);
 
   const handleOpen = () => {
     setOpen(!open);
@@ -69,7 +72,10 @@ const AddonCreate = ({ addonCategories }: Props) => {
       addonPrice,
     });
 
-    fetchData();
+    const { addons, newAddonsAddonCats } = res.data;
+
+    dispatch(addAddons(addons));
+    dispatch(addAddonsAddonCats(newAddonsAddonCats));
   };
 
   return (
