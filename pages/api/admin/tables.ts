@@ -20,12 +20,12 @@ export default async function handler(
     await qrCodeImageUpload(locationId, table.id);
     const qrCodeUrl = getQrCodeUrl(Number(locationId), table.id);
 
-    await prisma.tables.update({
+    const setTable = await prisma.tables.update({
       data: { table_url: qrCodeUrl },
       where: { id: table.id },
     });
 
-    return res.status(200).json({ ok: "There will be ok" });
+    return res.status(200).send({ setTable });
   } else if (req.method === "PUT") {
     const { id } = req.query;
 
@@ -45,12 +45,12 @@ export default async function handler(
 
     if (!id) return res.send(400);
 
-    await prisma.tables.update({
+    const deleteTable = await prisma.tables.update({
       data: { is_archived: true },
       where: { id: Number(id) },
     });
 
-    return res.status(200).json({ ok: "There will be ok" });
+    return res.status(200).send({ deleteTable });
   }
   res.send(405);
 }

@@ -19,8 +19,9 @@ import {
   getMenuCatIdsByMenuId,
   getSelectedLocationIdsByMenuId,
 } from "@/libs/custom";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
+import { removeMenu } from "@/store/slices/menusSlice";
 
 const MenuById = () => {
   const {
@@ -37,6 +38,8 @@ const MenuById = () => {
 
   const router = useRouter();
   const { id } = router.query;
+
+  const dispatch = useAppDispatch();
 
   const currentMenu = menus.filter((item: menus) => item.id === Number(id))[0];
 
@@ -68,11 +71,13 @@ const MenuById = () => {
   );
 
   const deleteMenu = async () => {
-    await axios.delete(`/api/admin/menus?id=${id}`);
+    const res = await axios.delete(`/api/admin/menus?id=${id}`);
+
+    const { deleteMenu } = res.data;
+
+    dispatch(removeMenu(deleteMenu));
 
     router.push("/admin/menus");
-
-    // fetchData();
   };
 
   return (

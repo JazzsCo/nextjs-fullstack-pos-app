@@ -6,9 +6,11 @@ import { Button, Input } from "@material-tailwind/react";
 
 import { AdminContext } from "@/contexts/AdminContext";
 import { LocationId } from "@/libs/locationId";
+import { useAppDispatch } from "@/store/hooks";
+import { addTable } from "@/store/slices/tablesSlice";
 
 const TableCreate = () => {
-  const { fetchData } = useContext(AdminContext);
+  const dispatch = useAppDispatch();
 
   const [open, setOpen] = useState(false);
 
@@ -25,9 +27,12 @@ const TableCreate = () => {
     const isValid = newTable.name;
     if (!isValid) return alert("Please enter table name");
 
-    await axios.post("/api/admin/tables", { newTable });
+    const res = await axios.post("/api/admin/tables", { newTable });
 
-    fetchData();
+    const { setTable } = res.data;
+
+    dispatch(addTable(setTable));
+
     setOpen(false);
   };
 

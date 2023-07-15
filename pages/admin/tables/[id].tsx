@@ -5,23 +5,27 @@ import { AdminContext } from "@/contexts/AdminContext";
 import TableUpdate from "@/components/TableUpdate";
 import DeleteDialog from "@/components/DeleteDialog";
 import axios from "axios";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
+import { addTable, removeTable } from "@/store/slices/tablesSlice";
 
 const TableById = () => {
   const router = useRouter();
   const { id } = router.query;
 
   const { tables } = useAppSelector(appData);
+  const dispatch = useAppDispatch();
 
   const table = tables.filter((table) => table.id === Number(id))[0];
 
   const deleteTable = async () => {
-    await axios.delete(`/api/admin/tables?id=${id}`);
+    const res = await axios.delete(`/api/admin/tables?id=${id}`);
+
+    const { deleteTable } = res.data;
+
+    dispatch(removeTable(deleteTable));
 
     router.push("/admin/tables");
-
-    // fetchData();
   };
 
   return (

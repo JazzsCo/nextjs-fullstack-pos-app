@@ -5,9 +5,12 @@ import LocationsSelect from "./LocationsSelect";
 import axios from "axios";
 import { Button, Input, Typography } from "@material-tailwind/react";
 import Dialog from "@mui/material/Dialog";
+import { useAppDispatch } from "@/store/hooks";
+import { addMenu } from "@/store/slices/menusSlice";
+import { addMenusLocations } from "@/store/slices/menusLocationsSlice";
 
 export default function MenuCreate() {
-  const { fetchData } = useContext(AdminContext);
+  const dispatch = useAppDispatch();
 
   const [menuImage, setMenuImage] = useState<File>();
 
@@ -45,10 +48,12 @@ export default function MenuCreate() {
 
         if (imageUrl) {
           const res = await axios.post(`/api/admin/menus`, { menu, imageUrl });
-          console.log(res);
-        }
 
-        fetchData();
+          const { newMenu, newMenusLocations } = res.data;
+
+          dispatch(addMenu(newMenu));
+          dispatch(addMenusLocations(newMenusLocations));
+        }
       }
     } catch (err) {
       console.log(err);
