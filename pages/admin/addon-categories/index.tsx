@@ -7,7 +7,7 @@ import AddonCatCreate from "@/components/AddonCatCreate";
 
 import { LocationId } from "@/libs/locationId";
 import { AdminContext } from "@/contexts/AdminContext";
-import { getMenuIdsByLocationId } from "@/libs/custom";
+import { getAddonCatIdsByMenuIds, getMenuIdsByLocationId } from "@/libs/custom";
 import { useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
 
@@ -23,11 +23,11 @@ const AddonCategory = () => {
     menuIds.includes(item.id)
   );
 
-  // const addonCatIds = getAddonCatIdsByMenuIds(menuIds, menusAddonCat);
+  const addonCatIds = getAddonCatIdsByMenuIds(menuIds, menusAddonCats);
 
-  // const getAddonCatByMenuIds = addonCategories.filter((item: addon_cats) =>
-  //   addonCatIds.includes(item.id)
-  // );
+  const getAddonCatByMenuIds = addonCategories.filter((item: addon_cats) =>
+    addonCatIds.includes(item.id)
+  );
 
   const menuCountByAddonCatIds = (id: number) => {
     const menuIdByAddonCat = menusAddonCats
@@ -48,8 +48,12 @@ const AddonCategory = () => {
       </div>
 
       <div className="ml-[17rem] mt-16 flex justify-start space-x-3">
-        {addonCategories.map((item: addon_cats) => (
-          <Link key={item.id} href={`/admin/addon-categories/${item.id}`}>
+        {getAddonCatByMenuIds.map((item: addon_cats) => (
+          <Link
+            className="flex flex-wrap"
+            key={item.id}
+            href={`/admin/addon-categories/${item.id}`}
+          >
             <div className="flex flex-col items-center justify-center space-y-2">
               <div className="w-[10rem] h-[7rem] cursor-pointer hover:bg-blue-gray-400 flex flex-col items-center justify-center bg-blue-gray-200 rounded-md">
                 <h1>{menuCountByAddonCatIds(item.id)} menus</h1>

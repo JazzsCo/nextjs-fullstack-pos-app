@@ -45,13 +45,9 @@ const AddonCatCreate = ({ menu }: Props) => {
 
     const { addonCat, newMenusAddonCats } = res.data;
 
-    console.log("addonCat", addonCat);
-
-    console.log("newMenusAddonCats", newMenusAddonCats);
+    dispatch(addAddonCat(addonCat));
 
     dispatch(addMenusAddonCats(newMenusAddonCats));
-
-    dispatch(addAddonCat(addonCat));
 
     setAddonCatName({
       name: "",
