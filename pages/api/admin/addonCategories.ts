@@ -90,12 +90,12 @@ export default async function handler(
 
       if (!id) return res.send(400);
 
-      await prisma.addon_cats.update({
+      const deleteAddonCat = await prisma.addon_cats.update({
         data: { is_archived: true },
         where: { id: Number(id) },
       });
 
-      return res.status(200).json({ ok: "There will be ok" });
+      return res.status(200).send({ deleteAddonCat });
     }
   } catch (error) {
     console.log("error", error);

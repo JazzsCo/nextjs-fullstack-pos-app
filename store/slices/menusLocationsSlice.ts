@@ -20,9 +20,15 @@ export const menusLocationsSlice = createSlice({
     setMenusLocations: (state, action) => {
       state.items = action.payload;
     },
+    addMenusLocations: (state, action) => {
+      action.payload.map((item: MenuLocation) => {
+        state.items = [...state.items, item];
+      });
+    },
   },
 });
 
-export const { setMenusLocations } = menusLocationsSlice.actions;
+export const { setMenusLocations, addMenusLocations } =
+  menusLocationsSlice.actions;
 
 export default menusLocationsSlice.reducer;

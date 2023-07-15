@@ -20,9 +20,15 @@ export const addonsAddonCatsSlice = createSlice({
     setAddonsAddonCats: (state, action) => {
       state.items = action.payload;
     },
+    addAddonsAddonCats: (state, action) => {
+      action.payload.map((item: AddonAddonCategory) => {
+        state.items = [...state.items, item];
+      });
+    },
   },
 });
 
-export const { setAddonsAddonCats } = addonsAddonCatsSlice.actions;
+export const { setAddonsAddonCats, addAddonsAddonCats } =
+  addonsAddonCatsSlice.actions;
 
 export default addonsAddonCatsSlice.reducer;

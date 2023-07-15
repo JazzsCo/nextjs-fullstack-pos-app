@@ -1,9 +1,7 @@
 import axios from "axios";
-import { useContext } from "react";
 import { useRouter } from "next/router";
 
 import { LocationId } from "@/libs/locationId";
-import { AdminContext } from "@/contexts/AdminContext";
 import { getMenuIdsByLocationId } from "@/libs/custom";
 
 import Layout from "@/components/Layout";
@@ -12,10 +10,13 @@ import DeleteDialog from "@/components/DeleteDialog";
 import AddonCatUpdate from "@/components/AddonCatUpdate";
 
 import type { addon_cats, menus, menus_addon_cats } from "@prisma/client";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
+import { removeAddonCat } from "@/store/slices/addonCatsSlice";
 
 const AddonCatById = () => {
+  const dispatch = useAppDispatch();
+
   const { menus, addonCategories, menusAddonCats, menusLocations } =
     useAppSelector(appData);
 
@@ -47,11 +48,13 @@ const AddonCatById = () => {
   );
 
   const deleteAddonCat = async () => {
-    await axios.delete(`/api/admin/addonCategories?id=${id}`);
+    const res = await axios.delete(`/api/admin/addonCategories?id=${id}`);
+
+    const { deleteAddonCat } = res.data;
+
+    dispatch(removeAddonCat(deleteAddonCat));
 
     router.push("/admin/addon-categories");
-
-    // fetchData();
   };
 
   return (

@@ -20,7 +20,6 @@ export const menusAddonCatsSlice = createSlice({
     setMenusAddonCats: (state, action) => {
       state.items = action.payload;
     },
-
     addMenusAddonCats: (state, action) => {
       action.payload.map((item: MenuAddonCategory) => {
         state.items = [...state.items, item];

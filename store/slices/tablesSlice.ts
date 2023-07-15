@@ -20,9 +20,15 @@ export const tablesSlice = createSlice({
     setTables: (state, action) => {
       state.items = action.payload;
     },
+    addTable: (state, action) => {
+      state.items = [...state.items, action.payload];
+    },
+    removeTable: (state, action) => {
+      state.items = state.items.filter((item) => item.id !== action.payload.id);
+    },
   },
 });
 
-export const { setTables } = tablesSlice.actions;
+export const { setTables, addTable, removeTable } = tablesSlice.actions;
 
 export default tablesSlice.reducer;

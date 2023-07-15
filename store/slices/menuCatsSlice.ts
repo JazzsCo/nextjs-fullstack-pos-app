@@ -20,9 +20,15 @@ export const menuCatsSlice = createSlice({
     setMenuCats: (state, action) => {
       state.items = action.payload;
     },
+    addMenuCat: (state, action) => {
+      state.items = [...state.items, action.payload];
+    },
+    removeMenuCat: (state, action) => {
+      state.items = state.items.filter((item) => item.id !== action.payload.id);
+    },
   },
 });
 
-export const { setMenuCats } = menuCatsSlice.actions;
+export const { setMenuCats, addMenuCat, removeMenuCat } = menuCatsSlice.actions;
 
 export default menuCatsSlice.reducer;
