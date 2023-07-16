@@ -41,7 +41,7 @@ const MenuCatCreate = ({ menus }: Props) => {
 
     const { menuCat: menuCatBb, newMenusMenuCats } = res.data;
 
-    dispatch(addMenuCat(menuCat));
+    dispatch(addMenuCat(menuCatBb));
     dispatch(addMenusMenuCats(newMenusMenuCats));
 
     setMenuCat({

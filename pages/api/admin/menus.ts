@@ -27,11 +27,11 @@ export default async function handler(
       });
 
       const newMenusLocations = await prisma.$transaction(
-        menusLocations.map((item: any) => {
+        menusLocations.map((item: any) =>
           prisma.menus_locations.create({
             data: item,
-          });
-        })
+          })
+        )
       );
 
       res.status(200).send({ newMenu, newMenusLocations });

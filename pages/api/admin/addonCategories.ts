@@ -34,7 +34,7 @@ export default async function handler(
       const { id } = req.query;
       const { menuId, addonCatName, menuNotHaveLocationIds } = req.body;
 
-      await prisma.addon_cats.update({
+      const updateAddoncat = await prisma.addon_cats.update({
         where: {
           id: Number(id),
         },
@@ -84,18 +84,20 @@ export default async function handler(
           },
         });
 
-      res.status(200).json({ test: "Im ok..." });
+      const menusAddonCats = await prisma.menus_addon_cats.findMany();
+
+      res.status(200).send({ updateAddoncat, menusAddonCats });
     } else if (req.method === "DELETE") {
       const { id } = req.query;
 
       if (!id) return res.send(400);
 
-      const removeAddonCat = await prisma.addon_cats.update({
+      const deleteAddonCat = await prisma.addon_cats.update({
         data: { is_archived: true },
         where: { id: Number(id) },
       });
 
-      return res.status(200).send({ removeAddonCat });
+      return res.status(200).send({ deleteAddonCat });
     }
   } catch (error) {
     console.log("error", error);

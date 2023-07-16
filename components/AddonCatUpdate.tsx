@@ -1,11 +1,13 @@
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { addon_cats, menus } from "@prisma/client";
 import { Dialog } from "@mui/material";
 import { Button, Input } from "@material-tailwind/react";
 
-import { AdminContext } from "@/contexts/AdminContext";
 import MenuListUpdate from "./MenuListUpdate";
+import { useAppDispatch } from "@/store/hooks";
+import { updateAddonCat } from "@/store/slices/addonCatsSlice";
+import { setMenusAddonCats } from "@/store/slices/menusAddonCatsSlice";
 
 interface Props {
   menus: menus[];
@@ -20,7 +22,7 @@ const AddonCatUpdate = ({
   addonCat,
   menuNotHaveLocationIds,
 }: Props) => {
-  const { fetchData } = useContext(AdminContext);
+  const dispatch = useAppDispatch();
 
   const [addonCatName, setAddonCatName] = useState(addonCat?.addon_cat_name);
   const [menuId, setMenuId] = useState<number[]>([]);
@@ -35,14 +37,20 @@ const AddonCatUpdate = ({
     setMenuId(childStateSelectedMenuIds);
   };
 
-  const menuCatUpdate = async () => {
-    await axios.put(`/api/admin/addonCategories?id=${addonCat.id}`, {
-      menuId,
-      addonCatName,
-      menuNotHaveLocationIds,
-    });
+  const addonCatUpdate = async () => {
+    const res = await axios.put(
+      `/api/admin/addonCategories?id=${addonCat.id}`,
+      {
+        menuId,
+        addonCatName,
+        menuNotHaveLocationIds,
+      }
+    );
 
-    fetchData();
+    const { updateAddoncat, menusAddonCats } = res.data;
+
+    dispatch(updateAddonCat(updateAddoncat));
+    dispatch(setMenusAddonCats(menusAddonCats));
   };
 
   return (
@@ -66,7 +74,7 @@ const AddonCatUpdate = ({
             onStateChange={menuStateChange}
           />
 
-          <Button onClick={menuCatUpdate} variant="gradient">
+          <Button onClick={addonCatUpdate} variant="gradient">
             Update
           </Button>
         </div>
