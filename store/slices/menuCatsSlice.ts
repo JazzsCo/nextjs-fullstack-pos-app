@@ -23,12 +23,18 @@ export const menuCatsSlice = createSlice({
     addMenuCat: (state, action) => {
       state.items = [...state.items, action.payload];
     },
+    updateMenuCat: (state, action) => {
+      state.items = state.items.map((item) =>
+        item.id === action.payload.id ? action.payload : item
+      );
+    },
     removeMenuCat: (state, action) => {
       state.items = state.items.filter((item) => item.id !== action.payload.id);
     },
   },
 });
 
-export const { setMenuCats, addMenuCat, removeMenuCat } = menuCatsSlice.actions;
+export const { setMenuCats, addMenuCat, removeMenuCat, updateMenuCat } =
+  menuCatsSlice.actions;
 
 export default menuCatsSlice.reducer;

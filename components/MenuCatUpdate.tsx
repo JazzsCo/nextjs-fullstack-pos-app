@@ -8,6 +8,9 @@ import { Dialog } from "@mui/material";
 import { Button, Input } from "@material-tailwind/react";
 
 import MenuListUpdate from "./MenuListUpdate";
+import { useAppDispatch } from "@/store/hooks";
+import { updateMenuCat } from "@/store/slices/menuCatsSlice";
+import { setMenusMenuCats } from "@/store/slices/menusMenuCatsSlice";
 
 interface Props {
   menus: menus[];
@@ -22,7 +25,7 @@ const MenuCatUpdate = ({
   menuCat,
   menuNotHaveLocationIds,
 }: Props) => {
-  const { fetchData } = useContext(AdminContext);
+  const dispatch = useAppDispatch();
 
   const [menuCatName, setMenuCatName] = useState(menuCat?.menu_cat_name);
   const [menuId, setMenuId] = useState<number[]>([]);
@@ -38,13 +41,16 @@ const MenuCatUpdate = ({
   };
 
   const menuCatUpdate = async () => {
-    await axios.put(`/api/admin/menuCategories?id=${menuCat.id}`, {
+    const res = await axios.put(`/api/admin/menuCategories?id=${menuCat.id}`, {
       menuId,
       menuCatName,
       menuNotHaveLocationIds,
     });
 
-    fetchData();
+    const { updateMenucat, menusMenuCats } = res.data;
+
+    dispatch(updateMenuCat(updateMenucat));
+    dispatch(setMenusMenuCats(menusMenuCats));
   };
 
   return (

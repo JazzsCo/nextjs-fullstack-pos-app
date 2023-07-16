@@ -15,6 +15,9 @@ import {
 import { Button, Input } from "@material-tailwind/react";
 import LocationsSelect from "./LocationsSelect";
 import LocationUpdate from "./LocationUpdate";
+import { useAppDispatch } from "@/store/hooks";
+import { updateMenus } from "@/store/slices/menusSlice";
+import { setMenusLocations } from "@/store/slices/menusLocationsSlice";
 
 interface Props {
   menu: menus;
@@ -22,7 +25,7 @@ interface Props {
 }
 
 const MenuUpdate = ({ menu, location }: Props) => {
-  const { fetchData } = useContext(AdminContext);
+  const dispatch = useAppDispatch();
 
   const [updateMenu, setUpdateMenu] = useState({
     name: menu?.name,
@@ -41,12 +44,15 @@ const MenuUpdate = ({ menu, location }: Props) => {
   };
 
   const menuUpdate = async () => {
-    await axios.put(`/api/admin/menus?id=${menu.id}`, {
+    const res = await axios.put(`/api/admin/menus?id=${menu.id}`, {
       updateMenu,
       locationId,
     });
 
-    fetchData();
+    const { menuUpdate, menusLocations } = res.data;
+
+    dispatch(updateMenus(menuUpdate));
+    dispatch(setMenusLocations(menusLocations));
   };
 
   return (

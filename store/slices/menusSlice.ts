@@ -23,12 +23,18 @@ export const menusSlice = createSlice({
     addMenu: (state, action) => {
       state.items = [...state.items, action.payload];
     },
+    updateMenus: (state, action) => {
+      state.items = state.items.map((item) =>
+        item.id === action.payload.id ? action.payload : item
+      );
+    },
     removeMenu: (state, action) => {
       state.items = state.items.filter((item) => item.id !== action.payload.id);
     },
   },
 });
 
-export const { setMenus, addMenu, removeMenu } = menusSlice.actions;
+export const { setMenus, addMenu, removeMenu, updateMenus } =
+  menusSlice.actions;
 
 export default menusSlice.reducer;

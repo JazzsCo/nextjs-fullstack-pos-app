@@ -40,7 +40,7 @@ export default async function handler(
       const { locationId } = req.body;
       const { name, price } = req.body.updateMenu;
 
-      await prisma.menus.update({
+      const menuUpdate = await prisma.menus.update({
         where: {
           id: Number(id),
         },
@@ -88,7 +88,9 @@ export default async function handler(
           },
         });
 
-      res.status(200).json({ test: "Im ok..." });
+      const menusLocations = await prisma.menus_locations.findMany();
+
+      res.status(200).send({ menuUpdate, menusLocations });
     } else if (req.method === "DELETE") {
       const { id } = req.query;
 
