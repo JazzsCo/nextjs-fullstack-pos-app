@@ -34,12 +34,12 @@ export default async function handler(
     const isValid = id && updateTableName;
     if (!isValid) return res.send(400);
 
-    await prisma.tables.update({
+    const tableUpdate = await prisma.tables.update({
       data: { name: updateTableName },
       where: { id: Number(id) },
     });
 
-    return res.status(200).json({ ok: "There will be ok" });
+    return res.status(200).send({ tableUpdate });
   } else if (req.method === "DELETE") {
     const { id } = req.query;
 

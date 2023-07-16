@@ -5,14 +5,15 @@ import { useContext, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import { Button, Input } from "@material-tailwind/react";
 
-import { AdminContext } from "@/contexts/AdminContext";
+import { useAppDispatch } from "@/store/hooks";
+import { updateTable } from "@/store/slices/tablesSlice";
 
 interface Props {
   table: tables;
 }
 
 const TableCreate = ({ table }: Props) => {
-  const { fetchData } = useContext(AdminContext);
+  const dispatch = useAppDispatch();
 
   const [open, setOpen] = useState(false);
 
@@ -20,10 +21,14 @@ const TableCreate = ({ table }: Props) => {
 
   const handleOpen = () => setOpen(!open);
 
-  const updateTable = async () => {
-    await axios.put(`/api/admin/tables?id=${table.id}`, { updateTableName });
+  const handleUpdateTable = async () => {
+    const res = await axios.put(`/api/admin/tables?id=${table.id}`, {
+      updateTableName,
+    });
 
-    fetchData();
+    const { tableUpdate } = res.data;
+
+    dispatch(updateTable(tableUpdate));
   };
 
   return (
@@ -42,7 +47,7 @@ const TableCreate = ({ table }: Props) => {
               onChange={(e) => setUpdateTableName(e.target.value)}
             />
           </div>
-          <Button onClick={updateTable} variant="gradient">
+          <Button onClick={handleUpdateTable} variant="gradient">
             Update Table
           </Button>
         </div>
