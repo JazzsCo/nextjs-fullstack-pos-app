@@ -10,9 +10,10 @@ import { getAddonCatIdsByMenuId } from "@/libs/custom";
 import { OrderContext } from "@/contexts/OrderContext";
 import QuantitySelector from "@/components/QuantitySelector";
 import { Button } from "@mui/material";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
 import { AddRoadRounded } from "@mui/icons-material";
+import { setCarts, updateCarts } from "@/store/slices/cartsSlice";
 
 const MenuById = () => {
   const router = useRouter();
@@ -29,23 +30,25 @@ const MenuById = () => {
     carts,
   } = useAppSelector(appData);
 
-  const { ...data } = useAppSelector(appData);
+  const dispatch = useAppDispatch();
 
   const [quantity, setQuantity] = useState(1);
   const [disabled, setDisabled] = useState(false);
 
   const [orderAddonIds, setOrderAddonIds] = useState<Number[]>([]);
 
-  const selectedAddons = addons.filter((item) =>
-    orderAddonIds.includes(item.id)
-  );
+  console.log(orderAddonIds);
 
-  const currentMenu = menus.filter((item: menus) => item.id === Number(id))[0];
+  const [currentMenu, setCurrentMenu] = useState<menus | null>(null);
+
+  const selectedAddons = addons.filter(
+    (item) => orderAddonIds && orderAddonIds.includes(item.id)
+  );
 
   const addonCatIds = getAddonCatIdsByMenuId(id, menusAddonCats);
 
-  const addonCatsByMenu = addonCategories.filter((item: addon_cats) =>
-    addonCatIds.includes(item.id)
+  const addonCatsByMenu = addonCategories.filter(
+    (item: addon_cats) => addonCatIds && addonCatIds.includes(item.id)
   );
 
   const isRequiredAddonCats = addonCatsByMenu.filter(
@@ -53,18 +56,14 @@ const MenuById = () => {
   );
 
   const addToCart = () => {
-    // updateData({
-    //   ...data,
-    //   cart: [
-    //     ...data.cart,
-    //     {
-    //       id: uuid(),
-    //       menu: currentMenu,
-    //       addons: selectedAddons,
-    //       quantity,
-    //     },
-    //   ],
-    // });
+    dispatch(
+      setCarts({
+        id: uuid(),
+        menu: currentMenu,
+        addons: selectedAddons,
+        quantity,
+      })
+    );
 
     delete query.id;
 
@@ -74,7 +73,9 @@ const MenuById = () => {
     });
   };
 
-  const updateCartItem = carts.find((item) => item.menu.id === Number(id));
+  const updateCartItem = carts.find((item) => item.id === id);
+
+  console.log(updateCartItem);
 
   const updateToCart = () => {
     if (updateCartItem) {
@@ -82,17 +83,15 @@ const MenuById = () => {
         (item) => item.id !== updateCartItem.id
       );
 
-      // updateData({
-      //   ...data,
-      //   cart: [
-      //     ...otherCartItem,
-      //     {
-      //       menu: currentMenu,
-      //       addons: selectedAddons,
-      //       quantity,
-      //     },
-      //   ],
-      // });
+      dispatch(updateCarts(otherCartItem));
+      dispatch(
+        setCarts({
+          id: uuid(),
+          menu: currentMenu,
+          addons: selectedAddons,
+          quantity,
+        })
+      );
     }
 
     delete query.id;
@@ -219,25 +218,31 @@ const MenuById = () => {
     }
 
     if (updateCartItem) {
-      const selectedCartItem = carts.find(
-        (item) => item.menu.id === Number(id)
-      );
-
-      const selectedAddonsIds = selectedCartItem?.addons.map(
+      const selectedAddonsIds = updateCartItem?.addons.map(
         (item) => item.id
       ) as Number[];
 
       setOrderAddonIds(selectedAddonsIds);
 
-      const selectedQuantity = selectedCartItem?.quantity;
+      const selectedQuantity = updateCartItem?.quantity;
+      const selectedMenu = updateCartItem?.menu;
 
       selectedQuantity && setQuantity(selectedQuantity);
+      selectedMenu && setCurrentMenu(selectedMenu);
+    } else {
+      const currentMenu = menus.filter(
+        (item: menus) => item.id === Number(id)
+      )[0];
+
+      console.log(currentMenu);
+
+      setCurrentMenu(currentMenu);
     }
   }, [updateCartItem]);
 
   useEffect(() => {
     const addonCatIdsByAddonIds = addonsAddonCats
-      .filter((item) => orderAddonIds.includes(item.addon_id))
+      .filter((item) => orderAddonIds && orderAddonIds.includes(item.addon_id))
       .map((item) => item.addon_cat_id);
 
     const addonCats = addonCategories.filter((item) =>

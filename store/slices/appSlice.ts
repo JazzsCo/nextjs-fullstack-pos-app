@@ -17,7 +17,7 @@ import { setCompany } from "./companySlice";
 import { setAddonsAddonCats } from "./addonsAddonCatsSlice";
 import { setMenusMenuCats } from "./menusMenuCatsSlice";
 import { setMenusLocations } from "./menusLocationsSlice";
-import { setCart } from "./cartsSlice";
+import { setCarts } from "./cartsSlice";
 
 interface AddonsState {
   isLoading: boolean;
@@ -61,8 +61,6 @@ export const fetchAppData = createAsyncThunk(
     thunkAPI.dispatch(setOrders(orders));
     thunkAPI.dispatch(setOrderlines(orderlines));
     thunkAPI.dispatch(setTables(tables));
-    thunkAPI.dispatch(setCompany([]));
-    thunkAPI.dispatch(setCart([]));
     thunkAPI.dispatch(setAppLoading(false));
   }
 );

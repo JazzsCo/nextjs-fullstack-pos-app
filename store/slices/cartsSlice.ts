@@ -17,12 +17,15 @@ export const cartsSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    setCart: (state, action) => {
-      state.items === action.payload;
+    setCarts: (state, action) => {
+      state.items = [...state.items, action.payload];
+    },
+    updateCarts: (state, action) => {
+      state.items = action.payload;
     },
   },
 });
 
-export const { setCart } = cartsSlice.actions;
+export const { setCarts, updateCarts } = cartsSlice.actions;
 
 export default cartsSlice.reducer;

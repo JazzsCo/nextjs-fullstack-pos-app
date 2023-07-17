@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 
 import {
@@ -13,20 +12,14 @@ import {
 import { BsFillCartPlusFill } from "react-icons/bs";
 
 import MenuCards from "./MenuCards";
-import { OrderContext } from "@/contexts/OrderContext";
 import { menus, menus_menu_cats } from "@prisma/client";
 import { useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
 
 export default function TabsComponent() {
-  const { menus, menuCategories, menusMenuCats, carts, ...data } =
-    useAppSelector(appData);
+  const { menus, menuCategories, menusMenuCats } = useAppSelector(appData);
 
   const { query } = useRouter();
-
-  // useEffect(() => {
-  //   updateData({ ...data, cart: [] });
-  // }, []);
 
   const menusByMenuCatId = (id: number) => {
     const menuIds = menusMenuCats

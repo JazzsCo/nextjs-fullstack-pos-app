@@ -10,11 +10,14 @@ import { OrderContext } from "@/contexts/OrderContext";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Avatar, Box, Button, Typography } from "@mui/material";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
+import { updateCarts } from "@/store/slices/cartsSlice";
 
 const Review = () => {
-  const { carts, ...data } = useAppSelector(appData);
+  const { carts } = useAppSelector(appData);
+
+  const dispatch = useAppDispatch();
 
   const router = useRouter();
   const query = router.query;
@@ -23,7 +26,8 @@ const Review = () => {
     const remainingOrderlines = carts.filter(
       (item) => item.menu.id !== cartItem.menu.id
     );
-    // updateData({ ...data, cart: remainingOrderlines });
+
+    dispatch(updateCarts(remainingOrderlines));
   };
 
   const editOrder = (cartItem: CartItem) => {
