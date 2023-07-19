@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { v4 as uuid } from "uuid";
 
@@ -6,20 +6,22 @@ import { addon_cats, addons, addons_addon_cats, menus } from "@prisma/client";
 
 import { Checkbox, Radio } from "@material-tailwind/react";
 
-import { getAddonCatIdsByMenuId } from "@/libs/custom";
-import { OrderContext } from "@/contexts/OrderContext";
+import {
+  getAddonCatIdsByMenuId,
+  getAddonCatIdsByMenuIds,
+  getAddonIdsByAddonCatIds,
+  getMenuIdsByLocationId,
+} from "@/libs/custom";
 import QuantitySelector from "@/components/QuantitySelector";
 import { Button } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
-import { AddRoadRounded } from "@mui/icons-material";
-import { setCarts, updateCarts } from "@/store/slices/cartsSlice";
+import { addCart, setCarts } from "@/store/slices/cartsSlice";
 
 const MenuById = () => {
   const router = useRouter();
-  const id = router.query.id;
-
   const query = router.query;
+  const { id, locationId } = query;
 
   const {
     menus,
@@ -27,6 +29,7 @@ const MenuById = () => {
     addons,
     menusAddonCats,
     addonsAddonCats,
+    menusLocations,
     carts,
   } = useAppSelector(appData);
 
@@ -37,18 +40,46 @@ const MenuById = () => {
 
   const [orderAddonIds, setOrderAddonIds] = useState<Number[]>([]);
 
-  console.log(orderAddonIds);
+  const [currentMenu, setCurrentMenu] = useState<menus>();
 
-  const [currentMenu, setCurrentMenu] = useState<menus | null>(null);
-
-  const selectedAddons = addons.filter(
-    (item) => orderAddonIds && orderAddonIds.includes(item.id)
+  const menuIdsBylocationId = getMenuIdsByLocationId(
+    Number(locationId),
+    menusLocations
   );
 
-  const addonCatIds = getAddonCatIdsByMenuId(id, menusAddonCats);
+  const addonCatIdsByMenuIds = getAddonCatIdsByMenuIds(
+    menuIdsBylocationId,
+    menusAddonCats
+  );
 
-  const addonCatsByMenu = addonCategories.filter(
-    (item: addon_cats) => addonCatIds && addonCatIds.includes(item.id)
+  const addonIdsByAddonCatIds = getAddonIdsByAddonCatIds(
+    addonCatIdsByMenuIds,
+    addonsAddonCats
+  );
+
+  const menusByLocation = menus.filter((item) =>
+    menuIdsBylocationId.includes(item.id)
+  );
+
+  const addonCatsByMenus = addonCategories.filter((item) =>
+    addonCatIdsByMenuIds.includes(item.id)
+  );
+
+  const addonsByAddonCats = addons.filter((item) =>
+    addonIdsByAddonCatIds.includes(item.id)
+  );
+
+  const selectedAddons = addonsByAddonCats.filter((item) =>
+    orderAddonIds.includes(item.id)
+  );
+
+  const addonCatIds = getAddonCatIdsByMenuId(
+    String(currentMenu?.id),
+    menusAddonCats
+  );
+
+  const addonCatsByMenu = addonCatsByMenus.filter((item: addon_cats) =>
+    addonCatIds.includes(item.id)
   );
 
   const isRequiredAddonCats = addonCatsByMenu.filter(
@@ -57,7 +88,7 @@ const MenuById = () => {
 
   const addToCart = () => {
     dispatch(
-      setCarts({
+      addCart({
         id: uuid(),
         menu: currentMenu,
         addons: selectedAddons,
@@ -75,18 +106,16 @@ const MenuById = () => {
 
   const updateCartItem = carts.find((item) => item.id === id);
 
-  console.log(updateCartItem);
-
   const updateToCart = () => {
     if (updateCartItem) {
       const otherCartItem = carts.filter(
         (item) => item.id !== updateCartItem.id
       );
 
-      dispatch(updateCarts(otherCartItem));
+      dispatch(setCarts(otherCartItem));
       dispatch(
-        setCarts({
-          id: uuid(),
+        addCart({
+          id: updateCartItem.id,
           menu: currentMenu,
           addons: selectedAddons,
           quantity,
@@ -144,7 +173,7 @@ const MenuById = () => {
       .filter((item: addons_addon_cats) => item.addon_cat_id === id)
       .map((item: addons_addon_cats) => item.addon_id);
 
-    const addonsByAddonCat = addons.filter((item: addons) =>
+    const addonsByAddonCat = addonsByAddonCats.filter((item: addons) =>
       addonIdsByAddonCatId.includes(item.id)
     );
 
@@ -222,30 +251,27 @@ const MenuById = () => {
         (item) => item.id
       ) as Number[];
 
-      setOrderAddonIds(selectedAddonsIds);
-
       const selectedQuantity = updateCartItem?.quantity;
       const selectedMenu = updateCartItem?.menu;
 
-      selectedQuantity && setQuantity(selectedQuantity);
-      selectedMenu && setCurrentMenu(selectedMenu);
+      setOrderAddonIds(selectedAddonsIds);
+      setQuantity(selectedQuantity);
+      setCurrentMenu(selectedMenu);
     } else {
-      const currentMenu = menus.filter(
+      const currentMenu = menusByLocation.filter(
         (item: menus) => item.id === Number(id)
       )[0];
 
-      console.log(currentMenu);
-
       setCurrentMenu(currentMenu);
     }
-  }, [updateCartItem]);
+  }, [updateCartItem, isRequiredAddonCats.length]);
 
   useEffect(() => {
     const addonCatIdsByAddonIds = addonsAddonCats
-      .filter((item) => orderAddonIds && orderAddonIds.includes(item.addon_id))
+      .filter((item) => orderAddonIds.includes(item.addon_id))
       .map((item) => item.addon_cat_id);
 
-    const addonCats = addonCategories.filter((item) =>
+    const addonCats = addonCatsByMenus.filter((item) =>
       addonCatIdsByAddonIds.includes(item.id)
     );
 

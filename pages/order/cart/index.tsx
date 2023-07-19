@@ -1,18 +1,18 @@
 import axios from "axios";
-import { useContext } from "react";
 import { useRouter } from "next/router";
 
 import { addons as Addon } from "@prisma/client";
 
 import { CartItem } from "@/libs/types";
-import { OrderContext } from "@/contexts/OrderContext";
 
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Avatar, Box, Button, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
-import { updateCarts } from "@/store/slices/cartsSlice";
+import { setCarts } from "@/store/slices/cartsSlice";
+import { addOrder } from "@/store/slices/ordersSlice";
+import { setOrderlines } from "@/store/slices/orderlinesSlice";
 
 const Review = () => {
   const { carts } = useAppSelector(appData);
@@ -23,11 +23,9 @@ const Review = () => {
   const query = router.query;
 
   const removeOrderlinFromCart = (cartItem: CartItem) => {
-    const remainingOrderlines = carts.filter(
-      (item) => item.menu.id !== cartItem.menu.id
-    );
+    const remainingOrderlines = carts.filter((item) => item.id !== cartItem.id);
 
-    dispatch(updateCarts(remainingOrderlines));
+    dispatch(setCarts(remainingOrderlines));
   };
 
   const editOrder = (cartItem: CartItem) => {
@@ -45,9 +43,11 @@ const Review = () => {
       { carts }
     );
 
-    const { order } = res.data;
+    const { order, orderlines } = res.data;
 
-    // fetchData();
+    dispatch(addOrder(order));
+    dispatch(setOrderlines(orderlines));
+    dispatch(setCarts([]));
 
     router.push({ pathname: `/order/active-order/${order.id}`, query });
   };

@@ -127,6 +127,8 @@ export default async function handler(
         },
       });
 
+      console.log(order);
+
       cart.forEach(async (orderline: any) => {
         const menu = orderline.menu;
         const hasAddons = orderline.addons.length;
@@ -154,7 +156,9 @@ export default async function handler(
         }
       });
 
-      res.status(200).send({ order });
+      const orderlines = await prisma.orderlines.findMany();
+
+      res.status(200).send({ order, orderlines });
     }
   } catch (error) {
     console.log(error);

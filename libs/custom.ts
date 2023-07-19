@@ -5,7 +5,6 @@ import {
   menus_menu_cats,
 } from "@prisma/client";
 import { CartItem } from "./types";
-import { useSession } from "next-auth/react";
 
 export const getMenuIdsByLocationId = (
   locationId: number,
@@ -22,6 +21,15 @@ export const getMenuCatIdsByMenuId = (
 ) => {
   return menusMenuCat
     .filter((item: menus_menu_cats) => item.menu_id === Number(id))
+    .map((item: menus_menu_cats) => item.menu_cat_id);
+};
+
+export const getMenuCatIdsByMenuIds = (
+  menuIds: number[],
+  menusMenuCat: menus_menu_cats[]
+) => {
+  return menusMenuCat
+    .filter((item: menus_menu_cats) => menuIds.includes(item.menu_id))
     .map((item: menus_menu_cats) => item.menu_cat_id);
 };
 
@@ -65,11 +73,11 @@ export const getSelectedLocationIdsByMenuId = (
 };
 
 export const getOrdersTotalPrice = (cart: CartItem[]) => {
-  return cart.reduce((prev, curr) => {
-    const menuPrice = curr.menu.price;
-    const addonPrice = curr.addons.reduce((prevAddon, currAddon) => {
+  return cart.reduce((prev, { menu, addons, quantity }) => {
+    const menuPrice = menu.price;
+    const addonPrice = addons.reduce((prevAddon, currAddon) => {
       return (prevAddon += currAddon.price);
     }, 0);
-    return (prev += (menuPrice + addonPrice) * curr.quantity);
+    return (prev += (menuPrice + addonPrice) * quantity);
   }, 0);
 };
