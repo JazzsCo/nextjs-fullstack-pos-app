@@ -73,7 +73,7 @@ export const getSelectedLocationIdsByMenuId = (
 };
 
 export const getOrdersTotalPrice = (cart: CartItem[]) => {
-  return cart.reduce((prev, { menu, addons, quantity }) => {
+  return cart.reduce((prev, { id, menu, addons, quantity }) => {
     const menuPrice = menu.price;
     const addonPrice = addons.reduce((prevAddon, currAddon) => {
       return (prevAddon += currAddon.price);

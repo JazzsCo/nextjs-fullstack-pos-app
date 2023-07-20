@@ -10,6 +10,7 @@ import {
   type menus_menu_cats,
 } from "@prisma/client";
 import { getOrdersTotalPrice } from "@/libs/custom";
+import { CartItem } from "@/libs/types";
 
 export default async function handler(
   req: NextApiRequest,
@@ -117,19 +118,17 @@ export default async function handler(
     } else if (req.method === "POST") {
       const { locationId, tableId } = req.query;
 
-      const { cart } = req.body;
+      const { carts } = req.body;
 
       const order = await prisma.orders.create({
         data: {
           locations_id: Number(locationId),
           tables_id: Number(tableId),
-          price: getOrdersTotalPrice(cart),
+          price: getOrdersTotalPrice(carts),
         },
       });
 
-      console.log(order);
-
-      cart.forEach(async (orderline: any) => {
+      await carts.forEach(async (orderline: any) => {
         const menu = orderline.menu;
         const hasAddons = orderline.addons.length;
 

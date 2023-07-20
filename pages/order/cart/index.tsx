@@ -45,9 +45,9 @@ const Review = () => {
 
     const { order, orderlines } = res.data;
 
+    dispatch(setCarts([]));
     dispatch(addOrder(order));
     dispatch(setOrderlines(orderlines));
-    dispatch(setCarts([]));
 
     router.push({ pathname: `/order/active-order/${order.id}`, query });
   };
